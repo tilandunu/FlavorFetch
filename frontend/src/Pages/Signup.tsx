@@ -46,11 +46,12 @@ export function Signup() {
           firstName: fname,
           lastName: lname,
           uid: user.uid,
+          userType: type,
         });
       }
       console.log("Registered successfully!");
       toast.success("User Registered Successfully", { position: "top-center" });
-      window.location.href = "/createBlog";
+      window.location.href = "/";
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -83,24 +84,26 @@ export function Signup() {
                   FlavorFetch
                 </CardTitle>
 
-                <CardDescription className="text-4xl text-black">
-                  YOUR CULINARY
-                </CardDescription>
-                <CardDescription className="text-4xl text-red-600">
-                  ADVENTURE AWAITS
-                </CardDescription>
+                <div className={visibilityType}>
+                  <CardDescription className="text-4xl text-black">
+                    YOUR CULINARY
+                  </CardDescription>
+                  <CardDescription className="text-4xl text-red-600">
+                    ADVENTURE AWAITS
+                  </CardDescription>
+                </div>
               </CardHeader>
               <div className={visibilityType}>
-                <div className="flex flex-col justify-center py-10">
+                <div className="flex flex-col justify-center py-1">
                   <div className="flex justify-center">
-                    <h1 className="text-[10px] font-inter pb-4">
+                    <h1 className="text-[10px] font-inter pt-10 pb-4">
                       {" "}
                       Choose your cooking journey
                     </h1>
                   </div>
-                  <div className="flex justify-center gap-4">
+                  <div className="flex justify-center gap-4 pb-12">
                     <div
-                      className={`flex p-2 justify-center align-middle items-center cursor-pointer border-2  border-black ${
+                      className={`flex px-4 py-2 justify-center align-middle items-center cursor-pointer border-2  border-black ${
                         type === "chef"
                           ? "bg-red-600 text-white border-none "
                           : ""
@@ -122,7 +125,7 @@ export function Signup() {
                       />
                     </div>
                     <div
-                      className={`flex p-2 justify-center align-middle items-center cursor-pointer text-center border-2  border-black ${
+                      className={`flex px-4 py-2 justify-center align-middle items-center cursor-pointer text-center border-2  border-black ${
                         type === "customer"
                           ? "bg-red-600 text-white border-none"
                           : ""
@@ -145,7 +148,7 @@ export function Signup() {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-center flex-col pt-14 pb-7">
+                <div className="flex justify-center flex-col pb-5">
                   <Button
                     onClick={handleNext}
                     className="hover:bg-green-700 text-white duration-300"
@@ -156,62 +159,76 @@ export function Signup() {
                 </div>
               </div>
               <div className={visibilityForm}>
-                <CardContent className="grid gap-4">
+                <CardContent className="grid gap-6 py-1">
                   <div className="grid gap-2">
-                    <Label htmlFor="email">First Name :</Label>
+                    <Label htmlFor="email" className="text-[12px] pl-1">
+                      First Name :
+                    </Label>
                     <Input
                       id="email"
                       type="text"
                       onChange={(e) => setFname(e.target.value)}
+                      className="border-[0.5px] border-black"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="email">Last Name :</Label>
+                    <Label htmlFor="email" className="text-[12px] pl-1">
+                      Last Name :
+                    </Label>
                     <Input
                       id="email"
                       type="text"
                       onChange={(e) => setLname(e.target.value)}
+                      className="border-[0.5px] border-black"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="email">Email :</Label>
+                    <Label htmlFor="email" className="text-[12px] pl-1">
+                      Email :
+                    </Label>
                     <Input
                       id="email"
                       type="email"
                       placeholder="m@example.com"
                       onChange={(e) => setEmail(e.target.value)}
+                      className="placeholder:text-[10px] border-[0.5px] border-black"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="password">Password :</Label>
+                    <Label htmlFor="password" className="text-[12px] pl-1">
+                      Password :
+                    </Label>
                     <Input
                       id="password"
                       type="password"
                       onChange={(e) => setPassword(e.target.value)}
+                      className="border-[0.5px] border-black"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="password">Re-Password :</Label>
+                    <Label htmlFor="password" className="text-[12px] pl-1">
+                      Re-Password :
+                    </Label>
                     <Input
                       id="repassword"
                       type="password"
                       onChange={(e) => setRePassword(e.target.value)}
+                      className="border-[0.5px] border-black"
                     />
                   </div>
                 </CardContent>
 
-                <CardFooter className="flex flex-col gap-6">
-                  <Button
-                    className="w-full bg-white hover:text-white text-black border-2 border-solid border-black"
+                <CardFooter className="flex flex-col gap-6 py-6">
+                  <Button className="w-full bg-black hover:bg-green-700">
+                    Create account
+                  </Button>
+                  <p
+                    className="bg-white text-black hover:border-b-2 px-10 py-1 hover:cursor-pointer hover:border-black duration-300"
                     onClick={handleBack}
                   >
                     {" "}
                     Back
-                  </Button>
-
-                  <Button className="w-full bg-black hover:bg-green-700">
-                    Create account
-                  </Button>
+                  </p>
                 </CardFooter>
               </div>
               <div className="flex justify-end ">
