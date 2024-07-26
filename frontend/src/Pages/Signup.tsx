@@ -1,0 +1,240 @@
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { auth, db } from "@/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { setDoc, doc } from "firebase/firestore";
+import { toast } from "react-toastify";
+
+export function Signup() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
+  const [type, setType] = useState("");
+  const [visibilityForm, setVisibilityForm] = useState("hidden");
+  const [visibilityType, setVisibilityType] = useState("visible");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [fname, setFname] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [lname, setLname] = useState("");
+
+  const handleRegister = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    if (password !== rePassword) {
+      toast.error("Passwords do not match", { position: "bottom-center" });
+      return;
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      const user = auth.currentUser;
+      console.log(user);
+      if (user) {
+        await setDoc(doc(db, "Users", user.uid), {
+          email: user.email,
+          firstName: fname,
+          lastName: lname,
+          uid: user.uid,
+        });
+      }
+      console.log("Registered successfully!");
+      toast.success("User Registered Successfully", { position: "top-center" });
+      window.location.href = "/createBlog";
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      console.log(error.message);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      toast.error(error.message, { position: "bottom-center" });
+    }
+  };
+
+  const handleNext = () => {
+    setVisibilityForm("visible");
+    setVisibilityType("hidden");
+  };
+
+  const handleBack = () => {
+    setVisibilityForm("hidden");
+    setVisibilityType("visible");
+  };
+
+  return (
+    <div className=" py-8 font-poppins">
+      <Card className="mx-16 shadow-2xl p-10 ">
+        <form onSubmit={handleRegister} className="border-2 border-black">
+          <div className="flex gap-24 flex-row align-middle justify-center items-center">
+            <div className="flex flex-col w-[600px] p-10">
+              {" "}
+              <CardHeader className="space-y-1">
+                <CardTitle className="text-sm text-slate-500 pb-6 font-extralight">
+                  FlavorFetch
+                </CardTitle>
+
+                <CardDescription className="text-4xl text-black">
+                  YOUR CULINARY
+                </CardDescription>
+                <CardDescription className="text-4xl text-red-600">
+                  ADVENTURE AWAITS
+                </CardDescription>
+              </CardHeader>
+              <div className={visibilityType}>
+                <div className="flex flex-col justify-center py-10">
+                  <div className="flex justify-center">
+                    <h1 className="text-[10px] font-inter pb-4">
+                      {" "}
+                      Choose your cooking journey
+                    </h1>
+                  </div>
+                  <div className="flex justify-center gap-4">
+                    <div
+                      className={`flex p-2 justify-center align-middle items-center cursor-pointer border-2  border-black ${
+                        type === "chef"
+                          ? "bg-red-600 text-white border-none "
+                          : ""
+                      }`}
+                      onClick={() => setType("chef")}
+                    >
+                      <h1 className="flex w-40 text-center justify-center p-2 ">
+                        {" "}
+                        I AM A CHEF
+                      </h1>
+                      <Input
+                        type="radio"
+                        id="chef"
+                        name="type"
+                        value="chef"
+                        className="hidden"
+                        checked={type === "chef"}
+                        onChange={() => setType("chef")}
+                      />
+                    </div>
+                    <div
+                      className={`flex p-2 justify-center align-middle items-center cursor-pointer text-center border-2  border-black ${
+                        type === "customer"
+                          ? "bg-red-600 text-white border-none"
+                          : ""
+                      }`}
+                      onClick={() => setType("customer")}
+                    >
+                      <h1 className="flex w-40 text-center justify-center p-2">
+                        {" "}
+                        I AM A CUSTOMER
+                      </h1>{" "}
+                      <Input
+                        type="radio"
+                        id="customer"
+                        name="type"
+                        value="customer"
+                        className="hidden"
+                        checked={type === "customer"}
+                        onChange={() => setType("customer")}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-center flex-col pt-14 pb-7">
+                  <Button
+                    onClick={handleNext}
+                    className="hover:bg-green-700 text-white duration-300"
+                  >
+                    {" "}
+                    Next
+                  </Button>
+                </div>
+              </div>
+              <div className={visibilityForm}>
+                <CardContent className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">First Name :</Label>
+                    <Input
+                      id="email"
+                      type="text"
+                      onChange={(e) => setFname(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Last Name :</Label>
+                    <Input
+                      id="email"
+                      type="text"
+                      onChange={(e) => setLname(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Email :</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="m@example.com"
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="password">Password :</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="password">Re-Password :</Label>
+                    <Input
+                      id="repassword"
+                      type="password"
+                      onChange={(e) => setRePassword(e.target.value)}
+                    />
+                  </div>
+                </CardContent>
+
+                <CardFooter className="flex flex-col gap-6">
+                  <Button
+                    className="w-full bg-white hover:text-white text-black border-2 border-solid border-black"
+                    onClick={handleBack}
+                  >
+                    {" "}
+                    Back
+                  </Button>
+
+                  <Button className="w-full bg-black hover:bg-green-700">
+                    Create account
+                  </Button>
+                </CardFooter>
+              </div>
+              <div className="flex justify-end ">
+                {" "}
+                <p className="text-[13px]">
+                  ALREADY HAVE AN ACCOUNT?{" "}
+                  <Link to={"/login"} className="px-[6px] text-red-500">
+                    LOGIN
+                  </Link>
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end items-end flex-row">
+              {" "}
+              <img
+                src="../public/edit 2.png"
+                alt="chef"
+                className="w-[480px] h-[440px] rounded-[60px]"
+              />
+            </div>
+          </div>
+        </form>
+      </Card>
+    </div>
+  );
+}
