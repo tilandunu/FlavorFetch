@@ -51,7 +51,7 @@ export function Signup() {
       }
       console.log("Registered successfully!");
       toast.success("User Registered Successfully", { position: "top-center" });
-      window.location.href = "/";
+      window.location.href = "/signin";
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

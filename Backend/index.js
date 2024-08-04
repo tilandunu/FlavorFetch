@@ -9,6 +9,9 @@ const RecipeIngredientModel = require("./models/RecipeIngredients");
 const RecipeModel = require("./models/Recipes");
 const SupplierModel = require("./models/Suppliers");
 const TicketModel = require("./models/Tickets");
+const ChefModel = require("./models/Chefs");
+const CustomerModel = require("./models/Customers");
+const DriverModel = require("./models/Drivers");
 
 const app = express();
 app.use(express.json());
