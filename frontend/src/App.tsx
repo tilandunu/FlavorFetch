@@ -12,6 +12,7 @@ function App() {
           <div className="auth-wrapper">
             <div className="auth-inner">
               <Routes>
+                <Route path="/" element={<Signup></Signup>} />
                 <Route path="/signup" element={<Signup></Signup>} />
                 <Route path="/signin" element={<Signin></Signin>} />
                 <Route path="/complete" element={<Complete></Complete>} />

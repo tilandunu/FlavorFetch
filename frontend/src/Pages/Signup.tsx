@@ -235,7 +235,7 @@ export function Signup() {
                 {" "}
                 <p className="text-[13px]">
                   ALREADY HAVE AN ACCOUNT?{" "}
-                  <Link to={"/login"} className="px-[6px] text-red-500">
+                  <Link to={"/signin"} className="px-[6px] text-red-500">
                     LOGIN
                   </Link>
                 </p>
