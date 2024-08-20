@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const RecipeSchema = new mongoose.Schema({
+  chefUID: {
+    type: String,
+    ref: "Chef",
+    required: true,
+  },
   title: { type: String, required: true },
   description: { type: String, required: true },
   type: {
@@ -52,6 +57,7 @@ const RecipeSchema = new mongoose.Schema({
     },
   ],
   createdAt: { type: Date, default: Date.now },
+  recipeImage: { type: String },
 });
 
 const RecipeModel = mongoose.model("Recipe", RecipeSchema);

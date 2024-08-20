@@ -2,7 +2,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Signup } from "./Pages/Signup";
 import { Signin } from "./Pages/Signin";
-import Complete from "./Pages/Complete";
+import ChefDashboard from "./Pages/ChefDashboard";
+import DriverDashboard from "./Pages/DriverDashboard";
+import SupplierDashboard from "./Pages/SupplierDashboard";
+import Home from "./Pages/Home";
+import AdminDashboard from "./Pages/AdminDashboard";
 
 function App() {
   return (
@@ -15,7 +19,14 @@ function App() {
                 <Route path="/" element={<Signup></Signup>} />
                 <Route path="/signup" element={<Signup></Signup>} />
                 <Route path="/signin" element={<Signin></Signin>} />
-                <Route path="/complete" element={<Complete></Complete>} />
+                <Route path="/chefDashboard" element={<ChefDashboard />} />
+                <Route path="/driverDashboard" element={<DriverDashboard />} />
+                <Route
+                  path="/supplierDashboard"
+                  element={<SupplierDashboard />}
+                />
+                <Route path="/home" element={<Home />} />
+                <Route path="/admin" element={<AdminDashboard />} />
               </Routes>
               <ToastContainer />
             </div>

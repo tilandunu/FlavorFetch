@@ -1,33 +1,11 @@
 const mongoose = require("mongoose");
 
 const CustomerSchema = new mongoose.Schema({
+  customerUID: { type: String, required: true, unique: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  phoneNumber: { type: String, required: true },
-  preferences: {
-    dietTypes: [{ type: String, enum: ["Vegan", "Paleo"] }],
-    allergyInfo: [
-      {
-        type: String,
-        enum: ["Dairy-Free", "Nut-Free", "Soy-Free", "Sugar-Free"],
-      },
-    ],
-    variety: [
-      {
-        type: String,
-        enum: [
-          "SriLankan",
-          "Chinese",
-          "Western",
-          "Italian",
-          "Mexican",
-          "Indian",
-          "American",
-        ],
-      },
-    ],
-  },
+  phoneNumber: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 

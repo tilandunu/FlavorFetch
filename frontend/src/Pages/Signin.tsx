@@ -16,12 +16,15 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userDetails, setUserDetails] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -43,9 +46,25 @@ export function Signin() {
         // @ts-ignore
         setUserDetails(userData);
         Cookies.set("userID", userData.uid, { expires: 7 });
-        window.location.href = "/signup";
+
+        console.log(userData.userType);
+
+        if (userData.userType === "chef") {
+          navigate("/chefDashboard");
+        } else if (userData.userType === "customer") {
+          navigate("/home");
+        } else if (userData.userType === "driver") {
+          navigate("/driverDashboard");
+        } else if (userData.userType === "supplier") {
+          navigate("/supplierDashboard");
+        } else if (userData.userType === "admin") {
+          navigate("/admin");
+        } else {
+          console.log("No such document!");
+          navigate("/");
+        }
       } else {
-        console.log("No such document!");
+        console.log("No such document idiot!");
       }
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -143,7 +162,7 @@ export function Signin() {
               <img
                 src="../public/edit 2.png"
                 alt="chef"
-                className="w-[480px] h-[440px] rounded-[60px]"
+                className="w-[480px] h-[430px] rounded-[60px]"
               />
             </div>
           </div>

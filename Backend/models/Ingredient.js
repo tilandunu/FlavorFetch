@@ -10,6 +10,7 @@ const IngredientSchema = new mongoose.Schema({
   stockQuantity: { type: Number, required: true }, // Total quantity available
   pricePerUnit: { type: Number, required: true },
   createdAt: { type: Date, default: Date.now },
+  ingredientImage: { type: String },
 });
 
 const IngredientModel = mongoose.model("Ingredient", IngredientSchema);

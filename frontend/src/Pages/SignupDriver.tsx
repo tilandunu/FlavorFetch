@@ -17,14 +17,12 @@ import { setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-export function Signup() {
+export function SignupDriver() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("driver");
   const [phoneNumber, setphoneNumber] = useState("");
-  const [visibilityForm, setVisibilityForm] = useState("hidden");
-  const [visibilityType, setVisibilityType] = useState("visible");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [fname, setFname] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -73,17 +71,6 @@ export function Signup() {
       // @ts-ignore
       toast.error(error.message, { position: "bottom-center" });
     }
-  };
-
-  const handleNext = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setVisibilityForm("visible");
-    setVisibilityType("hidden");
-  };
-
-  const handleBack = () => {
-    setVisibilityForm("hidden");
-    setVisibilityType("visible");
   };
 
   return (
