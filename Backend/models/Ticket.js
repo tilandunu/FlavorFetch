@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const TicketSchema = new mongoose.Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: customerID,
     ref: "Customer",
     required: true,
   },

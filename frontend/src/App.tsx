@@ -7,6 +7,7 @@ import DriverDashboard from "./Pages/DriverDashboard";
 import SupplierDashboard from "./Pages/SupplierDashboard";
 import Home from "./Pages/Home";
 import AdminDashboard from "./Pages/AdminDashboard";
+import { SignupDriver } from "./Pages/SignupDriver";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
                 />
                 <Route path="/home" element={<Home />} />
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/signupDriver" element={<SignupDriver />} />
               </Routes>
               <ToastContainer />
             </div>
