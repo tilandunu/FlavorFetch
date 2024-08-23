@@ -8,6 +8,14 @@ import SupplierDashboard from "./Pages/SupplierDashboard";
 import Home from "./Pages/Home";
 import AdminDashboard from "./Pages/AdminDashboard";
 import { SignupDriver } from "./Pages/SignupDriver";
+import { SupportTicket } from "./Pages/SupportTicket";
+import { SupportTicketDashboard } from "./Pages/SupportTicketDashboard";
+import {Feedback} from "./Pages/Feedback";
+
+
+
+
+
 
 function App() {
   return (
@@ -29,7 +37,15 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/signupDriver" element={<SignupDriver />} />
-              </Routes>
+                <Route path="/SupportTicket" element={<SupportTicket/>} />
+                <Route path="/SupportTicketDashboard" element={<SupportTicketDashboard/>} />
+                <Route path="/Feedback" element={<Feedback/>} />
+                
+                
+
+
+                
+                </Routes>
               <ToastContainer />
             </div>
           </div>
