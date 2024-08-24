@@ -3,7 +3,16 @@ import React from "react";
 const home = () => {
   return (
     <div>
-      <h1>Hello User!</h1>
+      <div>
+        <img src="" alt="" />
+      </div>
+      <div>
+        <p>HOME</p>
+        <p>RECIPES</p>
+        <p>PROFILE</p>
+        <p>RAISE A TICKET</p>
+      </div>
+      <footer />
     </div>
   );
 };
