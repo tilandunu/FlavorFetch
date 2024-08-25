@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const TicketModel = require("../models/ticket");
+const TicketModel = require("../models/Ticket");
 const CustomerModel = require("../models/Customer");
 
 // POST route to create a new ticket
@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
 
   try {
     // Find the user based on the provided userId
-    const user = await CustomerModel.findById(userId);
+    const user = await CustomerModel.findOne({ customerUID: userId });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
