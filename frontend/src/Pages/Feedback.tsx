@@ -17,7 +17,6 @@ import { toast } from "react-toastify";
 
 export function Feedback() {
   const [email, setEmail] = useState("");
-  const [name, setName]=useState("");
   const [message, setMessage] = useState("");
   const [visibilityForm, setVisibilityForm] = useState("hidden");
   const [visibilityType, setVisibilityType] = useState("visible");
@@ -35,7 +34,6 @@ export function Feedback() {
       // Use setDoc to create the document
       await setDoc(docRef, {
         email,
-        name,
         message,
         createdAt: new Date(),
       });
@@ -93,7 +91,7 @@ export function Feedback() {
                   </div>
                   <div className={visibilityType}>
                   <div className="flex justify-center flex-col pb-5">
-                    <Link to="/ Viewfeedback">
+                    <Link to="/ViewSupportFeedback">
                     <Button className="hover:bg-green-700 text-white duration-300 w-full">
                       View Feedback
                     </Button>

@@ -9,52 +9,56 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { auth } from "@/firebase";
+import Cookies from "js-cookie";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { setDoc, doc } from "firebase/firestore";
-import {  db } from "@/firebase";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export function SupportTicket() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [category, setCategory] = useState("");
+  const [issue, setIssue] = useState("");
+  const [issueType, setIssueType] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
+  const [status] = useState("Open");
   const [visibilityForm, setVisibilityForm] = useState("hidden");
   const [visibilityType, setVisibilityType] = useState("visible");
+
+  const uid = Cookies.get("customerUID");
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    try {
-      // Generate or specify a document ID
-      const documentId = `${email}-${Date.now()}`; // You can customize the ID format
-
-      // Reference to the document
-      const docRef = doc(db, "Tickets", documentId);
-
-      // Use setDoc to create the document
-      await setDoc(docRef, {
-        email,
-        subject,
-        message,
-        category,
-        createdAt: new Date(),
-      });
-
-      console.log("Support ticket submitted successfully!");
-      toast.success("Support Ticket Submitted Successfully", {
+    // Validation to ensure all fields are filled out
+    if (!email || !issueType || !issue) {
+      toast.error("Please fill out all required fields.", {
         position: "top-center",
       });
-      window.location.href = "/support";
+      return;
+    }
+
+    try {
+      const user = auth.currentUser;
+
+      if (user) {
+        // Sending the ticket data to the backend
+        await axios.post("http://localhost:3001/api/tickets", {
+          user: uid,
+          issue: issue,
+          status: status,
+          responseMessage: responseMessage,
+        });
+      }
+
+      toast.success("Ticket submitted successfully", {
+        position: "top-center",
+      });
+      window.location.href = "";
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      console.log(error.message);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      toast.error(error.message, { position: "bottom-center" });
+      toast.error("Failed to submit ticket. Please try again.", {
+        position: "bottom-center",
+      });
     }
   };
 
@@ -71,7 +75,7 @@ export function SupportTicket() {
 
   return (
     <div className="py-8 font-poppins">
-      <Card className="mx-16 shadow-2xl p-10 ">
+      <Card className="mx-16 shadow-2xl p-10">
         <form onSubmit={handleSubmit} className="border-2 border-black">
           <div className="flex gap-24 flex-row align-middle justify-center items-center">
             <div className="flex flex-col w-[600px] p-10">
@@ -97,31 +101,19 @@ export function SupportTicket() {
                     </h1>
                   </div>
                   <div className={visibilityType}>
-                <div className="flex justify-center flex-col pb-5">
-                  <Button
-                    onClick={(e) => handleNext(e)}
-                    className="hover:bg-green-700 text-white duration-300"
-                  >
-                    New Ticket
-                  </Button>
+                    <div className="flex justify-center flex-col pb-5">
+                      <Button
+                        onClick={handleNext}
+                        className="hover:bg-green-700 text-white duration-300"
+                      >
+                        New Ticket
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              </div>
               </div>
               <div className={visibilityForm}>
                 <CardContent className="grid gap-6 py-1">
-                  <div className="grid gap-2">
-                    <Label htmlFor="Full name" className="text-[12px] pl-1">
-                      Full name :
-                    </Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="placeholder:text-[10px] border-[0.5px] border-black"
-                    />
-                  </div>
-
                   <div className="grid gap-2">
                     <Label htmlFor="email" className="text-[12px] pl-1">
                       Email :
@@ -136,34 +128,35 @@ export function SupportTicket() {
                   </div>
 
                   <div className="grid gap-2">
-                  <Label htmlFor="issue" className="text-[12px] pl-1">
-                    Issue type:
-                </Label>
-                <select
-                  id="issue"
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="border-[0.5px] border-black p-2 text-[12px]"
-                >
-               <option value="" disabled selected>
-                Select issue type
-               </option>
-               <option value="technical">Technical Issue</option>
-               <option value="billing">Billing Issue</option>
-               <option value="general">General Inquiry</option>
-              </select>
-             </div>
+                    <Label htmlFor="issueType" className="text-[12px] pl-1">
+                      Issue Type :
+                    </Label>
+                    <select
+                      id="issueType"
+                      onChange={(e) => setIssueType(e.target.value)}
+                      className="border-[0.5px] border-black p-2 text-[12px]"
+                    >
+                      <option value="" disabled selected>
+                        Select issue type
+                      </option>
+                      <option value="technical">Technical Issue</option>
+                      <option value="billing">Billing Issue</option>
+                      <option value="general">General Inquiry</option>
+                    </select>
+                  </div>
 
-              <div className="grid gap-2">
-                    <Label htmlFor="subject" className="text-[12px] pl-1">
-                      Subject :
+                  <div className="grid gap-2">
+                    <Label htmlFor="issue" className="text-[12px] pl-1">
+                      Issue :
                     </Label>
                     <Input
-                      id="subject"
+                      id="issue"
                       type="text"
-                      onChange={(e) => setSubject(e.target.value)}
-                      className="border-[0.5px] border-black"
+                      onChange={(e) => setIssue(e.target.value)}
+                      className="placeholder:text-[10px] border-[0.5px] border-black"
                     />
                   </div>
+
                   <div className="grid gap-2">
                     <Label htmlFor="message" className="text-[12px] pl-1">
                       Message :
@@ -171,7 +164,7 @@ export function SupportTicket() {
                     <Input
                       id="message"
                       type="text"
-                      onChange={(e) => setMessage(e.target.value)}
+                      onChange={(e) => setResponseMessage(e.target.value)}
                       className="border-[0.5px] border-black"
                     />
                   </div>
@@ -185,7 +178,6 @@ export function SupportTicket() {
                     className="bg-white text-black hover:border-b-2 px-10 py-1 hover:cursor-pointer hover:border-black duration-300"
                     onClick={handleBack}
                   >
-                    {" "}
                     Back
                   </p>
                 </CardFooter>
@@ -201,7 +193,7 @@ export function SupportTicket() {
             </div>
             <div className="flex justify-end items-end flex-row">
               <img
-                src="../public/edit 2.png"
+                src="/edit 2.png"
                 alt="support"
                 className="w-[480px] h-[430px] rounded-[60px]"
               />

@@ -11,6 +11,12 @@ import { SignupDriver } from "./Pages/SignupDriver";
 import { SupportTicket } from "./Pages/SupportTicket";
 import { SupportTicketDashboard } from "./Pages/SupportTicketDashboard";
 import {Feedback} from "./Pages/Feedback";
+import {ViewSupportFeedback} from "./Pages/ViewSupportFeedback";
+import {TicketUserAccount} from "./Pages/TicketUserAccount";
+import {ViewMyTickets} from "./Pages/ViewMyTickets";
+
+
+
 
 
 
@@ -40,6 +46,11 @@ function App() {
                 <Route path="/SupportTicket" element={<SupportTicket/>} />
                 <Route path="/SupportTicketDashboard" element={<SupportTicketDashboard/>} />
                 <Route path="/Feedback" element={<Feedback/>} />
+                <Route path="/ViewSupportFeedback" element={<ViewSupportFeedback/>} />
+                <Route path="/TicketUserAccount" element={<TicketUserAccount/>} />
+                <Route path="/ViewMyTickets" element={<ViewMyTickets/>} />
+
+
                 
                 
 
