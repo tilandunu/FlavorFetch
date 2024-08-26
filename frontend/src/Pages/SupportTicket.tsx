@@ -25,7 +25,7 @@ export function SupportTicket() {
   const [visibilityForm, setVisibilityForm] = useState("hidden");
   const [visibilityType, setVisibilityType] = useState("visible");
 
-  const uid = Cookies.get("customerUID");
+  const uid = Cookies.get("customerID");
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
