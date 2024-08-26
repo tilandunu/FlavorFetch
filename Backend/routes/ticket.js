@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
 
   try {
     // Find the user based on the provided userId
-    const user = await CustomerModel.findOne({ customerUID: userId });
+    const user = await CustomerModel.findById({customerUID:userId});
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
