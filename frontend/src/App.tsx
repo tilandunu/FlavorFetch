@@ -11,6 +11,7 @@ import { SignupDriver } from "./Pages/SignupDriver";
 import AllRecipes from "./Pages/AllRecipes";
 import CustomerUserProfile from "./Pages/CustomerUserProfile";
 import TicketDashboard from "./Pages/TicketDashboard";
+import AddRecipe from "./Pages/AddRecipe";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
                   element={<CustomerUserProfile />}
                 />
                 <Route path="/ticketDashboard" element={<TicketDashboard />} />
+                <Route path="/addRecipe" element={<AddRecipe />} />
               </Routes>
               <ToastContainer />
             </div>

@@ -56,6 +56,7 @@ const RecipeSchema = new mongoose.Schema({
       quantity: { type: Number, required: true },
     },
   ],
+  additionalIngredients: [{ type: String }],
   createdAt: { type: Date, default: Date.now },
   recipeImage: { type: String },
 });
