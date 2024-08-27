@@ -28,9 +28,15 @@ import {
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { imagedb } from "@/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import Cookies from "js-cookie";
 
 //hooks
 const AddRecipe = () => {
+  const chefUID = Cookies.get("userID");
+
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [frameworks, setFrameworks] = useState([]);
@@ -51,6 +57,8 @@ const AddRecipe = () => {
   const [prepMinutes, setPrepMinutes] = useState("");
   const [cookMinutes, setCookMinutes] = useState("");
 
+  const [recipeImage, setRecipeImage] = useState("");
+  const [recipeImageUrl, setRecipeImageUrl] = useState("[]");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
@@ -58,8 +66,6 @@ const AddRecipe = () => {
   const [dietTypes, setDietTypes] = useState("");
   const [instructions, setInstructions] = useState("");
   const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
-  const prepTime = `${prepHours} ${prepMinutes}`;
-  const cookTime = `${cookHours} ${cookMinutes}`;
   const [servingCount, setServingCount] = useState("");
 
   useEffect(() => {
@@ -151,8 +157,59 @@ const AddRecipe = () => {
     );
   };
 
-  const handleLogAllergies = () => {
-    console.log(selectedAllergies);
+  const handleUpload = async () => {
+    if (!recipeImage) {
+      toast.error("Please select an image to upload");
+      return;
+    }
+
+    const imageRef = ref(imagedb, `recipes/${v4()}`);
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const snapshot = await uploadBytes(imageRef, recipeImage);
+      const url = await getDownloadURL(snapshot.ref);
+      setRecipeImageUrl(url);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const prepTime = `${prepHours} ${prepMinutes}`;
+    const cookTime = `${cookHours} ${cookMinutes}`;
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/api/recipes/createRecipe",
+        {
+          chefUID,
+          title,
+          description,
+          type,
+          variety,
+          dietTypes,
+          selectedAllergies,
+          prepTime,
+          cookTime,
+          servingCount,
+          selectedIngredients,
+          additionalIngredients,
+          instructions,
+          recipeImageUrl,
+        }
+      );
+
+      console.log(response.data);
+      toast.success("Recipe added successfully!");
+      // Redirect to chef dashboard after successful submission
+      window.location.href = "/chefDashboard";
+    } catch (error) {
+      console.error("Error submitting recipe:", error);
+      toast.error("Failed to add recipe. Please try again.");
+    }
   };
 
   return (
@@ -174,13 +231,32 @@ const AddRecipe = () => {
           </div>
         </div>
         <Separator className="bg-black"></Separator>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="pt-16 pb-3">
             <div className="py-3 flex gap-5">
               <p>ADD A IMAGE</p>
               <p className="text-stone-400">[ IMAGE SHOULD BE 1920x1080 ]</p>
             </div>
-            <Input type="file"></Input>
+            <div className="flex gap-10">
+              <Input
+                type="file"
+                onChange={(e) => setRecipeImage(e.target.files[0])}
+              ></Input>
+              <Button type="button" onClick={handleUpload}>
+                Upload
+              </Button>
+            </div>
+
+            {recipeImageUrl && (
+              <div className="my-10">
+                <p>Uploaded Image:</p>
+                <img
+                  src={recipeImageUrl}
+                  alt="Uploaded recipe"
+                  className="mt-6 max-w-xs"
+                />
+              </div>
+            )}
           </div>
           <div className="py-3">
             <p className="py-3">Type</p>
@@ -432,7 +508,9 @@ const AddRecipe = () => {
                   </li>
                 ))
               ) : (
-                <li className="py-2">No ingredients selected.</li>
+                <li className="px-10 py-2 text-stone-600 text-xm">
+                  No ingredients selected.
+                </li>
               )}
             </ul>
           </div>
@@ -476,7 +554,9 @@ const AddRecipe = () => {
                   </li>
                 ))
               ) : (
-                <li className="py-2">No additional ingredients added.</li>
+                <li className="px-10 py-2 text-stone-600 text-xm">
+                  No additional ingredients added.
+                </li>
               )}
             </ul>
           </div>
@@ -567,12 +647,13 @@ const AddRecipe = () => {
           </div>
 
           <div className="flex justify-center">
-            <Button className="flex w-1/3 h-12">ADD YOUR RECIPE</Button>
+            <Button type="submit" className="flex w-1/3 h-12">
+              ADD YOUR RECIPE
+            </Button>
           </div>
         </form>
       </div>
       <ToastContainer />
-      <Button onClick={handleLogAllergies}>Log Allergies</Button>
     </div>
   );
 };
