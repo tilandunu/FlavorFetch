@@ -11,7 +11,6 @@ const RecipeSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: [
-      "Appetizers & Snacks",
       "Main Courses",
       "Desserts",
       "Beverages",
@@ -24,27 +23,26 @@ const RecipeSchema = new mongoose.Schema({
   variety: {
     type: String,
     enum: [
-      "Asian",
+      "SriLankan",
       "Chinese",
       "Western",
       "Italian",
       "Mexican",
       "Indian",
-      "Mediterranean",
       "American",
     ],
     required: true,
   },
-  dietaryInfo: {
-    dietTypes: [{ type: String, enum: ["Vegan", "Paleo"] }],
-    allergyInfo: [
-      {
-        type: String,
-        enum: ["Dairy-Free", "Nut-Free", "Soy-Free", "Sugar-Free"],
-      },
-    ],
-  },
-  preparationTime: { type: String, required: true }, // e.g., '30 minutes'
+  dietTypes: [{ type: String, enum: ["Vegan", "Paleo"] }],
+  allergyInfo: [
+    {
+      type: String,
+      enum: ["Dairy-Free", "Nut-Free", "Soy-Free", "Sugar-Free"],
+    },
+  ],
+
+  preparationTime: { type: String, default: "N/A" },
+  cookingTime: { type: String, default: "N/A" }, // e.g., '30 minutes'
   servingCount: { type: Number, required: true },
   ingredients: [
     {
@@ -57,6 +55,7 @@ const RecipeSchema = new mongoose.Schema({
     },
   ],
   additionalIngredients: [{ type: String }],
+  instructions: { type: String },
   createdAt: { type: Date, default: Date.now },
   recipeImage: { type: String },
 });

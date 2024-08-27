@@ -9,9 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-("use client");
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react"; // Added X for the remove button
 import { cn } from "@/components/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,11 +26,41 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+//hooks
 const AddRecipe = () => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [frameworks, setFrameworks] = useState([]);
+  type Ingredient = {
+    ingredient: string; // ObjectId of the ingredient
+    label: string; // Name of the ingredient
+  };
+  const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>(
+    []
+  );
+  const [additionalIngredients, setAdditionalIngredients] = useState<string[]>(
+    []
+  );
+  const [newIngredient, setNewIngredient] = useState("");
+
+  const [prepHours, setPrepHours] = useState("");
+  const [cookHours, setCookHours] = useState("");
+  const [prepMinutes, setPrepMinutes] = useState("");
+  const [cookMinutes, setCookMinutes] = useState("");
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [type, setType] = useState("");
+  const [variety, setVariety] = useState("");
+  const [dietTypes, setDietTypes] = useState("");
+  const [instructions, setInstructions] = useState("");
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
+  const prepTime = `${prepHours} ${prepMinutes}`;
+  const cookTime = `${cookHours} ${cookMinutes}`;
+  const [servingCount, setServingCount] = useState("");
 
   useEffect(() => {
     // Fetch data from the ingredients collection
@@ -56,13 +84,85 @@ const AddRecipe = () => {
     fetchIngredients();
   }, []);
 
+  //functions
+
+  const handleAddIngredient = () => {
+    const selectedIngredient = frameworks.find(
+      (framework) => framework.value === value
+    );
+    if (selectedIngredient) {
+      if (
+        selectedIngredients.some(
+          (ing) => ing.ingredient === selectedIngredient.value
+        )
+      ) {
+        toast.error("Ingredient already added!");
+      } else {
+        setSelectedIngredients((prev) => [
+          ...prev,
+          {
+            ingredient: selectedIngredient.value,
+            label: selectedIngredient.label,
+          },
+        ]);
+        setValue(""); // Clear the selection
+      }
+    }
+  };
+
+  const handleClearIngredient = () => {
+    setValue(""); // Clear the selected value
+  };
+
+  const handleRemoveIngredient = (ingredientToRemove: string) => {
+    setSelectedIngredients((prev) =>
+      prev.filter((ingredient) => ingredient.ingredient !== ingredientToRemove)
+    );
+  };
+
+  const handleAddAdditionalIngredient = () => {
+    if (newIngredient.trim()) {
+      setAdditionalIngredients((prev) => [...prev, newIngredient.trim()]);
+      setNewIngredient(""); // Clear the input field after adding
+    } else {
+      toast.error("Please enter an ingredient!");
+    }
+  };
+
+  const handleRemoveAdditionalIngredient = (ingredientToRemove: string) => {
+    setAdditionalIngredients((prev) =>
+      prev.filter((ingredient) => ingredient !== ingredientToRemove)
+    );
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent form submission
+      handleAddAdditionalIngredient(); // Handle adding ingredient
+    }
+  };
+
+  const handleCheckboxChange = (allergy: string) => {
+    setSelectedAllergies(
+      (prev) =>
+        prev.includes(allergy)
+          ? prev.filter((item) => item !== allergy) // Remove allergy if it's already in the array
+          : [...prev, allergy] // Add allergy to the array
+    );
+  };
+
+  const handleLogAllergies = () => {
+    console.log(selectedAllergies);
+  };
+
   return (
     <div
       className="bg-zinc-200 min-h-screen py-10"
       style={{
         backgroundImage: `url("/add-recipe-back.jpg")`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundSize: "30%",
+        backgroundColor: "rgba(0, 0, 0, 0.5)", // Adding a semi-transparent overlay color
+        backgroundBlendMode: "overlay",
       }}
     >
       <div className="font-poppins px-32 py-16 mx-36 text-sm rounded-xl bg-zinc-100 shadow-xl">
@@ -75,22 +175,53 @@ const AddRecipe = () => {
         </div>
         <Separator className="bg-black"></Separator>
         <form>
-          {" "}
           <div className="pt-16 pb-3">
             <div className="py-3 flex gap-5">
-              <p>ADD A IMAGE</p>{" "}
+              <p>ADD A IMAGE</p>
               <p className="text-stone-400">[ IMAGE SHOULD BE 1920x1080 ]</p>
             </div>
-
             <Input type="file"></Input>
           </div>
           <div className="py-3">
+            <p className="py-3">Type</p>
+            <Select
+              required
+              value={type}
+              onValueChange={(value) => setType(value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Appetizers & Snacks">
+                  Appetizers & Snacks
+                </SelectItem>
+                <SelectItem value="Main Courses">Main Courses</SelectItem>
+                <SelectItem value="Desserts">Desserts</SelectItem>
+                <SelectItem value="Beverages">Beverages</SelectItem>
+                <SelectItem value="Breakfast">Breakfast</SelectItem>
+                <SelectItem value="Salads">Salads</SelectItem>
+                <SelectItem value="Soups & Stews">Soups & Stews</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="py-3">
             <p className="py-3">Title</p>
-            <Input className="h-12" />
+            <Input
+              className="h-12"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
           </div>
           <div className="py-3">
             <p className="py-3">Description</p>
-            <Input className="h-12" />
+            <Input
+              className="h-12"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
           </div>
           <div className="flex justify-center gap-5 py-10">
             <div className="flex flex-col items-center bg-white px-7 py-10 rounded-2xl shadow-lg">
@@ -99,81 +230,88 @@ const AddRecipe = () => {
               <div className="flex gap-10">
                 <div className="flex flex-col items-center">
                   <p className="py-4 text-stone-500">HOUR</p>
-                  <Select required>
+                  <Select
+                    value={prepHours}
+                    onValueChange={(value) => setPrepHours(value)}
+                  >
                     <SelectTrigger className="w-[180px] shadow-md">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1">1</SelectItem>
-                      <SelectItem value="2">2</SelectItem>
-                      <SelectItem value="3">3</SelectItem>
-                      <SelectItem value="4">4</SelectItem>
-                      <SelectItem value="5">5</SelectItem>
-                      <SelectItem value="6">6</SelectItem>
-                      <SelectItem value="6+">More than six</SelectItem>
+                      <SelectItem value="1 HOUR">1</SelectItem>
+                      <SelectItem value="2 HOUR">2</SelectItem>
+                      <SelectItem value="3 HOUR">3</SelectItem>
+                      <SelectItem value="4 HOUR">4</SelectItem>
+                      <SelectItem value="5 HOUR">5</SelectItem>
+                      <SelectItem value="6 HOUR">6</SelectItem>
+                      <SelectItem value="6+ HOUR">More than six</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-
                 <div className="flex flex-col items-center">
                   <p className="py-4 text-stone-500">MIN</p>
-                  <Select>
+                  <Select
+                    value={prepMinutes}
+                    onValueChange={(value) => setPrepMinutes(value)}
+                  >
                     <SelectTrigger className="w-[180px] shadow-md">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="5">5</SelectItem>
-                      <SelectItem value="10">10</SelectItem>
-                      <SelectItem value="15">15</SelectItem>
-                      <SelectItem value="20">20</SelectItem>
-                      <SelectItem value="30">30</SelectItem>
-                      <SelectItem value="45">45</SelectItem>
+                      <SelectItem value="5 MIN">5</SelectItem>
+                      <SelectItem value="10 MIN">10</SelectItem>
+                      <SelectItem value="15 MIN">15</SelectItem>
+                      <SelectItem value="20 MIN">20</SelectItem>
+                      <SelectItem value="30 MIN">30</SelectItem>
+                      <SelectItem value="45 MIN">45</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
             </div>
-
             <div>
               <Separator orientation="vertical"></Separator>
             </div>
-
             <div className="flex flex-col items-center bg-white px-7 py-10 rounded-2xl shadow-lg">
               <p className="pb-5">COOKING TIME</p>
               <Separator className="mb-3"></Separator>
               <div className="flex gap-10">
                 <div className="flex flex-col items-center">
                   <p className="py-4 text-stone-500">HOUR</p>
-                  <Select required>
+                  <Select
+                    value={cookHours}
+                    onValueChange={(value) => setCookHours(value)}
+                  >
                     <SelectTrigger className="w-[180px] shadow-md">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1">1</SelectItem>
-                      <SelectItem value="2">2</SelectItem>
-                      <SelectItem value="3">3</SelectItem>
-                      <SelectItem value="4">4</SelectItem>
-                      <SelectItem value="5">5</SelectItem>
-                      <SelectItem value="6">6</SelectItem>
-                      <SelectItem value="6+">More than six</SelectItem>
+                      <SelectItem value="1 HOUR">1</SelectItem>
+                      <SelectItem value="2 HOUR">2</SelectItem>
+                      <SelectItem value="3 HOUR">3</SelectItem>
+                      <SelectItem value="4 HOUR">4</SelectItem>
+                      <SelectItem value="5 HOUR">5</SelectItem>
+                      <SelectItem value="6 HOUR">6</SelectItem>
+                      <SelectItem value="6+ HOUR">More than six</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-
                 <div className="flex flex-col items-center">
                   <p className="py-4 text-stone-500">MIN</p>
-
-                  <Select>
+                  <Select
+                    value={cookMinutes}
+                    onValueChange={(value) => setCookMinutes(value)}
+                  >
                     <SelectTrigger className="w-[180px] shadow-md">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="5">5</SelectItem>
-                      <SelectItem value="10">10</SelectItem>
-                      <SelectItem value="15">15</SelectItem>
-                      <SelectItem value="20">20</SelectItem>
-                      <SelectItem value="30">30</SelectItem>
-                      <SelectItem value="45">45</SelectItem>
+                      <SelectItem value="5 MIN">5</SelectItem>
+                      <SelectItem value="10 MIN">10</SelectItem>
+                      <SelectItem value="15 MIN">15</SelectItem>
+                      <SelectItem value="20 MIN">20</SelectItem>
+                      <SelectItem value="30 MIN">30</SelectItem>
+                      <SelectItem value="45 MIN">45</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -182,7 +320,11 @@ const AddRecipe = () => {
           </div>
           <div className="py-3">
             <p className="py-3">Servings</p>
-            <Select required>
+            <Select
+              required
+              value={servingCount}
+              onValueChange={(value) => setServingCount(value)}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
@@ -193,19 +335,16 @@ const AddRecipe = () => {
                 <SelectItem value="4">4</SelectItem>
                 <SelectItem value="5">5</SelectItem>
                 <SelectItem value="6">6</SelectItem>
-                <SelectItem value="6+">More than six</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="py-3">
-            <p className="py-3">Add your ingredients</p>
-            <div className="flex gap-5 items-center align-middle">
+            <p className="py-3">Ingredients</p>
+            <div className="flex gap-5">
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
                     className="w-[600px] h-12 justify-between"
                   >
                     {value
@@ -226,7 +365,7 @@ const AddRecipe = () => {
                           .filter((framework) =>
                             framework.label
                               .toLowerCase()
-                              .startsWith(value.toLowerCase())
+                              .includes(value.toLowerCase())
                           )
                           .map((framework) => (
                             <CommandItem
@@ -252,23 +391,111 @@ const AddRecipe = () => {
                   </Command>
                 </PopoverContent>
               </Popover>
-              <Button className="bg-green-700"> ADD </Button>
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleAddIngredient();
+                }}
+                className="bg-green-700"
+              >
+                ADD
+              </Button>
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleClearIngredient();
+                }}
+                className="bg-green-700"
+              >
+                CLEAR
+              </Button>
             </div>
+          </div>
+          <div className="py-3">
+            <p className="py-3">Selected Ingredients</p>
+            <ul>
+              {selectedIngredients.length > 0 ? (
+                selectedIngredients.map((item, index) => (
+                  <li
+                    key={index}
+                    className="py-3 my-5 px-6 w-1/2 bg-stone-100 text-stone-800 rounded-full border-2 border-black flex justify-between items-center"
+                  >
+                    {item.label}
+                    <p
+                      className="font-inter hover:cursor-pointer"
+                      onClick={() => handleRemoveIngredient(item.ingredient)}
+                    >
+                      X
+                    </p>
+                  </li>
+                ))
+              ) : (
+                <li className="py-2">No ingredients selected.</li>
+              )}
+            </ul>
           </div>
           <div className="py-3">
             <p className="py-3">Not in stock? Add them here</p>
             <div className="flex flex-row items-center align-middle gap-5">
-              <Input className="w-[600px] h-12" />
-              <Button className="bg-green-700"> ADD </Button>
+              <Input
+                className="w-[600px] h-12"
+                value={newIngredient}
+                onChange={(e) => setNewIngredient(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <Button
+                className="bg-green-700"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleAddAdditionalIngredient();
+                }}
+                type="button"
+              >
+                ADD
+              </Button>
             </div>
           </div>
           <div className="py-3">
+            <p className="py-3">Additional Ingredients</p>
+            <ul>
+              {additionalIngredients.length > 0 ? (
+                additionalIngredients.map((item, index) => (
+                  <li
+                    key={index}
+                    className="py-3 my-5 px-6 w-1/2 bg-stone-100 text-stone-800 rounded-full border-2 border-black flex justify-between items-center"
+                  >
+                    {item}
+                    <p
+                      className="font-inter hover:cursor-pointer"
+                      onClick={() => handleRemoveAdditionalIngredient(item)}
+                    >
+                      X
+                    </p>
+                  </li>
+                ))
+              ) : (
+                <li className="py-2">No additional ingredients added.</li>
+              )}
+            </ul>
+          </div>
+          <div className="py-3">
             <p className="py-3">Instructions</p>
-            <Textarea className="h-72" />
+            <Textarea
+              className="h-72"
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              required
+            />
           </div>
           <div className="py-3">
             <p className="py-3">Variety</p>
-            <Select required>
+            <Select
+              required
+              value={variety}
+              onValueChange={(value) => setVariety(value)}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
@@ -285,7 +512,11 @@ const AddRecipe = () => {
           </div>
           <div className="py-3">
             <p className="py-3">Diet Type</p>
-            <Select required>
+            <Select
+              required
+              value={dietTypes}
+              onValueChange={(value) => setDietTypes(value)}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
@@ -295,31 +526,53 @@ const AddRecipe = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="py-9">
+          <div className=" flex flex-col py-9">
             <p className="py-3">Special notes regarding allergies</p>
-            <div className="flex  gap-4 py-2">
-              <Checkbox />
+            <div className="flex items-center justify-start gap-4 py-2">
+              <Input
+                type="checkbox"
+                className="w-6"
+                checked={selectedAllergies.includes("Dairy-Free")}
+                onChange={() => handleCheckboxChange("Dairy-Free")}
+              />
               <p>Dairy-Free</p>
             </div>
-            <div className="flex gap-4 py-2">
-              <Checkbox />
+            <div className="flex items-center justify-start gap-4 py-2">
+              <Input
+                type="checkbox"
+                className="w-6"
+                checked={selectedAllergies.includes("Nut-Free")}
+                onChange={() => handleCheckboxChange("Nut-Free")}
+              />
               <p>Nut-Free</p>
             </div>
-            <div className="flex gap-4 py-2">
-              <Checkbox />
+            <div className="flex items-center justify-start gap-4 py-2">
+              <Input
+                type="checkbox"
+                className="w-6"
+                checked={selectedAllergies.includes("Soy-Free")}
+                onChange={() => handleCheckboxChange("Soy-Free")}
+              />
               <p>Soy-Free</p>
             </div>
-            <div className="flex gap-4 py-2">
-              <Checkbox />
+            <div className="flex items-center justify-start gap-4 py-2">
+              <Input
+                type="checkbox"
+                className="w-6"
+                checked={selectedAllergies.includes("Sugar-Free")}
+                onChange={() => handleCheckboxChange("Sugar-Free")}
+              />
               <p>Sugar-Free</p>
             </div>
           </div>
+
           <div className="flex justify-center">
-            {" "}
             <Button className="flex w-1/3 h-12">ADD YOUR RECIPE</Button>
           </div>
         </form>
       </div>
+      <ToastContainer />
+      <Button onClick={handleLogAllergies}>Log Allergies</Button>
     </div>
   );
 };
