@@ -12,6 +12,7 @@ import AllRecipes from "./Pages/AllRecipes";
 import CustomerUserProfile from "./Pages/CustomerUserProfile";
 import TicketDashboard from "./Pages/TicketDashboard";
 import AddRecipe from "./Pages/AddRecipe";
+import { SignupSupplier } from "./Pages/SignupSupplier";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/signupDriver" element={<SignupDriver />} />
+                <Route path="/signupSupplier" element={<SignupSupplier />} />
                 <Route path="/allrecipes" element={<AllRecipes />} />
                 <Route
                   path="/customerUserProfile"
