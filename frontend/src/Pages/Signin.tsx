@@ -99,22 +99,32 @@ export function Signin() {
   }, []);
 
   return (
-    <div className=" py-8 font-poppins">
-      <Card className="mx-16 shadow-2xl p-10 ">
-        <form onSubmit={handleSubmit} className="border-2 border-black">
+    <div className="py-8 font-poppins">
+      <div
+        className="absolute inset-0 bg-white opacity-5 z-0"
+        style={{
+          backgroundImage: `url("/signinbackground.png")`,
+          backgroundSize: "contain",
+          backgroundPosition: "center",
+        }}
+      ></div>
+      <Card className="mx-16 shadow-2xl p-10 relative">
+        <form
+          onSubmit={handleSubmit}
+          className="relative z-10 border-2 border-black"
+        >
           <div className="flex gap-24 flex-row align-middle justify-center items-center">
             <div className="flex flex-col w-[600px] p-10">
-              {" "}
-              <CardHeader className="space-y-1">
+              <CardHeader className="flex justify-center items-center">
                 <CardTitle className="text-sm text-slate-500 pb-6 font-extralight">
                   FlavorFetch
                 </CardTitle>
 
                 <CardDescription className="text-4xl text-black">
-                  WELCOME BACK,
+                  HELLO,
                 </CardDescription>
                 <CardDescription className="text-4xl text-red-600">
-                  CHEF!
+                  WELCOME BACK!
                 </CardDescription>
               </CardHeader>
               <CardContent className="grid gap-6 py-1">
@@ -148,22 +158,13 @@ export function Signin() {
                 </Button>
               </CardFooter>
               <div className="flex justify-end relative right-5">
-                {" "}
                 <p className="text-[13px]">
-                  NO ACOUNT?{" "}
+                  NO ACCOUNT?{" "}
                   <Link to={"/signup"} className="px-[6px] text-red-500">
                     REGISTER
                   </Link>
                 </p>
               </div>
-            </div>
-            <div className="flex justify-end items-end flex-row">
-              {" "}
-              <img
-                src="../public/edit 2.png"
-                alt="chef"
-                className="w-[480px] h-[430px] rounded-[60px]"
-              />
             </div>
           </div>
         </form>
