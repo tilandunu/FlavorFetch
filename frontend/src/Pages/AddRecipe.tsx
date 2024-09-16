@@ -314,6 +314,7 @@ const AddRecipe = () => {
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="0 HOUR">0</SelectItem>
                       <SelectItem value="1 HOUR">1</SelectItem>
                       <SelectItem value="2 HOUR">2</SelectItem>
                       <SelectItem value="3 HOUR">3</SelectItem>
@@ -334,6 +335,7 @@ const AddRecipe = () => {
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="0 MIN">0</SelectItem>
                       <SelectItem value="5 MIN">5</SelectItem>
                       <SelectItem value="10 MIN">10</SelectItem>
                       <SelectItem value="15 MIN">15</SelectItem>
@@ -362,6 +364,7 @@ const AddRecipe = () => {
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="0 HOUR">0</SelectItem>
                       <SelectItem value="1 HOUR">1</SelectItem>
                       <SelectItem value="2 HOUR">2</SelectItem>
                       <SelectItem value="3 HOUR">3</SelectItem>
@@ -382,6 +385,7 @@ const AddRecipe = () => {
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="0 MIN">0</SelectItem>
                       <SelectItem value="5 MIN">5</SelectItem>
                       <SelectItem value="10 MIN">10</SelectItem>
                       <SelectItem value="15 MIN">15</SelectItem>
