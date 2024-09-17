@@ -32,6 +32,7 @@ import { imagedb } from "@/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 //hooks
 const AddRecipe = () => {
@@ -74,7 +75,7 @@ const AddRecipe = () => {
       try {
         const response = await axios.get(
           "http://localhost:3001/api/recipes/ingredients"
-        ); // Update with your actual API endpoint
+        );
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const ingredients = response.data.map((ingredient) => ({
@@ -212,6 +213,12 @@ const AddRecipe = () => {
     }
   };
 
+  const navigate = useNavigate();
+
+  const navigateChefDashboard = () => {
+    navigate("/chefDashboard");
+  };
+
   return (
     <div
       className="bg-zinc-200 min-h-screen py-10"
@@ -226,7 +233,12 @@ const AddRecipe = () => {
         <div className="flex justify-between items-center pt-5 pb-14">
           <p className="text-4xl font-normal tracking-wide">ADD RECIPE</p>
           <div className="flex items-center gap-5">
-            <span className="material-symbols-outlined">home</span>
+            <span
+              className="material-symbols-outlined hover:cursor-pointer"
+              onClick={navigateChefDashboard}
+            >
+              home
+            </span>
             <p>LOGOUT</p>
           </div>
         </div>
