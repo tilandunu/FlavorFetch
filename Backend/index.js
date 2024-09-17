@@ -1,8 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
+const PreferenceModel = require('./models/Preference');
 const userRouter = require("./routes/users");
+const product = require("./routes/product.route");
+const { default: Product } = require("./models/product.model");
 
 const app = express();
 app.use(express.json());
@@ -13,6 +15,7 @@ mongoose.connect(
 );
 
 app.use("/api/users", userRouter);
+app.use("/api/product", product);
 
 app.listen(3001, () => {
   console.log("Server is running");
