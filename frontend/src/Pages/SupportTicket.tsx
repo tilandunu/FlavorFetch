@@ -19,7 +19,7 @@ import axios from "axios";
 export function SupportTicket() {
   const [issue, setIssue] = useState("");
   const [issueType, setIssueType] = useState("");
-  const [responseMessage, setResponseMessage] = useState("");
+  const responseMessage = "null";
   const [visibilityForm, setVisibilityForm] = useState("hidden");
   const [visibilityType, setVisibilityType] = useState("visible");
 
@@ -36,7 +36,7 @@ export function SupportTicket() {
       if (user) {
         // Sending the ticket data to the backend
         await axios.post("http://localhost:3001/api/tickets", {
-          userID: customerUID, // Fixed key name
+          customerUID, // Fixed key name
           issueType, // Included issueType
           issue,
           responseMessage,
@@ -139,20 +139,6 @@ export function SupportTicket() {
                       value={issue} // Bind value to state
                       onChange={(e) => setIssue(e.target.value)}
                       className="placeholder:text-[10px] border-[0.5px] border-black"
-                      required
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="message" className="text-[12px] pl-1">
-                      Message :
-                    </Label>
-                    <Input
-                      id="message"
-                      type="text"
-                      value={responseMessage} // Bind value to state
-                      onChange={(e) => setResponseMessage(e.target.value)}
-                      className="border-[0.5px] border-black"
                       required
                     />
                   </div>
