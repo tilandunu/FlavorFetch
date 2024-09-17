@@ -14,6 +14,10 @@ const ChefDashboard = () => {
     navigate("/addRecipe");
   };
 
+  const navigateChefViewRecipe = () => {
+    navigate("/chefViewRecipe");
+  };
+
   const [firstName, setFirstName] = useState("");
 
   const tips = [
@@ -94,7 +98,10 @@ const ChefDashboard = () => {
                 </span>
                 <p>ADD RECIPE</p>
               </div>
-              <div className="flex gap-12 py-5 px-7 w-[600px] bg-white rounded-2xl shadow-md  hover:bg-stone-700 hover:text-white duration-500 cursor-pointer">
+              <div
+                className="flex gap-12 py-5 px-7 w-[600px] bg-white rounded-2xl shadow-md  hover:bg-stone-700 hover:text-white duration-500 cursor-pointer"
+                onClick={navigateChefViewRecipe}
+              >
                 <span className="material-symbols-outlined cursor-pointer">
                   edit
                 </span>

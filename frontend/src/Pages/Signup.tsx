@@ -21,7 +21,7 @@ export function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("chef");
   const [phoneNumber, setphoneNumber] = useState("");
   const [visibilityForm, setVisibilityForm] = useState("hidden");
   const [visibilityType, setVisibilityType] = useState("visible");
