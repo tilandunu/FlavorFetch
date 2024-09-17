@@ -1,36 +1,40 @@
 const express = require("express");
 const router = express.Router();
-const TicketModel = require("../models/Ticket");
 const CustomerModel = require("../models/Customer");
+const TicketModel = require("../models/Ticket");
 
-// POST route to create a new ticket
+// Handle POST requests to create a new ticket
 router.post("/", async (req, res) => {
-  const { userId, issueType, issue, responseMessage } = req.body;
+  const { userID, issueType, issue, responseMessage } = req.body;
+
+  // Check if all required fields are present
+  if ( !issueType || !issue||!responseMessage) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
 
   try {
-    // Find the user based on the provided userId
-    const user = await CustomerModel.findById({customerUID:userId});
+    // Find the customer by userID
+    const customer = await CustomerModel.findOne({ customerUID: userID });
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found" });
     }
 
-    // Create a new ticket
+    // Create and save a new ticket with the customer's ID
     const newTicket = new TicketModel({
-      user: user._id,
+      customerUID : userID, // Save the customer reference
       issueType,
       issue,
       responseMessage,
-      status: "Open", // Default status is "Open"
+      status: "Open",
       createdAt: new Date(),
     });
 
-    // Save the ticket to the database
     const savedTicket = await newTicket.save();
-
-    res.status(201).json(savedTicket);
+    res.status(201).json(savedTicket); // Return the saved ticket
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

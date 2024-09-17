@@ -17,26 +17,18 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 export function SupportTicket() {
-  const [email, setEmail] = useState("");
   const [issue, setIssue] = useState("");
   const [issueType, setIssueType] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
-  const [status] = useState("Open");
   const [visibilityForm, setVisibilityForm] = useState("hidden");
   const [visibilityType, setVisibilityType] = useState("visible");
 
-  const uid = Cookies.get("customerID");
+  const customerUID = Cookies.get("userId"); // Updated to match the cookie name
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     // Validation to ensure all fields are filled out
-    if (!email || !issueType || !issue) {
-      toast.error("Please fill out all required fields.", {
-        position: "top-center",
-      });
-      return;
-    }
 
     try {
       const user = auth.currentUser;
@@ -44,17 +36,20 @@ export function SupportTicket() {
       if (user) {
         // Sending the ticket data to the backend
         await axios.post("http://localhost:3001/api/tickets", {
-          user: uid,
-          issue: issue,
-          status: status,
-          responseMessage: responseMessage,
+          userID: customerUID, // Fixed key name
+          issueType, // Included issueType
+          issue,
+          responseMessage,
+          status: "Open", // Directly included the status
         });
       }
 
       toast.success("Ticket submitted successfully", {
         position: "top-center",
       });
-      window.location.href = "";
+
+      setVisibilityForm("hidden");
+      setVisibilityType("visible");
     } catch (error) {
       toast.error("Failed to submit ticket. Please try again.", {
         position: "bottom-center",
@@ -115,28 +110,17 @@ export function SupportTicket() {
               <div className={visibilityForm}>
                 <CardContent className="grid gap-6 py-1">
                   <div className="grid gap-2">
-                    <Label htmlFor="email" className="text-[12px] pl-1">
-                      Email :
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="m@example.com"
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="placeholder:text-[10px] border-[0.5px] border-black"
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
                     <Label htmlFor="issueType" className="text-[12px] pl-1">
                       Issue Type :
                     </Label>
                     <select
                       id="issueType"
+                      value={issueType} // Bind value to state
                       onChange={(e) => setIssueType(e.target.value)}
                       className="border-[0.5px] border-black p-2 text-[12px]"
+                      required
                     >
-                      <option value="" disabled selected>
+                      <option value="" disabled>
                         Select issue type
                       </option>
                       <option value="technical">Technical Issue</option>
@@ -152,8 +136,10 @@ export function SupportTicket() {
                     <Input
                       id="issue"
                       type="text"
+                      value={issue} // Bind value to state
                       onChange={(e) => setIssue(e.target.value)}
                       className="placeholder:text-[10px] border-[0.5px] border-black"
+                      required
                     />
                   </div>
 
@@ -164,14 +150,19 @@ export function SupportTicket() {
                     <Input
                       id="message"
                       type="text"
+                      value={responseMessage} // Bind value to state
                       onChange={(e) => setResponseMessage(e.target.value)}
                       className="border-[0.5px] border-black"
+                      required
                     />
                   </div>
                 </CardContent>
 
                 <CardFooter className="flex flex-col gap-6 py-6">
-                  <Button className="w-full bg-black hover:bg-green-700">
+                  <Button
+                    type="submit"
+                    className="w-full bg-black hover:bg-green-700"
+                  >
                     Submit Ticket
                   </Button>
                   <p

@@ -26,7 +26,7 @@ export function SupportTicketDashboard() {
       </CardDescription>
     </div>
     <img 
-      src="../public/chef.png"
+      src="../chef.png"
       alt="Support"
       className="w-32 h-32 ml-6"
     />
@@ -36,15 +36,15 @@ export function SupportTicketDashboard() {
       {/* Buttons */}
       <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 flex space-x-12">
         <Link to="/Feedback">
-          <button className="bg-white text-brown-800 font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-lg  hover:bg-green-700 text-black duration-300">
+          <button className="bg-white text-brown-800 font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-lg  hover:bg-red-700 text-black duration-300 hover:text-white">
             FEEDBACK
-            <p className="text-xs text-white-500 mt-1  hover:bg-green-700 text-black duration-300">View feedback our customers provided</p>
+            <p className="text-xs text-white-500 mt-1  hover:bg-red-700 text-black duration-300 hover:text-white">View feedback our customers provided</p>
           </button>
         </Link>
         <Link to="/SupportTicket">
-          <button  className="bg-white text-brown-800 font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-lg hover:bg-green-700 text-black duration-300">
+          <button  className="bg-white text-brown-800 font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-lg hover:bg-red-700 text-black duration-300 hover:text-white">
             CUSTOMER SUPPORT
-            <p className="text-xs text-white-500 mt-1  hover:bg-green-700 text-black duration-300 ">Get in touch for help </p>
+            <p className="text-xs text-white-500 mt-1  hover:bg-red-700 text-black duration-300 hover:text-white">Get in touch for help </p>
           </button>
         </Link>
       </div>
