@@ -85,4 +85,108 @@ router.post("/createRecipe", async (req, res) => {
   }
 });
 
+router.get("/chefRecipes", async (req, res) => {
+  const chefUID = req.query.chefUID;
+
+  if (!chefUID) {
+    return res.status(400).json({ error: "Chef UID is required" });
+  }
+
+  try {
+    const recipes = await RecipeModel.find({ chefUID });
+    if (!recipes || recipes.length === 0) {
+      return res.status(404).json({ error: "No recipes found" });
+    }
+
+    res.status(200).json(recipes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/getRecipe/:id", async (req, res) => {
+  try {
+    const recipe = await RecipeModel.findById(req.params.id);
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+    res.json(recipe);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching recipe" });
+  }
+});
+
+// PUT route to update a recipe by ID
+router.put("/updateRecipe/:id", async (req, res) => {
+  const { id } = req.params;
+  const {
+    chefUID,
+    title,
+    description,
+    type,
+    variety,
+    dietTypes,
+    selectedAllergies,
+    prepTime,
+    cookTime,
+    servingCount,
+    selectedIngredients,
+    additionalIngredients,
+    instructions,
+    recipeImageUrl,
+  } = req.body;
+
+  try {
+    // Convert ingredient IDs to ObjectId if they are passed
+    const ingredientObjectIds = selectedIngredients.map(
+      (ingredient) => new mongoose.Types.ObjectId(ingredient._id)
+    );
+
+    const updatedRecipe = await RecipeModel.findByIdAndUpdate(
+      id,
+      {
+        chefUID,
+        title,
+        description,
+        type,
+        variety,
+        dietTypes,
+        selectedAllergies,
+        prepTime,
+        cookTime,
+        servingCount,
+        selectedIngredients: ingredientObjectIds,
+        additionalIngredients,
+        instructions,
+        recipeImageUrl,
+      },
+      {
+        new: true, // Return the updated document
+        runValidators: true, // Validate the updated document
+      }
+    );
+
+    if (!updatedRecipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    res.status(200).json(updatedRecipe);
+  } catch (error) {
+    console.error("Error updating recipe:", error);
+    res.status(500).json({ error: "Error updating recipe" });
+  }
+});
+
+router.get("/allRecipes", async (req, res) => {
+  try {
+    const recipes = await RecipeModel.find(); // No filter, fetches all recipes
+    if (!recipes || recipes.length === 0) {
+      return res.status(404).json({ error: "No recipes found" });
+    }
+    res.status(200).json(recipes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

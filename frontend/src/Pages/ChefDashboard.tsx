@@ -60,7 +60,10 @@ const ChefDashboard = () => {
     <div className="flex font-poppins bg-zinc-100 ">
       <div className="flex flex-col py-10 px-16 items-center gap-11">
         <img className="w-28 mt-10" src="/trans-black.svg" alt="" />
-        <p className="mt-2 cursor-pointer hover:text-green-600 duration-700">
+        <p
+          className="mt-2 cursor-pointer hover:text-green-600 duration-700"
+          onClick={navigateChefViewRecipe}
+        >
           VIEW RECIPES
         </p>
         <p className="cursor-pointer hover:text-green-600 duration-700">
@@ -107,7 +110,10 @@ const ChefDashboard = () => {
                 </span>
                 <p>EDIT RECIPE</p>
               </div>
-              <div className="flex gap-12 py-5 px-7 w-[600px] bg-white rounded-2xl shadow-md  hover:bg-red-950 hover:text-white duration-500 cursor-pointer">
+              <div
+                className="flex gap-12 py-5 px-7 w-[600px] bg-white rounded-2xl shadow-md  hover:bg-red-950 hover:text-white duration-500 cursor-pointer"
+                onClick={navigateChefViewRecipe}
+              >
                 <span className="material-symbols-outlined text-red-600 cursor-pointer">
                   delete
                 </span>

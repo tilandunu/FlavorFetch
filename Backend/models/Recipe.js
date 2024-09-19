@@ -26,7 +26,7 @@ const RecipeSchema = new mongoose.Schema({
     { type: mongoose.Schema.Types.ObjectId, ref: "Ingredient", required: true },
   ],
   additionalIngredients: [{ type: String }],
-  instructions: { type: String },
+  instructions: [{ type: String }],
   createdAt: { type: Date, default: Date.now },
   recipeImageUrl: { type: String },
 });
