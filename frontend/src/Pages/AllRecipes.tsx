@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 
 const AllRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [chefs, setChefs] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipesAndChefs = async () => {
@@ -41,6 +43,10 @@ const AllRecipes = () => {
     };
     fetchRecipesAndChefs();
   }, []);
+
+  const handleGoToRecipe = (recipeId) => {
+    navigate(`/recipePage/${recipeId}`);
+  };
 
   return (
     <div className="font-poppins">
@@ -122,7 +128,10 @@ const AllRecipes = () => {
                     star
                   </span>
                 </div>
-                <div className="flex justify-end px-3 items-center align-middle mb-5">
+                <div
+                  className="flex justify-end px-3 items-center align-middle mb-5"
+                  onClick={() => handleGoToRecipe(recipe._id)}
+                >
                   <p className="text-[10px] bg-stone-700 w-20 text-center py-1 rounded-3xl text-stone-300">
                     GO TO &gt;
                   </p>

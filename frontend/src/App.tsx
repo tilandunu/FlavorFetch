@@ -45,7 +45,7 @@ function App() {
                 <Route path="/ticketDashboard" element={<TicketDashboard />} />
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
-                <Route path="/recipePage" element={<RecipePage />} />
+                <Route path="/recipePage/:recipeId" element={<RecipePage />} />
               </Routes>
               <ToastContainer />
             </div>

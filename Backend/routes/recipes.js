@@ -47,15 +47,16 @@ router.post("/createRecipe", async (req, res) => {
     prepTime,
     cookTime,
     servingCount,
-    selectedIngredients,
+    selectedIngredients, // This will be an array of ObjectId strings from the frontend
     additionalIngredients,
     instructions,
     recipeImageUrl,
   } = req.body;
 
   try {
+    // Map the strings to ObjectId
     const ingredientObjectIds = selectedIngredients.map(
-      (ingredient) => new mongoose.Types.ObjectId(ingredient._id)
+      (ingredient) => new mongoose.Types.ObjectId(ingredient)
     );
 
     const newRecipe = new RecipeModel({
@@ -69,7 +70,7 @@ router.post("/createRecipe", async (req, res) => {
       prepTime,
       cookTime,
       servingCount,
-      selectedIngredients: ingredientObjectIds,
+      selectedIngredients: ingredientObjectIds, // Store ObjectIds in the schema
       additionalIngredients,
       instructions,
       recipeImageUrl,
@@ -186,6 +187,35 @@ router.get("/allRecipes", async (req, res) => {
     res.status(200).json(recipes);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/getRecipeParam/:id", async (req, res) => {
+  try {
+    const recipeId = req.params.id;
+    const recipe = await RecipeModel.findById(recipeId).lean();
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    res.status(200).json(recipe);
+  } catch (error) {
+    console.error("Error fetching recipe:", error);
+    res.status(500).json({ error: "Error fetching recipe" });
+  }
+});
+
+router.get("/getSelectedIngredients/:id", async (req, res) => {
+  try {
+    const ingredient = await IngredientModel.findById(req.params.id);
+    if (!ingredient) {
+      return res.status(404).json({ error: "Ingredient not found" });
+    }
+    res.status(200).json(ingredient);
+  } catch (error) {
+    console.error("Error fetching ingredient:", error);
+    res.status(500).json({ error: "Error fetching ingredient" });
   }
 });
 

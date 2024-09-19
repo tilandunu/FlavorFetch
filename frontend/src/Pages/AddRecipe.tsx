@@ -83,6 +83,8 @@ const AddRecipe = () => {
           value: ingredient._id, // Assuming '_id' is the ObjectId
           label: ingredient.name,
         }));
+        console.log("Fetched ingredients:", ingredients);
+
         setFrameworks(ingredients);
       } catch (error) {
         console.error("Error fetching ingredients:", error);
@@ -95,6 +97,7 @@ const AddRecipe = () => {
   //functions
 
   const handleAddIngredient = () => {
+    console.log("Current value:", value);
     const selectedIngredient = frameworks.find(
       // @ts-ignore
       (framework) => framework.value === value
@@ -118,6 +121,7 @@ const AddRecipe = () => {
           },
         ]);
         setValue(""); // Clear the selection
+        setOpen(false);
       }
     }
   };
@@ -194,6 +198,10 @@ const AddRecipe = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Ingredients to submit:", selectedIngredients);
+    const ingredientsToSubmit = selectedIngredients.map(
+      (ing) => ing.ingredient
+    );
 
     const prepTime = `${prepHours} ${prepMinutes}`;
     const cookTime = `${cookHours} ${cookMinutes}`;
@@ -212,7 +220,7 @@ const AddRecipe = () => {
           prepTime,
           cookTime,
           servingCount,
-          selectedIngredients,
+          selectedIngredients: ingredientsToSubmit,
           additionalIngredients,
           instructions,
           recipeImageUrl,
