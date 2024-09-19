@@ -5,6 +5,7 @@ const CustomerModel = require("../models/Customer");
 const DriverModel = require("../models/Driver");
 const SupplierModel = require("../models/Supplier");
 
+
 // POST route to create a new user
 router.post("/", async (req, res) => {
   const {
