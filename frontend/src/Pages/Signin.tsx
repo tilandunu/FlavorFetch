@@ -52,7 +52,7 @@ export function Signin() {
         if (userData.userType === "chef") {
           navigate("/chefDashboard");
         } else if (userData.userType === "customer") {
-          navigate("/home");
+          navigate("/SupportTicketDashboard");
         } else if (userData.userType === "driver") {
           navigate("/driverDashboard");
         } else if (userData.userType === "supplier") {

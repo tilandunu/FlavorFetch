@@ -9,47 +9,48 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { auth } from "@/firebase";
+import Cookies from "js-cookie";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { setDoc, doc } from "firebase/firestore";
-import {  db } from "@/firebase";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 export function Feedback() {
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+
   const [visibilityForm, setVisibilityForm] = useState("hidden");
   const [visibilityType, setVisibilityType] = useState("visible");
+
+  const customerUID = Cookies.get("userId"); // Updated to match the cookie name
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
+    // Validation to ensure all fields are filled out
+
     try {
-      // Generate or specify a document ID
-      const documentId = `${email}-${Date.now()}`; // You can customize the ID format
+      const user = auth.currentUser;
 
-      // Reference to the document
-      const docRef = doc(db, "Tickets", documentId);
+      if (user) {
+        // Sending the ticket data to the backend
+        await axios.post(`http://localhost:3001/api/feedback`, {
+          customerUID,
+          message, // Fixed key name
+          // Directly included the status
+        });
+      }
 
-      // Use setDoc to create the document
-      await setDoc(docRef, {
-        email,
-        message,
-        createdAt: new Date(),
-      });
-
-      console.log("Feedback submitted successfully!");
-      toast.success("Feedback Submitted Successfully", {
+      toast.success("Feedback submitted successfully", {
         position: "top-center",
       });
-      //window.location.href = "/support";
+
+      setVisibilityForm("hidden");
+      setVisibilityType("visible");
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      console.log(error.message);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      toast.error(error.message, { position: "bottom-center" });
+      toast.error("Failed to submit Feedback. Please try again.", {
+        position: "bottom-center",
+      });
     }
   };
 
@@ -79,7 +80,6 @@ export function Feedback() {
                   <CardDescription className="text-4xl text-black">
                     WANT TO GIVE FEEDBACK?
                   </CardDescription>
-                  
                 </div>
               </CardHeader>
               <div className={visibilityType}>
@@ -90,54 +90,28 @@ export function Feedback() {
                     </h1>
                   </div>
                   <div className={visibilityType}>
-                  <div className="flex justify-center flex-col pb-5">
-                    <Link to="/ViewSupportFeedback">
-                    <Button className="hover:bg-green-700 text-white duration-300 w-full">
-                      View Feedback
-                    </Button>
-                    </Link>
+                    <div className="flex justify-center flex-col pb-5">
+                      <Link to="/ViewSupportFeedback">
+                        <Button className="hover:bg-green-700 text-white duration-300 w-full">
+                          View Feedback
+                        </Button>
+                      </Link>
                     </div>
-                
                   </div>
-              <div className={visibilityType}>
-                <div className="flex justify-center flex-col pb-5">
-                  <Button
-                    onClick={(e) => handleNext(e)}
-                    className="hover:bg-green-700 text-white duration-300 w-full"
-                  >
-                    Provide Feedback
-                  </Button>
+                  <div className={visibilityType}>
+                    <div className="flex justify-center flex-col pb-5">
+                      <Button
+                        onClick={(e) => handleNext(e)}
+                        className="hover:bg-green-700 text-white duration-300 w-full"
+                      >
+                        Provide Feedback
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              </div>
               </div>
               <div className={visibilityForm}>
                 <CardContent className="grid gap-6 py-1">
-                  <div className="grid gap-2">
-                    <Label htmlFor="Full name" className="text-[12px] pl-1">
-                      Full name :
-                    </Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="placeholder:text-[10px] border-[0.5px] border-black"
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="email" className="text-[12px] pl-1">
-                      Email :
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="m@example.com"
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="placeholder:text-[10px] border-[0.5px] border-black"
-                    />
-                  </div>
-
                   <div className="grid gap-2">
                     <Label htmlFor="message" className="text-[12px] pl-1">
                       Message :
@@ -166,16 +140,19 @@ export function Feedback() {
               </div>
               <div className="flex justify-end ">
                 <p className="text-[13px]">
-                  NEED TO LOGIN?{" "}
-                  <Link to={"/signin"} className="px-[6px] text-red-500">
-                    LOGIN
+                  NEED TO GO BACK?{" "}
+                  <Link
+                    to={"/SupportTicketDashboard"}
+                    className="px-[6px] text-red-500"
+                  >
+                    BACK
                   </Link>
                 </p>
               </div>
             </div>
             <div className="flex justify-end items-end flex-row">
               <img
-                src="../public/edit 2.png"
+                src="../public/feedback.jpg"
                 alt="support"
                 className="w-[480px] h-[430px] rounded-[60px]"
               />

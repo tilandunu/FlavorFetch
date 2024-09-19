@@ -22,16 +22,50 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET route to fetch all tickets (you might want to add authentication and authorization here)
 router.get("/", async (req, res) => {
   try {
-    const tickets = await Ticket.find();
+    const tickets = await Ticket.find(); // Fetches all tickets
     res.json(tickets);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// You can add more routes here for updating, deleting, or fetching specific tickets
+router.delete("/", async (req, res) => {
+  const { customerUID } = req.params;
 
+  try {
+    const ticket = await Ticket.findOneAndDelete({ customerUID });
+
+    if (!ticket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    return res.status(200).json({ message: "Ticket deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting ticket:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Update ticket by customerUID
+router.put("/", async (req, res) => {
+  const { customerUID, issueType, issue, responseMessage, status } = req.body;
+
+  try {
+    const updatedTicket = await Ticket.findOneAndUpdate(
+      { customerUID }, // Adjust the query to find the correct ticket
+      { issueType, issue, responseMessage, status },
+      { new: true } // Return the updated ticket
+    );
+
+    if (!updatedTicket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    res.status(200).json(updatedTicket);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating ticket", error });
+  }
+});
 module.exports = router;

@@ -35,7 +35,7 @@ export function SupportTicket() {
 
       if (user) {
         // Sending the ticket data to the backend
-        await axios.post("http://localhost:3001/api/tickets", {
+        await axios.post(`http://localhost:3001/api/tickets`, {
           customerUID, // Fixed key name
           issueType, // Included issueType
           issue,
@@ -161,16 +161,19 @@ export function SupportTicket() {
               </div>
               <div className="flex justify-end ">
                 <p className="text-[13px]">
-                  NEED TO LOGIN?{" "}
-                  <Link to={"/signin"} className="px-[6px] text-red-500">
-                    LOGIN
+                  NEED TO GO BACK?{" "}
+                  <Link
+                    to={"/SupportTicketDashboard"}
+                    className="px-[6px] text-red-500"
+                  >
+                    BACK
                   </Link>
                 </p>
               </div>
             </div>
             <div className="flex justify-end items-end flex-row">
               <img
-                src="/edit 2.png"
+                src="/support2.png"
                 alt="support"
                 className="w-[480px] h-[430px] rounded-[60px]"
               />
