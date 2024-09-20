@@ -14,6 +14,7 @@ import TicketDashboard from "./Pages/TicketDashboard";
 import AddRecipe from "./Pages/AddRecipe";
 import { SignupSupplier } from "./Pages/SignupSupplier";
 import ChefViewRecipes from "./Pages/ChefViewRecipes";
+import RecipePage from "./Pages/RecipePage";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                 <Route path="/ticketDashboard" element={<TicketDashboard />} />
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
+                <Route path="/recipePage/:recipeId" element={<RecipePage />} />
               </Routes>
               <ToastContainer />
             </div>

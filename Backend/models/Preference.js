@@ -6,7 +6,7 @@ const PreferenceSchema = new mongoose.Schema({
     ref: "Customer",
     required: true,
   },
-  dietTypes: { type: String, enum: ["Vegan", "Paleo"], default: null },
+  dietTypes: { type: String, enum: ["Vegan", "Paleo", "Mixed"], default: null },
   allergyInfo: {
     type: [String],
     enum: ["Dairy-Free", "Nut-Free", "Soy-Free", "Sugar-Free"],

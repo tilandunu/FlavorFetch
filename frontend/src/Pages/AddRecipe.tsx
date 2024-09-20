@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import {
@@ -8,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { Check, ChevronsUpDown } from "lucide-react"; // Added X for the remove button
 import { cn } from "@/components/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -65,7 +65,8 @@ const AddRecipe = () => {
   const [type, setType] = useState("");
   const [variety, setVariety] = useState("");
   const [dietTypes, setDietTypes] = useState("");
-  const [instructions, setInstructions] = useState("");
+  const [instructions, setInstructions] = useState<string[]>([]);
+  const [currentInstruction, setCurrentInstruction] = useState("");
   const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
   const [servingCount, setServingCount] = useState("");
 
@@ -82,6 +83,8 @@ const AddRecipe = () => {
           value: ingredient._id, // Assuming '_id' is the ObjectId
           label: ingredient.name,
         }));
+        console.log("Fetched ingredients:", ingredients);
+
         setFrameworks(ingredients);
       } catch (error) {
         console.error("Error fetching ingredients:", error);
@@ -94,12 +97,15 @@ const AddRecipe = () => {
   //functions
 
   const handleAddIngredient = () => {
+    console.log("Current value:", value);
     const selectedIngredient = frameworks.find(
+      // @ts-ignore
       (framework) => framework.value === value
     );
     if (selectedIngredient) {
       if (
         selectedIngredients.some(
+          // @ts-ignore
           (ing) => ing.ingredient === selectedIngredient.value
         )
       ) {
@@ -108,11 +114,14 @@ const AddRecipe = () => {
         setSelectedIngredients((prev) => [
           ...prev,
           {
+            // @ts-ignore
             ingredient: selectedIngredient.value,
+            // @ts-ignore
             label: selectedIngredient.label,
           },
         ]);
         setValue(""); // Clear the selection
+        setOpen(false);
       }
     }
   };
@@ -176,8 +185,23 @@ const AddRecipe = () => {
     }
   };
 
+  const handleAddInstruction = () => {
+    if (currentInstruction.trim()) {
+      setInstructions((prev) => [...prev, currentInstruction.trim()]);
+      setCurrentInstruction("");
+    }
+  };
+
+  const handleRemoveInstruction = (index: number) => {
+    setInstructions((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Ingredients to submit:", selectedIngredients);
+    const ingredientsToSubmit = selectedIngredients.map(
+      (ing) => ing.ingredient
+    );
 
     const prepTime = `${prepHours} ${prepMinutes}`;
     const cookTime = `${cookHours} ${cookMinutes}`;
@@ -196,7 +220,7 @@ const AddRecipe = () => {
           prepTime,
           cookTime,
           servingCount,
-          selectedIngredients,
+          selectedIngredients: ingredientsToSubmit,
           additionalIngredients,
           instructions,
           recipeImageUrl,
@@ -252,6 +276,7 @@ const AddRecipe = () => {
             <div className="flex gap-10">
               <Input
                 type="file"
+                // @ts-ignore
                 onChange={(e) => setRecipeImage(e.target.files[0])}
               ></Input>
               <Button type="button" onClick={handleUpload}>
@@ -441,7 +466,9 @@ const AddRecipe = () => {
                   >
                     {value
                       ? frameworks.find(
+                          // @ts-ignore
                           (framework) => framework.value === value
+                          // @ts-ignore
                         )?.label
                       : "Select Ingredient..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -455,21 +482,26 @@ const AddRecipe = () => {
                       <CommandGroup>
                         {frameworks
                           .filter((framework) =>
+                            // @ts-ignore
                             framework.label
                               .toLowerCase()
                               .includes(value.toLowerCase())
                           )
                           .map((framework) => (
                             <CommandItem
+                              // @ts-ignore
                               key={framework.value}
                               onSelect={() => {
-                                setValue(framework.value); // Keep ObjectId as the value
+                                // @ts-ignore
+                                setValue(framework.value);
+                                // Keep ObjectId as the value
                                 setOpen(false);
                               }}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
+                                  // @ts-ignore
                                   value === framework.value
                                     ? "opacity-100"
                                     : "opacity-0"
@@ -578,12 +610,41 @@ const AddRecipe = () => {
           </div>
           <div className="py-3">
             <p className="py-3">Instructions</p>
-            <Textarea
-              className="h-72"
-              value={instructions}
-              onChange={(e) => setInstructions(e.target.value)}
-              required
-            />
+            <div className="flex flex-row items-center align-middle gap-5">
+              <Input
+                className="w-[600px] h-12"
+                value={currentInstruction}
+                onChange={(e) => setCurrentInstruction(e.target.value)}
+                placeholder="Enter an instruction step..."
+              />
+              <Button
+                className="bg-green-700"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleAddInstruction();
+                }}
+                type="button"
+              >
+                ADD STEP
+              </Button>
+            </div>
+            <ul className="mt-4">
+              {instructions.map((instruction, index) => (
+                <li
+                  key={index}
+                  className="py-3 my-5 px-6 bg-stone-100 text-stone-800 rounded-lg border-2 border-black flex justify-between items-center"
+                >
+                  <span>{`${index + 1}. ${instruction}`}</span>
+                  <Button
+                    type="button"
+                    onClick={() => handleRemoveInstruction(index)}
+                    className="bg-red-500 hover:bg-red-600"
+                  >
+                    Remove
+                  </Button>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="py-3">
             <p className="py-3">Variety</p>
@@ -619,6 +680,7 @@ const AddRecipe = () => {
               <SelectContent>
                 <SelectItem value="Vegan">Vegan</SelectItem>
                 <SelectItem value="Paleo">Paleo</SelectItem>
+                <SelectItem value="Mixed">Mixed</SelectItem>
               </SelectContent>
             </Select>
           </div>
