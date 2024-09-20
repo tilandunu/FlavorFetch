@@ -94,7 +94,7 @@ const AllRecipes = () => {
       </div>
 
       <div className="flex items-center justify-center mt-10">
-        <div className="flex gap-20 justify-center px-32 py-10 flex-wrap">
+        <div className="flex gap-10 justify-center px-32 py-10 flex-wrap">
           {recipes.map((recipe) => (
             <section key={recipe._id} className="flex">
               <div className="flex flex-col bg-stone-200 rounded-3xl">
