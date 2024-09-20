@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const userRouter = require("./routes/users");
 const recipeRouter = require("./routes/recipes");
+const orderRouter = require("./routes/orders");
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,7 @@ mongoose.connect(
 
 app.use("/api/users", userRouter);
 app.use("/api/recipes", recipeRouter);
+app.use("/api/orders", orderRouter);
 
 app.listen(3001, () => {
   console.log("Server is running");

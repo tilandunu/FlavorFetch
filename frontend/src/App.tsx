@@ -15,6 +15,8 @@ import AddRecipe from "./Pages/AddRecipe";
 import { SignupSupplier } from "./Pages/SignupSupplier";
 import ChefViewRecipes from "./Pages/ChefViewRecipes";
 import RecipePage from "./Pages/RecipePage";
+import OrderManagement from "./Pages/OrderManagement";
+import OrderManagementNC from "./Pages/OrderManagementNC";
 
 function App() {
   return (
@@ -46,6 +48,11 @@ function App() {
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
                 <Route path="/recipePage/:recipeId" element={<RecipePage />} />
+                <Route path="/orderManagement" element={<OrderManagement />} />
+                <Route
+                  path="/orderManagementNC"
+                  element={<OrderManagementNC />}
+                />
               </Routes>
               <ToastContainer />
             </div>
