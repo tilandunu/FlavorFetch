@@ -1,33 +1,56 @@
-import { Separator } from "@/components/ui/separator";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const OrderManagement = () => {
   const navigate = useNavigate();
-
+  const [orders, setOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const navigateOrderManagementNC = () => {
-    navigate("/orderManagementNC");
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const customerUID = Cookies.get("userID");
+      if (!customerUID) {
+        setError("Customer ID not found. Please log in.");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/api/orders/customerOrders?customerUID=${customerUID}`
+        );
+        setOrders(response.data);
+        setIsLoading(false);
+      } catch (err) {
+        setError("Failed to fetch orders. Please try again.");
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  const navigateOrderManagementNC = () => navigate("/orderManagementNC");
+  const navigateOrderManagement = () => navigate("/orderManagement");
+  const navigateHome = () => navigate("/home");
+
+  const openModal = (order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
   };
 
-  const navigateOrderManagement = () => {
-    navigate("/orderManagement");
-  };
+  const closeModal = () => setIsModalOpen(false);
 
-  const navigateHome = () => {
-    navigate("/home");
-  };
-
-  const openModal = (orderId) => {
-    setSelectedOrder(orderId); // Set the order ID for display in the modal
-    setIsModalOpen(true); // Open the modal
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false); // Close the modal
-  };
+  if (isLoading)
+    return <div className="text-center mt-8">Loading orders...</div>;
+  if (error)
+    return <div className="text-center mt-8 text-red-500">{error}</div>;
 
   return (
     <div className="bg-slate-600 p-1">
@@ -74,14 +97,14 @@ const OrderManagement = () => {
               </div>
             </div>
 
-            {["#11323e", "#11324f", "#11325g"].map((orderId) => (
+            {orders.map((order) => (
               <section
-                key={orderId}
+                key={order._id}
                 className="flex flex-col w-full my-5"
-                onClick={() => openModal(orderId)}
+                onClick={() => openModal(order)}
               >
                 <div className="flex bg-white py-10 px-10 shadow-md rounded-lg border-2 border-stone-400 justify-between items-center">
-                  <p>ORDER {orderId}</p>
+                  <p>ORDER #{order._id.slice(-6)}</p>
                   <p className="text-xs text-stone-400">CLICK TO VIEW</p>
                 </div>
               </section>
@@ -90,12 +113,21 @@ const OrderManagement = () => {
         </div>
       </div>
 
-      {/* Modal */}
-      {isModalOpen && (
+      {isModalOpen && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center font-poppins">
           <div className="bg-white p-8 rounded-lg w-[400px]">
             <h2 className="text-xl font-semibold mb-4">Order Details</h2>
-            <p>Details for Order {selectedOrder}</p>
+            <p>Order ID: {selectedOrder._id}</p>
+            <p>Status: {selectedOrder.status}</p>
+            <p>Total Amount: ${selectedOrder.totalAmount.toFixed(2)}</p>
+            <h3 className="font-semibold mt-4">Ingredients:</h3>
+            <ul>
+              {selectedOrder.ingredients.map((item, index) => (
+                <li key={index}>
+                  {item.ingredient.name}: {item.quantity}
+                </li>
+              ))}
+            </ul>
             <button
               className="mt-6 bg-slate-800 text-white py-2 px-4 rounded"
               onClick={closeModal}
