@@ -15,6 +15,8 @@ import AddRecipe from "./Pages/AddRecipe";
 import { SignupSupplier } from "./Pages/SignupSupplier";
 import ChefViewRecipes from "./Pages/ChefViewRecipes";
 import RecipePage from "./Pages/RecipePage";
+import OrderManagement from "./Pages/OrderManagement";
+import OrderManagementNC from "./Pages/OrderManagementNC";
 
 function App() {
   return (
