@@ -132,7 +132,7 @@ const AllRecipes = () => {
                   className="flex justify-end px-3 items-center align-middle mb-5"
                   onClick={() => handleGoToRecipe(recipe._id)}
                 >
-                  <p className="text-[10px] bg-stone-700 w-20 text-center py-1 rounded-3xl text-stone-300">
+                  <p className="text-[10px] bg-stone-700 w-20 text-center py-1 rounded-3xl text-stone-300 hover:cursor-pointer">
                     GO TO &gt;
                   </p>
                 </div>

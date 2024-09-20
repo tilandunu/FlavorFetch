@@ -62,8 +62,8 @@ const RecipePage = () => {
   if (!recipe) return <p>Loading...</p>;
 
   return (
-    <div className="font-poppins">
-      <div className="flex gap-7 mx-16 my-10 justify-between">
+    <div className="font-poppins cursor-default bg-stone-100">
+      <div className="flex gap-7 mx-16 py-10 justify-between">
         <div className="flex gap-7 hover:cursor-pointer">
           <span className="material-symbols-outlined" onClick={navigateHome}>
             home
@@ -82,8 +82,7 @@ const RecipePage = () => {
           <img
             src={recipe.recipeImageUrl}
             alt="Recipe Image"
-            className="rounded-3xl w-30 h-30 object-cover"
-            style={{ width: "350px", height: "350px" }}
+            className="rounded-3xl object-cover transition-all duration-1000 w-[350px] h-[350px] hover:w-[380px] hover:h-[380px] hover:-rotate-3 hover:shadow-md"
           />
           <p className="text-3xl mt-7 font-medium">{recipe.title}</p>
           <p className="text-sm relative bottom-1 mb-4 text-stone-500">
@@ -117,31 +116,36 @@ const RecipePage = () => {
             </div>
           </div>
           <div className="flex flex-col items-start w-full mt-10">
-            <p className="text-teal-600 text-sm my-2">
+            <p className="font-semibold text-sm my-2">
               ORDER THESE INGREDIENTS DIRECTLY
             </p>
-            <div className="flex flex-col gap-2 my-10">
+            <div className="flex flex-col gap-2 mt-3 mb-16">
               {ingredients.map((ingredient, index) => (
-                <div key={index} className="flex gap-4">
+                <div
+                  key={index}
+                  className="flex gap-4 hover:text-green-600 duration-500 cursor-pointer font-light items-center"
+                >
                   <span className="material-symbols-outlined">add_circle</span>
-                  <p className="uppercase">{ingredient}</p>
+                  <p className="uppercase text-sm">{ingredient}</p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex gap-5 w-full">
-            <p className="text-teal-600">ADDITIONAL INGREDIENTS: </p>
-            <p>{recipe.additionalIngredients.join(" | ")}</p>
+          <div className="flex gap-5 w-full items-center">
+            <p className="font-semibold text-sm">ADDITIONAL INGREDIENTS: </p>
+            <p className="uppercase text-sm">
+              {recipe.additionalIngredients.join(" | ")}
+            </p>
           </div>
         </div>
       </div>
       <div className="flex mx-10 mt-32 mb-20">
         <Separator className="bg-black" />
       </div>
-      <div className="flex justify-between ml-40 my-28">
+      <div className="flex justify-between ml-40 mt-28 pb-32">
         <div className="w-full border-2 border-black p-10">
           <p className="flex font-light text-3xl mb-6">INSTRUCTIONS</p>
-          <div className="flex flex-col text-sm gap-3 font-normal">
+          <div className="flex flex-col text-sm gap-3 font-normal hover:text-lg duration-1000">
             {recipe.instructions.map((instruction, index) => (
               <p key={index}>
                 {index + 1}. {instruction}

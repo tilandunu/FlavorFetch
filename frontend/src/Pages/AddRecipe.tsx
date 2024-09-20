@@ -680,6 +680,7 @@ const AddRecipe = () => {
               <SelectContent>
                 <SelectItem value="Vegan">Vegan</SelectItem>
                 <SelectItem value="Paleo">Paleo</SelectItem>
+                <SelectItem value="Mixed">Mixed</SelectItem>
               </SelectContent>
             </Select>
           </div>
