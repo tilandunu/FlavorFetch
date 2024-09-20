@@ -25,6 +25,7 @@ router.get("/chef", async (req, res) => {
   }
 });
 
+// Fetch all ingredients
 router.get("/ingredients", async (req, res) => {
   try {
     const ingredients = await IngredientModel.find({}, "_id name"); // Fetch only the _id and name fields
@@ -35,6 +36,7 @@ router.get("/ingredients", async (req, res) => {
   }
 });
 
+// Create a recipe
 router.post("/createRecipe", async (req, res) => {
   const {
     chefUID,
@@ -47,7 +49,7 @@ router.post("/createRecipe", async (req, res) => {
     prepTime,
     cookTime,
     servingCount,
-    selectedIngredients, // This will be an array of ObjectId strings from the frontend
+    selectedIngredients,
     additionalIngredients,
     instructions,
     recipeImageUrl,
@@ -86,6 +88,7 @@ router.post("/createRecipe", async (req, res) => {
   }
 });
 
+// Fetch recipes by chef UID
 router.get("/chefRecipes", async (req, res) => {
   const chefUID = req.query.chefUID;
 
@@ -105,6 +108,7 @@ router.get("/chefRecipes", async (req, res) => {
   }
 });
 
+// Get a recipe by ID
 router.get("/getRecipe/:id", async (req, res) => {
   try {
     const recipe = await RecipeModel.findById(req.params.id);
@@ -162,8 +166,8 @@ router.put("/updateRecipe/:id", async (req, res) => {
         recipeImageUrl,
       },
       {
-        new: true, // Return the updated document
-        runValidators: true, // Validate the updated document
+        new: true,
+        runValidators: true,
       }
     );
 
@@ -178,9 +182,10 @@ router.put("/updateRecipe/:id", async (req, res) => {
   }
 });
 
+// Fetch all recipes
 router.get("/allRecipes", async (req, res) => {
   try {
-    const recipes = await RecipeModel.find(); // No filter, fetches all recipes
+    const recipes = await RecipeModel.find();
     if (!recipes || recipes.length === 0) {
       return res.status(404).json({ error: "No recipes found" });
     }
@@ -190,10 +195,13 @@ router.get("/allRecipes", async (req, res) => {
   }
 });
 
+// Get recipe by ID with populated ingredients
 router.get("/getRecipeParam/:id", async (req, res) => {
   try {
     const recipeId = req.params.id;
-    const recipe = await RecipeModel.findById(recipeId).lean();
+    const recipe = await RecipeModel.findById(recipeId)
+      .populate("selectedIngredients", "_id name")
+      .lean();
 
     if (!recipe) {
       return res.status(404).json({ error: "Recipe not found" });
@@ -206,6 +214,27 @@ router.get("/getRecipeParam/:id", async (req, res) => {
   }
 });
 
+// Populate ingredients based on IDs
+router.get("/populateIngredients", async (req, res) => {
+  const ingredientIds = req.query.ingredientIds; // Expecting an array of ingredient IDs
+
+  if (!ingredientIds) {
+    return res.status(400).json({ error: "Ingredient IDs are required" });
+  }
+
+  try {
+    const ingredients = await IngredientModel.find({
+      _id: { $in: ingredientIds },
+    }).select("_id name pricePerUnit ingredientImage"); // Fetch only the _id and name fields
+
+    res.status(200).json(ingredients);
+  } catch (error) {
+    console.error("Error fetching ingredients:", error);
+    res.status(500).json({ error: "Error fetching ingredients" });
+  }
+});
+
+// Get selected ingredient by ID
 router.get("/getSelectedIngredients/:id", async (req, res) => {
   try {
     const ingredient = await IngredientModel.findById(req.params.id);

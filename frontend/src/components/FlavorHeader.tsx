@@ -19,6 +19,10 @@ const FlavorHeader = () => {
     navigate("/ticketDashboard");
   };
 
+  const navigateOrders = () => {
+    navigate("/orderManagement");
+  };
+
   return (
     <div>
       <div className="flex flex-row justify-center mx-16 font-poppins">
@@ -39,6 +43,12 @@ const FlavorHeader = () => {
           onClick={navigateProfile}
         >
           PROFILE
+        </p>
+        <p
+          className="bg-black text-stone-200 py-5 w-1/4 text-center hover:bg-red-600 hover:text-red-200 duration-500 cursor-pointer"
+          onClick={navigateOrders}
+        >
+          ORDERS
         </p>
         <p
           className="bg-black text-stone-200 py-5 w-1/4 text-center hover:bg-red-600 hover:text-red-200 duration-500 cursor-pointer rounded-r-full"

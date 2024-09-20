@@ -175,6 +175,15 @@ export function SignupSupplier() {
                   </Link>
                 </p>
               </div>
+              <div className="flex justify-end ">
+                {" "}
+                <p className="text-[13px]">
+                  WANNA BECOME A DRIVER?{" "}
+                  <Link to={"/signUpDriver"} className="px-[6px] text-red-500">
+                    REGISTER
+                  </Link>
+                </p>
+              </div>
             </div>
             <div className="flex justify-end items-end flex-row">
               {" "}
