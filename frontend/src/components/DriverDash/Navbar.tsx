@@ -51,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = ({ pagename }) => {
           <img src={demouser} alt="avatar" className="rounded-full h-8 w-8" />
         </div>
         <div className="flex flex-col text-sm">
-          <span className="font-medium">John Doe</span>
+          <span className="font-medium">Ravinath</span>
           <span>Driver</span>
         </div>
       </div>
