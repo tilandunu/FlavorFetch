@@ -8,7 +8,7 @@ const FlavorHeader = () => {
   };
 
   const navigateRecipes = () => {
-    navigate("/suppl");
+    navigate("/allrecipes");
   };
 
   const navigateProfile = () => {
