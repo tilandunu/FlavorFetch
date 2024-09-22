@@ -265,6 +265,18 @@ export function Signup() {
                   </Link>
                 </p>
               </div>
+              <div className="flex justify-end ">
+                {" "}
+                <p className="text-[13px]">
+                  WANNA BE A SUPPLIER?{" "}
+                  <Link
+                    to={"/signupSupplier"}
+                    className="px-[6px] text-red-500"
+                  >
+                    REGISTER
+                  </Link>
+                </p>
+              </div>
             </div>
             <div className="flex justify-end items-end flex-row">
               {" "}

@@ -9,7 +9,7 @@ interface Params {
 
 function UpdateIngredient() {
   const { id } = useParams<Params>();
-  
+
   // State variables with appropriate types
   const [name, setName] = useState<string>("");
   const [catagory, setCatagory] = useState<string>("");
@@ -22,8 +22,9 @@ function UpdateIngredient() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/getIngredient/${id}`)
-      .then(result => {
+    axios
+      .get(`http://localhost:3001/api/ingredientsgetIngredient/${id}`)
+      .then((result) => {
         setName(result.data.name);
         setCatagory(result.data.catagory);
         setQuantity(result.data.quantity);
@@ -33,12 +34,12 @@ function UpdateIngredient() {
         setDate(result.data.date);
         // Image handling would depend on your backend
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }, [id]);
 
   const Update = (e: FormEvent) => {
     e.preventDefault();
-    
+
     // Create form data to handle file uploads
     const formData = new FormData();
     formData.append("name", name);
@@ -51,89 +52,96 @@ function UpdateIngredient() {
       formData.append("image", image);
     }
 
-    axios.put(`http://localhost:3001/updateIngredient/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
-    })
-      .then(result => {
+    axios
+      .put(
+        `http://localhost:3001/api/ingredientsupdateIngredient/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then((result) => {
         console.log(result);
-        navigate('/');
+        navigate("/");
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   };
 
   return (
-    <div className='d-flix vh-100 bg-primary justify-content-center align-items-center'>
-      <div className='w-50 bg-white rounded p-3'>
+    <div className="d-flix vh-100 bg-primary justify-content-center align-items-center">
+      <div className="w-50 bg-white rounded p-3">
         <form onSubmit={Update}>
           <h2>Update Ingredient</h2>
           <div className="mb-2">
             <label htmlFor="name">Name</label>
-            <input 
-              type="text" 
-              placeholder="Enter Ingredient Name" 
+            <input
+              type="text"
+              placeholder="Enter Ingredient Name"
               className="form-control"
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="mb-2">
             <label htmlFor="catagory">Catagory</label>
-            <input 
-              type="text" 
-              placeholder="Enter Ingredient Type" 
+            <input
+              type="text"
+              placeholder="Enter Ingredient Type"
               className="form-control"
-              value={catagory} 
-              onChange={(e) => setCatagory(e.target.value)} 
+              value={catagory}
+              onChange={(e) => setCatagory(e.target.value)}
             />
           </div>
           <div className="mb-2">
             <label htmlFor="quantity">Stock Quantity</label>
-            <input 
-              type="number" 
-              placeholder="Enter Stock Quantity" 
+            <input
+              type="number"
+              placeholder="Enter Stock Quantity"
               className="form-control"
-              value={quantity} 
-              onChange={(e) => setQuantity(Number(e.target.value))} 
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
             />
           </div>
           <div className="mb-2">
             <label htmlFor="minQuantity">Minimum Quantity</label>
-            <input 
-              type="number" 
-              placeholder="Enter minimum quantity to notify supplier management" 
+            <input
+              type="number"
+              placeholder="Enter minimum quantity to notify supplier management"
               className="form-control"
-              value={minQuantity} 
-              onChange={(e) => setMinQuantity(Number(e.target.value))} 
+              value={minQuantity}
+              onChange={(e) => setMinQuantity(Number(e.target.value))}
             />
           </div>
           <div className="mb-2">
             <label htmlFor="price">Unit Price</label>
-            <input 
-              type="number" 
-              placeholder="Enter Unit Price" 
+            <input
+              type="number"
+              placeholder="Enter Unit Price"
               className="form-control"
-              value={price} 
-              onChange={(e) => setPrice(Number(e.target.value))} 
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
             />
           </div>
           <div className="mb-2">
             <label htmlFor="date">Added Date</label>
-            <input 
-              type="date" 
-              placeholder="Enter the date" 
+            <input
+              type="date"
+              placeholder="Enter the date"
               className="form-control"
-              value={date} 
-              onChange={(e) => setDate(e.target.value)} 
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
           </div>
           <div className="mb-2">
             <label htmlFor="image">Image</label>
-            <input 
-              type="file" 
+            <input
+              type="file"
               className="form-control"
-              onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
+              onChange={(e) =>
+                setImage(e.target.files ? e.target.files[0] : null)
+              }
             />
           </div>
           <button className="btn btn-success">Submit</button>

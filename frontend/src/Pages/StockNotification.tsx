@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Notification from "./components/Notification";
+import Notification from "./Notification";
 
 interface StockItem {
   _id: string;
@@ -17,7 +17,9 @@ function StockNotification() {
 
   async function callGetLowStock() {
     try {
-      let res = await axios.get('http://localhost:3001/getLowStockItems');
+      let res = await axios.get(
+        "http://localhost:3001/api/ingredients/getLowStockItems"
+      );
 
       if (res) {
         console.log(res);
@@ -38,17 +40,15 @@ function StockNotification() {
     <div>
       <h1>This is the notification page</h1>
       <div>
-        {lowStock && lowStock.length !== 0 ? (
-          lowStock.map((stock) => (
-            <Notification
-              key={stock._id}
-              name={stock.name}
-              qty={stock.quantity}
-            />
-          ))
-        ) : (
-          "Badu thiyanawa pako"
-        )}
+        {lowStock && lowStock.length !== 0
+          ? lowStock.map((stock) => (
+              <Notification
+                key={stock._id}
+                name={stock.name}
+                qty={stock.quantity}
+              />
+            ))
+          : "Items are in stock"}
       </div>
     </div>
   );
