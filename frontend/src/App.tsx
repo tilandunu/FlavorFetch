@@ -8,14 +8,15 @@ import SupplierDashboard from "./Pages/SupplierDashboard";
 import Home from "./Pages/Home";
 import AdminDashboard from "./Pages/AdminDashboard";
 import { SignupDriver } from "./Pages/SignupDriver";
-import { SupportTicket } from "./Pages/SupportTicket";
-import { SupportTicketDashboard } from "./Pages/SupportTicketDashboard";
-import { Feedback } from "./Pages/Feedback";
-import { ViewSupportFeedback } from "./Pages/ViewSupportFeedback";
-import { TicketUserAccount } from "./Pages/TicketUserAccount";
-import { ViewMyTickets } from "./Pages/ViewMyTickets";
-import { EditSupportTicket } from "./Pages/EditSupportTicket";
-import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
+import AllRecipes from "./Pages/AllRecipes";
+import CustomerUserProfile from "./Pages/CustomerUserProfile";
+import TicketDashboard from "./Pages/TicketDashboard";
+import AddRecipe from "./Pages/AddRecipe";
+import { SignupSupplier } from "./Pages/SignupSupplier";
+import ChefViewRecipes from "./Pages/ChefViewRecipes";
+import RecipePage from "./Pages/RecipePage";
+import OrderManagement from "./Pages/OrderManagement";
+import OrderManagementNC from "./Pages/OrderManagementNC";
 
 function App() {
   return (
@@ -37,55 +38,16 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/signupDriver" element={<SignupDriver />} />
-                <Route path="/SupportTicket" element={<SupportTicket />} />
+                <Route path="/signupSupplier" element={<SignupSupplier />} />
+                <Route path="/allrecipes" element={<AllRecipes />} />
                 <Route
-                  path="/SupportTicketDashboard"
-                  element={<SupportTicketDashboard />}
+                  path="/customerUserProfile"
+                  element={<CustomerUserProfile />}
                 />
-                <Route path="/Feedback" element={<Feedback />} />
-                <Route
-                  path="/ViewSupportFeedback"
-                  element={<ViewSupportFeedback />}
-                />
-                <Route
-                  path="/TicketUserAccount"
-                  element={<TicketUserAccount />}
-                />
-
-                <Route path="/ViewMyTickets" element={<ViewMyTickets />} />
-
-                <Route
-                  path="/EditSupportTicket"
-                  element={
-                    <EditSupportTicket
-                      ticket={{
-                        customerUID: "",
-                        issue: "",
-                        issueType: "",
-                        responseMessage: "",
-                        status: "",
-                      }}
-                      onClose={function (): void {
-                        throw new Error("Function not implemented.");
-                      }}
-                    />
-                  }
-                />
-
-                <Route
-                  path="/EditSupportFeedback"
-                  element={
-                    <EditSupportFeedback
-                      feedback={{
-                        customerUID: "",
-                        message: "",
-                      }}
-                      onClose={function (): void {
-                        throw new Error("Function not implemented.");
-                      }}
-                    />
-                  }
-                />
+                <Route path="/ticketDashboard" element={<TicketDashboard />} />
+                <Route path="/addRecipe" element={<AddRecipe />} />
+                <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
+                <Route path="/recipePage/:recipeId" element={<RecipePage />} />
               </Routes>
 
               <ToastContainer />

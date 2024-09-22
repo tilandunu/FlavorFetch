@@ -17,18 +17,16 @@ import { setDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-export function SignupDriver() {
+export function SignupSupplier() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-  const type = "driver";
+  const type = "supplier";
   const [phoneNumber, setphoneNumber] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [fname, setFname] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lname, setLname] = useState("");
-  const [vehicleType, setvehicleType] = useState("");
-  const [vehicleNumber, setvehicleNumber] = useState("");
 
   const handleRegister = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -59,8 +57,6 @@ export function SignupDriver() {
           lastName: lname,
           userType: type,
           phoneNumber: phoneNumber,
-          vehicleType: vehicleType,
-          vehicleNumber: vehicleNumber,
         });
       }
 
@@ -90,10 +86,10 @@ export function SignupDriver() {
                 </CardTitle>
 
                 <CardDescription className="text-4xl text-black">
-                  JOIN OUR TEAM
+                  JOIN WITH US
                 </CardDescription>
                 <CardDescription className="text-4xl text-red-600">
-                  OF DELIVERY EXPERTS
+                  AND GROW YOUR BUSINESS
                 </CardDescription>
               </CardHeader>
               <CardContent className="grid gap-6 py-1">
@@ -143,33 +139,6 @@ export function SignupDriver() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="vehicleType" className="text-[12px] pl-1">
-                    Vehicle Type :
-                  </Label>
-                  <select
-                    name="vehicleType"
-                    id="cars"
-                    className="border-[0.5px] border-black py-2 px-2 text-sm rounded-md"
-                    onChange={(e) => setvehicleType(e.target.value)}
-                  >
-                    <option value="Scooter">Scooter</option>
-                    <option value="Threewheel">Threewheel</option>
-                    <option value="Bike">Bike</option>
-                    <option value="Car">Car</option>
-                  </select>
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="VehicleNumber" className="text-[12px] pl-1">
-                    Vehicle Number :
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="text"
-                    onChange={(e) => setvehicleNumber(e.target.value)}
-                    className="border-[0.5px] border-black"
-                  />
-                </div>
-                <div className="grid gap-2">
                   <Label htmlFor="password" className="text-[12px] pl-1">
                     Password :
                   </Label>
@@ -209,12 +178,9 @@ export function SignupDriver() {
               <div className="flex justify-end ">
                 {" "}
                 <p className="text-[13px]">
-                  WANT TO BECOME A SUPPLIER?{" "}
-                  <Link
-                    to={"/signUpSupplier"}
-                    className="px-[6px] text-red-500"
-                  >
-                    SUPPLIER
+                  WANNA BECOME A DRIVER?{" "}
+                  <Link to={"/signUpDriver"} className="px-[6px] text-red-500">
+                    REGISTER
                   </Link>
                 </p>
               </div>
@@ -222,7 +188,7 @@ export function SignupDriver() {
             <div className="flex justify-end items-end flex-row">
               {" "}
               <img
-                src="../R.jpeg"
+                src="../supplier.jpg"
                 alt="chef"
                 className="w-[480px] h-[360px] rounded-[60px]"
               />
