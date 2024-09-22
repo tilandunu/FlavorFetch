@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const DriverSchema = new mongoose.Schema({
   driverUID: { type: String, required: true, unique: true },
@@ -12,6 +12,7 @@ const DriverSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const DriverModel = mongoose.model("Driver", DriverSchema);
+const DriverModel = mongoose.model('Driver', DriverSchema);
 
-module.exports = DriverModel;
+// Default export
+export default DriverModel;

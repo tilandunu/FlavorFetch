@@ -54,7 +54,7 @@ export function Signin() {
         } else if (userData.userType === "customer") {
           navigate("/home");
         } else if (userData.userType === "driver") {
-          navigate("/driverDashboard");
+          navigate("/driverdashboard");
         } else if (userData.userType === "supplier") {
           navigate("/supplierDashboard");
         } else if (userData.userType === "admin") {
