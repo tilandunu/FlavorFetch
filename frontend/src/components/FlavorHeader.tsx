@@ -8,7 +8,7 @@ const FlavorHeader = () => {
   };
 
   const navigateRecipes = () => {
-    navigate("/allrecipes");
+    navigate("/suppl");
   };
 
   const navigateProfile = () => {
@@ -16,7 +16,7 @@ const FlavorHeader = () => {
   };
 
   const navigateTicket = () => {
-    navigate("/ticketDashboard");
+    navigate("/SupportTicketDashboard");
   };
 
   const navigateOrders = () => {
