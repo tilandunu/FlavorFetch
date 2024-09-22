@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { EditSupportFeedback } from "./EditSupportFeedback"; // Uncomment when ready
 import { Link } from "react-router-dom";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface Feedback {
   customerUID: string;
@@ -14,6 +18,8 @@ export function ViewSupportFeedback() {
   const [error, setError] = useState<string | null>(null);
   const [editFeedbackId, setEditFeedbackId] = useState<string | null>(null);
   const [updatedMessage, setUpdatedMessage] = useState<string>("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -42,7 +48,7 @@ export function ViewSupportFeedback() {
           message: updatedMessage,
         };
         const response = await axios.put(
-          `http://localhost:3001/api/feedback/${editFeedbackId}`, // Update endpoint with customerUID
+          `http://localhost:3001/api/feedback`, // Update endpoint with customerUID
           updatedFeedback
         );
         setFeedbacks((prevFeedbacks) =>
@@ -63,15 +69,36 @@ export function ViewSupportFeedback() {
 
   const handleDelete = async (feedbackId: string) => {
     try {
-      await axios.delete(`http://localhost:3001/api/feedback/${feedbackId}`); // Use feedbackId in the endpoint
+      await axios.delete(`http://localhost:3001/api/feedback`); // Use feedbackId in the endpoint
       setFeedbacks((prevFeedbacks) =>
         prevFeedbacks.filter((feedback) => feedback.customerUID !== feedbackId)
       );
+
+      toast.success("Feedback deleted successfully", {
+        position: "top-center",
+      });
     } catch (error) {
       console.error("Failed to delete feedback", error);
     }
   };
 
+  navigate("/ViewSupportFeedback");
+
+  const generatePDF = async (feedback: Feedback) => {
+    const doc = new jsPDF();
+
+    // Create a canvas for the PDF content
+    const canvas = await html2canvas(
+      document.querySelector(`#feedback-${feedback.customerUID}`) as HTMLElement
+    );
+    const imgData = canvas.toDataURL("image/png");
+
+    // Add the image to the PDF
+    doc.addImage(imgData, "PNG", 10, 10, 190, 0); // X, Y, Width, Height (Height is auto-scaled)
+
+    // Save the PDF
+    doc.save(`Feedback_${feedback.customerUID}.pdf`);
+  };
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -124,6 +151,12 @@ export function ViewSupportFeedback() {
                   className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 >
                   Delete
+                </button>
+                <button
+                  onClick={() => generatePDF(feedback)} // Generate PDF
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                >
+                  Download PDF
                 </button>
               </div>
             </li>

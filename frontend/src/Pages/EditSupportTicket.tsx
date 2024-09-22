@@ -36,29 +36,23 @@ export function EditSupportTicket({ ticket, onClose }: EditSupportTicketProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const user = auth.currentUser;
+    const user = auth.currentUser;
 
-      if (user) {
-        // Update existing ticket using customerUID
-        await axios.put("http://localhost:3001/api/tickets", {
-          customerUID,
-          issueType,
-          issue,
-          responseMessage,
-          status: "Open",
-        });
-        toast.success("Ticket updated successfully", {
-          position: "top-center",
-        });
-      }
-
-      onClose(); // Close the edit modal or form
-    } catch (error) {
-      toast.error("Failed to update ticket. Please try again.", {
-        position: "bottom-center",
+    if (user) {
+      // Update existing ticket using customerUID
+      await axios.put("http://localhost:3001/api/tickets", {
+        customerUID,
+        issueType,
+        issue,
+        responseMessage,
+        status: "Open",
+      });
+      toast.success("Ticket updated successfully", {
+        position: "top-center",
       });
     }
+
+    onClose(); // Close the edit modal or form
   };
 
   return (

@@ -2,22 +2,19 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { auth } from "@/firebase";
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 interface EditSupportFeedbackProps {
   feedback: {
-    customerUID: string; // Use customerUID instead of id
+    customerUID: string; // customerUID from props
     message: string;
   };
   onClose: () => void;
@@ -29,36 +26,25 @@ export function EditSupportFeedback({
 }: EditSupportFeedbackProps) {
   const [message, setMessage] = useState(feedback.message);
 
-  const responseMessage = "null"; // You may want to adjust this
-
-  const customerUID = Cookies.get("userId");
+  const responseMessage = "null"; // Adjust as necessary
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const user = auth.currentUser;
-
-      if (user) {
-        // Update existing feedback using customerUID
-        await axios.put("http://localhost:3001/api/feedback", {
-          customerUID,
-
-          message,
-          responseMessage,
-          status: "Open",
-        });
-        toast.success("Feedback updated successfully", {
-          position: "top-center",
-        });
+    // Use the customerUID from the feedback prop to update feedback
+    await axios.put(
+      `http://localhost:3001/api/feedback`, // Correct reference
+      {
+        customerUID: feedback.customerUID,
+        message,
       }
+    );
 
-      onClose(); // Close the edit modal or form
-    } catch (error) {
-      toast.error("Failed to update feedback. Please try again.", {
-        position: "bottom-center",
-      });
-    }
+    toast.success("Feedback updated successfully", {
+      position: "top-center",
+    });
+
+    onClose(); // Close the edit modal or form
   };
 
   return (

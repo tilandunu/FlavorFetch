@@ -15,6 +15,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function Feedback() {
   const [message, setMessage] = useState("");
@@ -35,8 +36,8 @@ export function Feedback() {
       if (user) {
         // Sending the ticket data to the backend
         await axios.post(`http://localhost:3001/api/feedback`, {
-          customerUID,
-          message, // Fixed key name
+          customerUID: customerUID, // Use the actual customerUID from the cookie
+          message: message, // Fixed key name
           // Directly included the status
         });
       }
