@@ -49,6 +49,7 @@ function App() {
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
                 <Route path="/recipePage/:recipeId" element={<RecipePage />} />
               </Routes>
+
               <ToastContainer />
             </div>
           </div>
