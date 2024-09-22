@@ -77,4 +77,35 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.post("/getChefsByUIDs", async (req, res) => {
+  const { chefUIDs } = req.body;
+
+  if (!Array.isArray(chefUIDs) || chefUIDs.length === 0) {
+    return res.status(400).json({ error: "No chefUIDs provided" });
+  }
+
+  try {
+    const chefs = await ChefModel.find({ chefUID: { $in: chefUIDs } });
+    res.status(200).json(chefs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/getChefByUID/:chefUID", async (req, res) => {
+  try {
+    const { chefUID } = req.params;
+    const chef = await ChefModel.findOne({ chefUID }).lean();
+
+    if (!chef) {
+      return res.status(404).json({ error: "Chef not found" });
+    }
+
+    res.status(200).json(chef);
+  } catch (error) {
+    console.error("Error fetching chef details:", error);
+    res.status(500).json({ error: "Error fetching chef details" });
+  }
+});
+
 module.exports = router;

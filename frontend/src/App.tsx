@@ -11,12 +11,24 @@ import { SignupDriver } from "./Pages/SignupDriver";
 import AllRecipes from "./Pages/AllRecipes";
 import CustomerUserProfile from "./Pages/CustomerUserProfile";
 import TicketDashboard from "./Pages/TicketDashboard";
+import AddRecipe from "./Pages/AddRecipe";
+import { SignupSupplier } from "./Pages/SignupSupplier";
+import ChefViewRecipes from "./Pages/ChefViewRecipes";
+import RecipePage from "./Pages/RecipePage";
+import { SupportTicket } from "./Pages/SupportTicket";
+import { SupportTicketDashboard } from "./Pages/SupportTicketDashboard";
+import { Feedback } from "./Pages/Feedback";
+import { ViewSupportFeedback } from "./Pages/ViewSupportFeedback";
+import { TicketUserAccount } from "./Pages/TicketUserAccount";
+import { ViewMyTickets } from "./Pages/ViewMyTickets";
+import { EditSupportTicket } from "./Pages/EditSupportTicket";
+import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
 
 import DriverDashboard from "./Pages/Driver/Dashboard";
 import Role from "./Pages/Driver/DeleveryHistory.tsx";
 import UserManagement from "./Pages/Driver/UserManagement";
 
-import UpOrder from "./components/UpdateOrder/UpOrder.tsx"
+import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
 
 function App() {
   return (
@@ -30,7 +42,7 @@ function App() {
                 <Route path="/signup" element={<Signup></Signup>} />
                 <Route path="/signin" element={<Signin></Signin>} />
                 <Route path="/chefDashboard" element={<ChefDashboard />} />
-               
+
                 <Route
                   path="/supplierDashboard"
                   element={<SupplierDashboard />}
@@ -38,6 +50,22 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/signupDriver" element={<SignupDriver />} />
+                <Route path="/SupportTicket" element={<SupportTicket />} />
+                <Route
+                  path="/SupportTicketDashboard"
+                  element={<SupportTicketDashboard />}
+                />
+                <Route path="/Feedback" element={<Feedback />} />
+                <Route
+                  path="/ViewSupportFeedback"
+                  element={<ViewSupportFeedback />}
+                />
+                <Route
+                  path="/TicketUserAccount"
+                  element={<TicketUserAccount />}
+                />
+                <Route path="/ViewMyTickets" element={<ViewMyTickets />} />
+                <Route path="/signupSupplier" element={<SignupSupplier />} />
                 <Route path="/allrecipes" element={<AllRecipes />} />
                 <Route
                   path="/customerUserProfile"
@@ -48,9 +76,44 @@ function App() {
                 <Route path="/driverdashboard" element={<DriverDashboard />} />
                 <Route path="/role-management" element={<Role />} />
                 <Route path="/orderdetails/:id" element={<UpOrder />} />
-                <Route path="/user-management" element={<UserManagement />} /> 
+                <Route path="/user-management" element={<UserManagement />} />
 
+                <Route path="/addRecipe" element={<AddRecipe />} />
+                <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
+                <Route path="/recipePage/:recipeId" element={<RecipePage />} />
+                <Route
+                  path="/EditSupportTicket"
+                  element={
+                    <EditSupportTicket
+                      ticket={{
+                        customerUID: "",
+                        issue: "",
+                        issueType: "",
+                        responseMessage: "",
+                        status: "",
+                      }}
+                      onClose={function (): void {
+                        throw new Error("Function not implemented.");
+                      }}
+                    />
+                  }
+                />
+                <Route
+                  path="/EditSupportFeedback"
+                  element={
+                    <EditSupportFeedback
+                      feedback={{
+                        customerUID: "",
+                        message: "",
+                      }}
+                      onClose={function (): void {
+                        throw new Error("Function not implemented.");
+                      }}
+                    />
+                  }
+                />
               </Routes>
+
               <ToastContainer />
             </div>
           </div>
