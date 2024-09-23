@@ -33,6 +33,31 @@ export function SignupDriver() {
   const handleRegister = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
+
+
+    //valida
+
+        // Validate required fields
+    if (!fname || !lname || !email || !phoneNumber || !vehicleType || !vehicleNumber) {
+      toast.error("Please fill out all fields", { position: "bottom-center" });
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Invalid email format", { position: "bottom-center" });
+      return;
+    }
+
+    // Validate phone number format
+    const phoneRegex = /^\d{10}$/; // Example: 10 digits
+    if (!phoneRegex.test(phoneNumber)) {
+      toast.error("Invalid phone number format", { position: "bottom-center" });
+      return;
+    }
+
+    // Validate password match
     if (password !== rePassword) {
       toast.error("Passwords do not match", { position: "bottom-center" });
       return;
@@ -68,12 +93,13 @@ export function SignupDriver() {
       toast.success("User Registered Successfully", { position: "top-center" });
       window.location.href = "/signin";
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      console.log(error.message);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      toast.error(error.message, { position: "bottom-center" });
+      if (error instanceof Error) {
+        console.log(error.message);
+        toast.error(error.message, { position: "bottom-center" });
+      } else {
+        console.log("An unexpected error occurred");
+        toast.error("An unexpected error occurred", { position: "bottom-center" });
+      }
     }
   };
 

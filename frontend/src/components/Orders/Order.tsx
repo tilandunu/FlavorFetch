@@ -1,53 +1,7 @@
-/*import React from "react";
-import axios from "axios";
-import "./orders.css";
-
-function Order(props) {
-  const {
-    _id,
-    totalAmount,
-    paymentMethod,
-    status,
-    deliveryAddress,
-  } = props.order; 
-
-  const deleteHandler = async () => {
-    console.log("Order ID to delete:", _id); // Check the value of _id
-    try {
-      await axios.delete(`http://localhost:3001/api/orders/${_id}`);
-      console.log("Order deleted successfully");
-      window.location.reload(); // Reload the page after delete
-    } catch (error) {
-      console.error("Error deleting order:", error);
-    }
-  };
-
-  // Only display the row if the order status is "declined" or "delivered"
-  if (status !== "Cancelled" && status !== "Delivered") {
-    return null;
-  }
-
-  return (
-    <tr>
-      <td>{_id}</td>
-      <td>{totalAmount}</td>
-      <td>{paymentMethod}</td>
-      <td>{status}</td>
-      <td>{deliveryAddress}</td>
-      <td className="order-actions">
-        <button className="delete-button" onClick={deleteHandler}>
-          Delete
-        </button>
-      </td>
-    </tr>
-  );
-}
-
-export default Order;
-*/
-
 import React from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; // Import the toast CSS
 import "./orders.css";
 
 interface OrderProps {
@@ -67,10 +21,11 @@ const Order: React.FC<OrderProps> = (props) => {
     console.log("Order ID to delete:", _id); 
     try {
       await axios.delete(`http://localhost:3001/api/orders/${_id}`);
-      console.log("Order deleted successfully");
+      toast.success("Order deleted successfully!", { position: "top-center" });
       window.location.reload();
     } catch (error) {
       console.error("Error deleting order:", error);
+      toast.error("Failed to delete order.", { position: "top-center" });
     }
   };
 
