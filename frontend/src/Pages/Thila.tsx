@@ -11,13 +11,10 @@ function RequestIngredient() {
   const Submit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      let res = await axios.post(
-        "http://localhost:3001/api/ingredients/requestIngrediant",
-        {
-          ingName,
-          ingQty,
-        }
-      );
+      let res = await axios.post("http://localhost:3001/requestIngrediant", {
+        ingName,
+        ingQty,
+      });
       if (res) {
         if (res.status === 210) {
           setNotification("MESSAGE: " + res.data);

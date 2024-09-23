@@ -23,7 +23,7 @@ function UpdateIngredient() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/api/ingredientsgetIngredient/${id}`)
+      .get(`http://localhost:3001/getIngredient/${id}`)
       .then((result) => {
         setName(result.data.name);
         setCatagory(result.data.catagory);
@@ -53,15 +53,11 @@ function UpdateIngredient() {
     }
 
     axios
-      .put(
-        `http://localhost:3001/api/ingredientsupdateIngredient/${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
+      .put(`http://localhost:3001/updateIngredient/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((result) => {
         console.log(result);
         navigate("/");

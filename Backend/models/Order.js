@@ -27,7 +27,6 @@ const OrderSchema = new mongoose.Schema({
     enum: ["Pending", "To-Be-Delivered", "Delivered", "Cancelled"],
     default: "Pending",
   },
-  driverUID: { type: String, ref: "Driver" }, // Driver reference
   deliveryAddress: { type: String, required: true }, // Delivery address
   createdAt: { type: Date, default: Date.now },
 });

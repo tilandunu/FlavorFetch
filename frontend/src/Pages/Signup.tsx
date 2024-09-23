@@ -165,7 +165,7 @@ export function Signup() {
                 <div className="flex justify-center flex-col pb-5">
                   <Button
                     onClick={(e) => handleNext(e)}
-                    className="hover:bg-green-700 text-white duration-300"
+                    className="bg-black hover:bg-red-700 text-white duration-300"
                   >
                     {" "}
                     Next

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface NotificationProps {
   name: string;
@@ -12,7 +12,8 @@ const Notification: React.FC<NotificationProps> = (props) => {
       <div>
         <div>
           <h3>
-            We are currently low on {props.name}. The available quantity is {props.qty}.
+            We are currently low on {props.name}. The available quantity is{" "}
+            {props.qty}.
           </h3>
         </div>
         <div>
@@ -21,6 +22,6 @@ const Notification: React.FC<NotificationProps> = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default Notification;

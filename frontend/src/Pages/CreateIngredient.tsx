@@ -34,24 +34,20 @@ function CreateIngredient() {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("catagory", catagory);
-    formData.append("quantity", quantity.toString());
+    formData.append("stockQuantity", quantity.toString());
     formData.append("minQuantity", minQuantity.toString());
-    formData.append("price", price.toString());
+    formData.append("pricePerUnit", price.toString());
     formData.append("date", date);
     if (image) {
       formData.append("image", image);
     }
 
     axios
-      .post(
-        "http://localhost:3001/api/ingredients/createIngredient",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
+      .post("http://localhost:3001/createIngredient", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((result) => {
         console.log(result);
         navigate("/");

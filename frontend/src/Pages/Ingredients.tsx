@@ -20,7 +20,7 @@ function Ingredients() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/api/ingredients")
+      .get("http://localhost:3001")
       .then((result) => setIngredients(result.data))
       .catch((err) => console.log(err));
   }, []);
@@ -31,7 +31,7 @@ function Ingredients() {
     );
     if (confirmDelete) {
       axios
-        .delete("http://localhost:3001/api/ingredients/deleteIngredient/" + id)
+        .delete("http://localhost:3001/deleteIngredient/" + id)
         .then((res) => {
           console.log(res);
           window.location.reload();

@@ -40,6 +40,30 @@ const ChefViewRecipes = () => {
     navigate(`/updateRecipe/${recipeId}`); // Navigate to the update recipe page with recipeId
   };
 
+  const handleDeleteRecipe = async (recipeId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/recipes/deleteRecipe/${recipeId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        // Remove the deleted recipe from the state
+        setRecipes((prevRecipes) =>
+          prevRecipes.filter((recipe) => recipe._id !== recipeId)
+        );
+        console.log("Recipe deleted successfully");
+      } else {
+        const errorData = await response.json();
+        console.error("Error deleting recipe:", errorData.error);
+      }
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
+  };
+
   return (
     <div className="font-poppins bg-stone-100 min-h-screen hover:cursor-default">
       <div className="flex justify-between items-center px-32 p-10">
@@ -99,7 +123,10 @@ const ChefViewRecipes = () => {
                   {" "}
                   <span className="material-symbols-outlined">edit</span>
                 </div>
-                <div className="flex bg-white p-4 rounded-full items-center shadow-md cursor-pointer hover:bg-black hover:text-white duration-500">
+                <div
+                  className="flex bg-white p-4 rounded-full items-center shadow-md cursor-pointer hover:bg-black hover:text-white duration-500"
+                  onClick={() => handleDeleteRecipe(recipe._id)} // Pass recipe ID to delete handler
+                >
                   <span className="material-symbols-outlined">delete</span>
                 </div>
               </div>

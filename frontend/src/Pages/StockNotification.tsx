@@ -17,9 +17,7 @@ function StockNotification() {
 
   async function callGetLowStock() {
     try {
-      let res = await axios.get(
-        "http://localhost:3001/api/ingredients/getLowStockItems"
-      );
+      let res = await axios.get("http://localhost:3001/getLowStockItems");
 
       if (res) {
         console.log(res);
@@ -48,7 +46,7 @@ function StockNotification() {
                 qty={stock.quantity}
               />
             ))
-          : "Items are in stock"}
+          : "Badu thiyanawa pako"}
       </div>
     </div>
   );
