@@ -41,26 +41,31 @@ const ChefViewRecipes = () => {
   };
 
   const handleDeleteRecipe = async (recipeId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/api/recipes/deleteRecipe/${recipeId}`,
-        {
-          method: "DELETE",
-        }
-      );
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this recipe?"
+    );
 
-      if (response.ok) {
-        // Remove the deleted recipe from the state
-        setRecipes((prevRecipes) =>
-          prevRecipes.filter((recipe) => recipe._id !== recipeId)
+    if (confirmDelete) {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/api/recipes/deleteRecipe/${recipeId}`,
+          {
+            method: "DELETE",
+          }
         );
-        console.log("Recipe deleted successfully");
-      } else {
-        const errorData = await response.json();
-        console.error("Error deleting recipe:", errorData.error);
+
+        if (response.ok) {
+          setRecipes((prevRecipes) =>
+            prevRecipes.filter((recipe) => recipe._id !== recipeId)
+          );
+          console.log("Recipe deleted successfully");
+        } else {
+          const errorData = await response.json();
+          console.error("Error deleting recipe:", errorData.error);
+        }
+      } catch (error) {
+        console.error("Error deleting recipe:", error);
       }
-    } catch (error) {
-      console.error("Error deleting recipe:", error);
     }
   };
 

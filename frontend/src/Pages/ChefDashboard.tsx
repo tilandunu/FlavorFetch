@@ -18,6 +18,13 @@ const ChefDashboard = () => {
     navigate("/chefViewRecipe");
   };
 
+  const handleLogout = () => {
+    // Clear the userID cookie
+    Cookies.remove("userID");
+    // Navigate to the login or home page
+    navigate("/signin"); // Change this to your desired route
+  };
+
   const [firstName, setFirstName] = useState("");
 
   const tips = [
@@ -84,7 +91,10 @@ const ChefDashboard = () => {
           </p>{" "}
           <p> </p>
           <div className="flex content-center align-middle justify-center items-center gap-4">
-            <p className="flex mr-8 border-b-2 hover:border-black duration-500 cursor-pointer">
+            <p
+              className="flex mr-8 border-b-2 hover:border-black duration-500 cursor-pointer"
+              onClick={handleLogout}
+            >
               LOGOUT
             </p>
           </div>
