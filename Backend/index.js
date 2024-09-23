@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const userRouter = require("./routes/users");
+const ratingRouter = require("./routes/rating");
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ mongoose.connect(
 );
 
 app.use("/api/users", userRouter);
+app.use("/api/rating", ratingRouter);
 
 app.listen(3001, () => {
   console.log("Server is running");

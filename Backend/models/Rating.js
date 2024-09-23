@@ -13,6 +13,7 @@ const RatingSchema = new mongoose.Schema({
   },
   rating: { type: Number, required: true, min: 1, max: 5 }, // Rating scale from 1 to 5
   comment: { type: String }, // Optional comment about the recipe
+  image: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 
