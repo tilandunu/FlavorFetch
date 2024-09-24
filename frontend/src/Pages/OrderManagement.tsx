@@ -12,9 +12,10 @@ const OrderManagement = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetching orders specific to the logged-in customer
   useEffect(() => {
     const fetchOrders = async () => {
-      const customerUID = Cookies.get("userID");
+      const customerUID = Cookies.get("userID"); // Get customer ID from cookies
       if (!customerUID) {
         setError("Customer ID not found. Please log in.");
         setIsLoading(false);
@@ -23,9 +24,9 @@ const OrderManagement = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/orders/customerOrders?customerUID=${customerUID}`
+          `http://localhost:3001/api/orders/customerOrders?customerUID=${customerUID}&status=Delivered`
         );
-        setOrders(response.data);
+        setOrders(response.data); // Setting the orders to state
         setIsLoading(false);
       } catch (err) {
         setError("Failed to fetch orders. Please try again.");
@@ -36,10 +37,12 @@ const OrderManagement = () => {
     fetchOrders();
   }, []);
 
+  // Navigation functions
   const navigateOrderManagementNC = () => navigate("/orderManagementNC");
   const navigateOrderManagement = () => navigate("/orderManagement");
   const navigateHome = () => navigate("/home");
 
+  // Modal handling
   const openModal = (order) => {
     setSelectedOrder(order);
     setIsModalOpen(true);
@@ -47,6 +50,7 @@ const OrderManagement = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
+  // Loading and error states
   if (isLoading)
     return <div className="text-center mt-8">Loading orders...</div>;
   if (error)
@@ -58,7 +62,7 @@ const OrderManagement = () => {
         <div className="flex flex-col items-center w-[25%]">
           <img
             src="../trans black.png"
-            alt=""
+            alt="Logo"
             className="w-28 h-28 mt-16 mb-28"
           />
           <div className="flex flex-col gap-8 cursor-pointer">
@@ -66,7 +70,7 @@ const OrderManagement = () => {
               className="bg-slate-800 flex justify-center w-44 h-8 items-center rounded-2xl"
               onClick={navigateOrderManagement}
             >
-              <p className="uppercase text-xs text-white">Completed</p>
+              <p className="uppercase text-xs text-white">Delivered</p>
             </div>
             <div
               className="bg-slate-200 flex justify-center w-44 h-8 items-center rounded-2xl"
@@ -76,6 +80,7 @@ const OrderManagement = () => {
             </div>
           </div>
         </div>
+
         <div className="flex items-center my-12">
           <Separator
             orientation="vertical"
@@ -83,6 +88,7 @@ const OrderManagement = () => {
           />
         </div>
 
+        {/* Orders dashboard */}
         <div className="flex flex-col w-[75%] px-32">
           <div className="flex flex-col">
             <div className="flex justify-between items-center my-20">
@@ -97,6 +103,7 @@ const OrderManagement = () => {
               </div>
             </div>
 
+            {/* Displaying customer-specific completed orders */}
             {orders.map((order) => (
               <section
                 key={order._id}
@@ -104,7 +111,7 @@ const OrderManagement = () => {
                 onClick={() => openModal(order)}
               >
                 <div className="flex bg-white py-10 px-10 shadow-md rounded-lg border-2 border-stone-400 justify-between items-center">
-                  <p>ORDER #{order._id.slice(-6)}</p>
+                  <p>ORDER #{order._id}</p>
                   <p className="text-xs text-stone-400">CLICK TO VIEW</p>
                 </div>
               </section>
@@ -113,6 +120,7 @@ const OrderManagement = () => {
         </div>
       </div>
 
+      {/* Modal for viewing order details */}
       {isModalOpen && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center font-poppins">
           <div className="bg-white p-8 rounded-lg w-[400px]">
