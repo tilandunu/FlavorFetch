@@ -78,6 +78,10 @@ const AllRecipes = () => {
         <p className="text-stone-500 text-xs">
           "a traditional Yorkshire recipe"
         </p>
+        <div>
+          {" "}
+          <Input className="m-full"></Input>
+        </div>
       </div>
       {/* <div className="flex items-center justify-center my-10">
         <Input className="w-1/2 border-2 border-gray-400"></Input>

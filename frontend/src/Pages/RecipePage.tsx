@@ -70,12 +70,21 @@ const RecipePage = () => {
     toast.success("Item removed from the cart", { position: "top-right" });
   };
 
-  const navigateHome = () => {
-    navigate("/home");
+  const confirmNavigation = (destination) => {
+    const userConfirmed = window.confirm(
+      "You will lose your current cart details. Are you sure you want to leave this page?"
+    );
+    if (userConfirmed) {
+      navigate(destination);
+    }
   };
 
-  const navigateAllRecipes = () => {
-    navigate("/allrecipes");
+  const handleHomeClick = () => {
+    confirmNavigation("/home");
+  };
+
+  const handleBackClick = () => {
+    confirmNavigation("/allrecipes");
   };
 
   if (!recipe) return <p>Loading...</p>;
@@ -84,13 +93,10 @@ const RecipePage = () => {
     <div className="font-poppins cursor-default bg-stone-100">
       <div className="flex gap-7 mx-16 py-10 justify-between">
         <div className="flex gap-7 hover:cursor-pointer">
-          <span className="material-symbols-outlined" onClick={navigateHome}>
+          <span className="material-symbols-outlined" onClick={handleHomeClick}>
             home
           </span>
-          <span
-            className="material-symbols-outlined"
-            onClick={navigateAllRecipes}
-          >
+          <span className="material-symbols-outlined" onClick={handleBackClick}>
             arrow_back
           </span>
         </div>
@@ -221,7 +227,6 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
             <table className="w-full ">
               <thead>
                 <tr className="border-b">
-                  <th className="p-2 text-center">Image</th>
                   <th className="p-2 text-center">Ingredient</th>
                   <th className="p-2 text-center">Price</th>
                   <th className="p-2 text-center">Quantity</th>
@@ -231,15 +236,6 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
               <tbody>
                 {cartItems.map((item, index) => (
                   <tr key={item._id} className="border-b">
-                    <td className="p-2 text-center">
-                      <div className="flex justify-center items-center">
-                        <img
-                          src={item.ingredientImage}
-                          alt={item.name}
-                          className="w-12 h-12 rounded"
-                        />
-                      </div>
-                    </td>
                     <td className="p-2 text-center">{item.name}</td>
                     <td className="p-2 text-center">{item.pricePerUnit}</td>
                     <td className="p-2 text-center">
