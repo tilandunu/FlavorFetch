@@ -7,6 +7,7 @@ const userRouter = require("./routes/users");
 const ticketRouter = require("./routes/ticket");
 const feedbackRouter = require("./routes/feedback");
 const recipeRouter = require("./routes/recipes");
+const orderRouter = require("./routes/orders");
 const driverRouters = require("./routes/driverRoutes");
 const orderRouters = require("./routes/orderRoutes");
 
@@ -34,6 +35,7 @@ app.use("/api/users", userRouter);
 app.use("/api/tickets", ticketRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/recipes", recipeRouter);
+app.use("/api/orders", orderRouter);
 app.use("/api/orders", orderRouters);
 app.use("/api/drivers", driverRouters);
 

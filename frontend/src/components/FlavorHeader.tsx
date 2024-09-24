@@ -23,6 +23,10 @@ const FlavorHeader = () => {
     navigate("/orderManagement");
   };
 
+  const navigateOrders = () => {
+    navigate("/orderManagement");
+  };
+
   return (
     <div>
       <div className="flex flex-row justify-center mx-16 font-poppins">

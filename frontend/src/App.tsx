@@ -34,6 +34,8 @@ import RequestIngredient from "./Pages/Thila";
 import StockNotification from "./Pages/StockNotification";
 
 import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
+import OrderManagement from "./Pages/OrderManagement";
+import OrderManagementNC from "./Pages/OrderManagementNC";
 
 function App() {
   return (
@@ -120,6 +122,11 @@ function App() {
                       }}
                     />
                   }
+                />
+                <Route path="/orderManagement" element={<OrderManagement />} />
+                <Route
+                  path="/orderManagementNC"
+                  element={<OrderManagementNC />}
                 />
               </Routes>
 

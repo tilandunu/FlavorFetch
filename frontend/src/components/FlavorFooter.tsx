@@ -1,13 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const FlavorFooter = () => {
+  const navigate = useNavigate();
+
+  const navigateSignupSupplier = () => {
+    navigate("/signupSupplier");
+  };
+
   return (
     <div className="font-poppins cursor-default">
       <div className="align-middle content-center flex flex-row justify-center gap-44 bg-zinc-800 py-4">
         <p className="text-white tracking-wide py-3 text-sm">
           BECOME A SUPPLIER AND EXPAND YOUR REACH, JOIN US TODAY
         </p>
-        <p className="bg-red-600 text-white px-24 py-3 rounded-lg text-sm hover:bg-white hover:text-black duration-500 cursor-pointer">
+        <p
+          className="bg-red-600 text-white px-24 py-3 rounded-lg text-sm hover:bg-white hover:text-black duration-500 cursor-pointer"
+          onClick={navigateSignupSupplier}
+        >
           REGISTER
         </p>
       </div>

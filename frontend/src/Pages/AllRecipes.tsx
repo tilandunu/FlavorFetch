@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
+import { CardFooter } from "@/components/ui/card";
+import FlavorFooter from "@/components/FlavorFooter";
+import FlavorHeader from "@/components/FlavorHeader";
 
 const AllRecipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -76,9 +79,9 @@ const AllRecipes = () => {
           "a traditional Yorkshire recipe"
         </p>
       </div>
-      <div className="flex items-center justify-center my-10">
+      {/* <div className="flex items-center justify-center my-10">
         <Input className="w-1/2 border-2 border-gray-400"></Input>
-      </div>
+      </div> */}
       <div className="flex justify-center gap-7 mt-20">
         <div className="bg-rose-900 w-32 h-10 flex items-center justify-center text-xs text-rose-100 rounded-2xl">
           <p>MAIN COURSES</p>
@@ -101,7 +104,7 @@ const AllRecipes = () => {
       </div>
 
       <div className="flex items-center justify-center mt-10">
-        <div className="flex gap-20 justify-center px-32 py-10 flex-wrap">
+        <div className="flex gap-10 justify-center px-32 py-10 flex-wrap">
           {recipes.map((recipe) => (
             <section key={recipe._id} className="flex">
               <div className="flex flex-col bg-stone-200 rounded-3xl">
@@ -147,6 +150,9 @@ const AllRecipes = () => {
             </section>
           ))}
         </div>
+      </div>
+      <div className="mt-32">
+        <FlavorFooter />
       </div>
     </div>
   );
