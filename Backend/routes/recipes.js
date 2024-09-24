@@ -248,4 +248,19 @@ router.get("/getSelectedIngredients/:id", async (req, res) => {
   }
 });
 
+router.delete("/deleteRecipe/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedRecipe = await RecipeModel.findByIdAndDelete(id);
+    if (!deletedRecipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+    res.status(200).json({ message: "Recipe deleted successfully!" });
+  } catch (error) {
+    console.error("Error deleting recipe:", error);
+    res.status(500).json({ error: "Error deleting recipe" });
+  }
+});
+
 module.exports = router;

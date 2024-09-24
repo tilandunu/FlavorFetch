@@ -16,7 +16,11 @@ const FlavorHeader = () => {
   };
 
   const navigateTicket = () => {
-    navigate("/ticketDashboard");
+    navigate("/SupportTicketDashboard");
+  };
+
+  const navigateOrders = () => {
+    navigate("/orderManagement");
   };
 
   const navigateOrders = () => {

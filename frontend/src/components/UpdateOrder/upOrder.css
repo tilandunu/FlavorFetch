@@ -1,0 +1,107 @@
+.cont {
+    background: url('D:\testProject\FlavorFetch\frontend\public\new.jpg') no-repeat center center fixed;
+    background-size: cover; /* Ensures the image covers the whole page */
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.update-order-container {
+    width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.update-order-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-order-form label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.update-order-form input,
+.update-order-form select,
+.update-order-form textarea {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.update-order-form textarea {
+    resize: vertical;
+    height: 100px; /* Adjust height for ingredients */
+}
+
+.submit-button {
+    padding: 10px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.back-button {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #c62828; /* Darker red */
+}
+
+
+@media (max-width: 600px) {
+    .update-order-container {
+        padding: 15px;
+    }
+
+    .form-title {
+        font-size: 20px;
+    }
+
+    .update-order-form input,
+    .update-order-form select,
+    .update-order-form textarea {
+        font-size: 14px;
+    }
+
+    .submit-button {
+        font-size: 14px;
+    }
+}
+
+

@@ -51,12 +51,20 @@ const AllRecipes = () => {
     navigate(`/recipePage/${recipeId}`);
   };
 
+  const handleGoToHome = () => {
+    navigate(`/home`);
+  };
+
   return (
     <div className="font-poppins">
       <div className="flex gap-7 mx-16 my-10 justify-between">
         <div className="flex gap-7">
-          <span className="material-symbols-outlined">home</span>
-          <span className="material-symbols-outlined">arrow_back</span>
+          <span
+            className="material-symbols-outlined cursor-pointer"
+            onClick={handleGoToHome}
+          >
+            home
+          </span>
         </div>
       </div>
       <div className="flex flex-col items-center">
