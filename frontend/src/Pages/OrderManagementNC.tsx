@@ -25,7 +25,7 @@ const OrderManagementNC = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/orders/customerOrders?customerUID=${customerUID}&status=To-Be-Delivered`
+          `http://localhost:3001/api/order/customerOrders?customerUID=${customerUID}&status=To-Be-Delivered`
         );
         setOrders(response.data); // Set fetched orders
         setIsLoading(false);
@@ -64,7 +64,7 @@ const OrderManagementNC = () => {
     }
 
     try {
-      await axios.put(`http://localhost:3001/api/orders/${selectedOrder._id}`, {
+      await axios.put(`http://localhost:3001/api/order/${selectedOrder._id}`, {
         deliveryAddress: newAddress,
       });
       // Update the orders list with the new address
@@ -88,7 +88,7 @@ const OrderManagementNC = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:3001/api/orders/${orderId}`);
+      await axios.delete(`http://localhost:3001/api/order/${orderId}`);
       // Remove the deleted order from the state
       const updatedOrders = orders.filter((order) => order._id !== orderId);
       setOrders(updatedOrders);

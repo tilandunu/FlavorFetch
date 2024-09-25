@@ -24,7 +24,7 @@ const OrderManagement = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:3001/api/orders/customerOrders?customerUID=${customerUID}&status=Delivered`
+          `http://localhost:3001/api/order/customerOrders?customerUID=${customerUID}&status=Delivered`
         );
         setOrders(response.data); // Setting the orders to state
         setIsLoading(false);

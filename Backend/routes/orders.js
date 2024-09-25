@@ -2,6 +2,38 @@ const express = require("express");
 const router = express.Router();
 const OrderModel = require("../models/Order");
 
+router.post("/create", async (req, res) => {
+  const {
+    customerUID,
+    ingredients,
+    totalAmount,
+    paymentMethod,
+    status,
+    deliveryAddress,
+  } = req.body;
+
+  if (!customerUID || !ingredients || !totalAmount || !deliveryAddress) {
+    return res.status(400).json({ message: "Missing required order data" });
+  }
+
+  try {
+    const newOrder = new OrderModel({
+      customerUID,
+      ingredients,
+      totalAmount,
+      paymentMethod,
+      status,
+      deliveryAddress,
+    });
+
+    const savedOrder = await newOrder.save();
+    res.status(201).json(savedOrder);
+  } catch (error) {
+    console.error("Error creating order:", error);
+    res.status(500).json({ message: "Failed to create order" });
+  }
+});
+
 // Route to fetch customer orders by customerUID and status
 router.get("/customerOrders", async (req, res) => {
   const customerUID = req.query.customerUID;

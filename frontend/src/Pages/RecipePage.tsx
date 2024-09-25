@@ -4,6 +4,7 @@ import axios from "axios";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const RecipePage = () => {
   const { recipeId } = useParams();
@@ -211,6 +212,45 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
     });
   };
 
+  //the checkout part
+  const handleCheckout = async () => {
+    const customerUID = Cookies.get("userID"); // Assuming you have imported Cookies
+
+    if (!customerUID) {
+      toast.error("You must be logged in to checkout", {
+        position: "top-right",
+      });
+      return;
+    }
+
+    const orderData = {
+      customerUID: customerUID,
+      ingredients: cartItems.map((item, index) => ({
+        ingredient: item._id,
+        quantity: quantities[index],
+      })),
+      totalAmount: cartItems.reduce(
+        (total, item, index) => total + item.pricePerUnit * quantities[index],
+        0
+      ),
+      paymentMethod: "Cash on Delivery", // Default payment method
+      status: "To-Be-Delivered", // Default status
+      deliveryAddress: "123 Main Street", // You can replace this with actual user input
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/api/order/create", // Adjust the API endpoint if necessary
+        orderData
+      );
+      toast.success("Order placed successfully!", { position: "top-right" });
+      onClose(); // Close the modal after successful checkout
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      toast.error("Failed to place the order", { position: "top-right" });
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-md flex justify-center items-center font-poppins">
       <div className="bg-white rounded-lg shadow-lg w-[90%] h-[80%]">
@@ -285,7 +325,10 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
                   .toFixed(2)}
               </p>
             </div>
-            <button className="w-full bg-red-500 text-white p-2 rounded-lg uppercase font-semibold">
+            <button
+              className="w-full bg-red-500 text-white p-2 rounded-lg uppercase font-semibold"
+              onClick={handleCheckout}
+            >
               Checkout
             </button>
           </div>

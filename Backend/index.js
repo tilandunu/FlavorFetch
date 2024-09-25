@@ -35,7 +35,7 @@ app.use("/api/users", userRouter);
 app.use("/api/tickets", ticketRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/recipes", recipeRouter);
-app.use("/api/orders", orderRouter);
+app.use("/api/order", orderRouter);
 app.use("/api/orders", orderRouters);
 app.use("/api/drivers", driverRouters);
 
