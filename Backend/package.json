@@ -16,8 +16,13 @@
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+<<<<<<< HEAD
     "mongoose": "^8.5.3",
     "nodemon": "^3.1.4",
     "react-router-dom": "^6.26.1"
+=======
+    "mongoose": "^8.5.2",
+    "nodemon": "^3.1.4"
+>>>>>>> parent of a55284d (created supplier management branch)
   }
 }
