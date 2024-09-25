@@ -46,7 +46,7 @@ function StockNotification() {
                 qty={stock.quantity}
               />
             ))
-          : "Badu thiyanawa pako"}
+          : "Stock available"}
       </div>
     </div>
   );
