@@ -27,15 +27,13 @@ import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
 import DriverDashboard from "./Pages/Driver/Dashboard";
 import Role from "./Pages/Driver/DeleveryHistory.tsx";
 import UserManagement from "./Pages/Driver/UserManagement";
-import Ingredients from "./Pages/Ingredients";
-import CreateIngredient from "./Pages/CreateIngredient";
-import UpdateIngredient from "./Pages/UpdateIngredient";
-import RequestIngredient from "./Pages/Thila";
-import StockNotification from "./Pages/StockNotification";
 
 import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
 import OrderManagement from "./Pages/OrderManagement";
 import OrderManagementNC from "./Pages/OrderManagementNC";
+import AddSupplies from "./Pages/AddSupplies.tsx";
+import ManageSupplies from "./Pages/ManageSupplies.tsx";
+import EditSupplies from "./Pages/EditSupplies.tsx";
 
 function App() {
   return (
@@ -84,11 +82,6 @@ function App() {
                 <Route path="/role-management" element={<Role />} />
                 <Route path="/orderdetails/:id" element={<UpOrder />} />
                 <Route path="/user-management" element={<UserManagement />} />
-                <Route path="/ingredientHome" element={<Ingredients />} />
-                <Route path="/create" element={<CreateIngredient />} />
-                <Route path="/update/:id" element={<UpdateIngredient />} />
-                <Route path="/requestIng" element={<RequestIngredient />} />
-                <Route path="/stocknt" element={<StockNotification />} />
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
                 <Route path="/recipePage/:recipeId" element={<RecipePage />} />
@@ -127,6 +120,12 @@ function App() {
                 <Route
                   path="/orderManagementNC"
                   element={<OrderManagementNC />}
+                />
+                <Route path="/addSupplies" element={<AddSupplies />} />
+                <Route path="/manageSupplies" element={<ManageSupplies />} />
+                <Route
+                  path="/editSupplies/:orderId"
+                  element={<EditSupplies />}
                 />
               </Routes>
 
