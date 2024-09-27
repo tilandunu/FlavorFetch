@@ -1,44 +1,59 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const bodyParser = require("body-parser");
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from "dotenv";
+import cookieParser from 'cookie-parser';
 
-const userRouter = require("./routes/users");
-const ticketRouter = require("./routes/ticket");
-const feedbackRouter = require("./routes/feedback");
-const recipeRouter = require("./routes/recipes");
-const orderRouter = require("./routes/orders");
-const driverRouters = require("./routes/driverRoutes");
-const orderRouters = require("./routes/orderRoutes");
+// Import routes
+import pr from './routes/product.route.js';
+import userRouter from './routes/users';
+import ticketRouter from './routes/ticket';
+import feedbackRouter from './routes/feedback';
+import recipeRouter from './routes/recipes';
+import orderRouter from './routes/orders';
+import driverRouter from './routes/driverRoutes';
 
-const app = express();
-app.use(express.json());
-app.use(cors());
-app.use(bodyParser.json());
+dotenv.config();
 
-mongoose
-  .connect(
-    "mongodb+srv://tilandunu:1234@cluster0.kacglu2.mongodb.net/FlavorFetch?retryWrites=true&w=majority&appName=Cluster0",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+// MongoDB connection
+mongoose.connect(
+  process.env.MONGO_URI || "mongodb+srv://tilandunu:1234@cluster0.kacglu2.mongodb.net/FlavorFetch?retryWrites=true&w=majority&appName=Cluster0",
+  { useNewUrlParser: true, useUnifiedTopology: true }
+)
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log('MongoDB connected');
   })
   .catch((err) => {
-    console.error("MongoDB connection error:", err);
+    console.error('MongoDB connection error:', err);
   });
 
-app.use("/api/users", userRouter);
-app.use("/api/tickets", ticketRouter);
-app.use("/api/feedback", feedbackRouter);
-app.use("/api/recipes", recipeRouter);
-app.use("/api/orders", orderRouter);
-app.use("/api/orders", orderRouters);
-app.use("/api/drivers", driverRouters);
+const app = express();
 
-app.listen(3001, () => {
-  console.log("Server is running");
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
+
+// Routes
+app.use('/api/product', pr);         // Product route
+app.use('/api/users', userRouter);   // User route
+app.use('/api/tickets', ticketRouter);   // Ticket route
+app.use('/api/feedback', feedbackRouter); // Feedback route
+app.use('/api/recipes', recipeRouter);   // Recipe route
+app.use('/api/orders', orderRouter);   // Order route
+app.use('/api/drivers', driverRouter);   // Driver route
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
