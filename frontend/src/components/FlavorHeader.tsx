@@ -12,7 +12,7 @@ const FlavorHeader = () => {
   };
 
   const navigateProfile = () => {
-    navigate("/customerUserProfile");
+    navigate("/profileCustomer");
   };
 
   const navigateTicket = () => {

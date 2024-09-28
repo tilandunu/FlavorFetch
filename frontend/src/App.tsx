@@ -26,6 +26,8 @@ import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
 import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
 import OrderManagement from "./Pages/OrderManagement";
 import OrderManagementNC from "./Pages/OrderManagementNC";
+import ProfileCustomer from "./Pages/ProfileCustomer.tsx";
+import ProfileOther from "./Pages/ProfileOther.tsx";
 
 function App() {
   return (
@@ -111,6 +113,8 @@ function App() {
                   path="/orderManagementNC"
                   element={<OrderManagementNC />}
                 />
+                <Route path="/profileCustomer" element={<ProfileCustomer />} />
+                <Route path="/profileOther" element={<ProfileOther />} />
               </Routes>
 
               <ToastContainer />
