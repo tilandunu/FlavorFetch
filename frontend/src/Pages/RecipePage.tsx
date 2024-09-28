@@ -5,6 +5,8 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 const RecipePage = () => {
   const { recipeId } = useParams();
@@ -86,6 +88,95 @@ const RecipePage = () => {
 
   const handleBackClick = () => {
     confirmNavigation("/allrecipes");
+  };
+
+  const generatePDF = async () => {
+    const doc = new jsPDF();
+
+    // Set a modern font and a clean title layout
+    doc.setFont("Helvetica ", "bold");
+    doc.setTextColor(40, 44, 52); // Dark modern text color
+    doc.setFontSize(24);
+    doc.text(recipe.title, 20, 20);
+
+    // Add chef name with a stylish format
+    doc.setFontSize(14);
+    doc.setFont("Helvetica ", "italic");
+    doc.text(`Chef: ${chef}`, 20, 35);
+
+    // Add a horizontal line to separate sections
+    doc.setDrawColor(180, 180, 180); // Light gray for the line
+    doc.line(20, 40, 190, 40);
+
+    // Add recipe description in a smaller, lighter font
+    doc.setFont("Helvetica ", "normal");
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100); // Lighter text for description
+    doc.text(recipe.description, 20, 50, { maxWidth: 170 });
+
+    // Add serving count with a larger, bold font
+
+    doc.setFont("Helvetica ", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0); // Green color for emphasis
+    doc.text(`Serves: ${recipe.servingCount}`, 20, 65);
+
+    // Add main ingredients section
+    doc.setFont("Helvetica ", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0); // Back to modern dark text
+    doc.text("Ingredients:", 20, 80);
+
+    // Use a bullet list format for the ingredients
+    doc.setFont("Helvetica ", "normal");
+    doc.setFontSize(12);
+    ingredients.forEach((ingredient, index) => {
+      doc.text(`• ${ingredient.name}`, 25, 90 + index * 10);
+    });
+
+    // Add additional ingredients section if applicable
+    if (recipe.additionalIngredients.length > 0) {
+      const additionalStartY = 90 + ingredients.length * 10 + 10;
+      doc.setFont("Helvetica ", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0); // Light blue for additional ingredients
+      doc.text("Additional Ingredients:", 20, additionalStartY);
+
+      doc.setFont("Helvetica ", "normal");
+      doc.setFontSize(12);
+      recipe.additionalIngredients.forEach((ingredient, index) => {
+        doc.text(`• ${ingredient}`, 25, additionalStartY + 10 + index * 10);
+      });
+    }
+
+    // Add a page break and instructions
+    doc.addPage();
+    doc.setFont("Helvetica ", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Instructions:", 20, 20);
+
+    // Use a clean and spaced-out layout for instructions
+    doc.setFont("Helvetica ", "normal");
+    doc.setFontSize(12);
+    recipe.instructions.forEach((instruction, index) => {
+      doc.text(`${index + 1}. ${instruction}`, 20, 30 + index * 10, {
+        maxWidth: 170,
+      });
+    });
+
+    // Add a footer with page number and branding
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Page ${i} of ${pageCount}`, 180, 290);
+      doc.text("FlavorFetch Recipe", 20, 290); // Branding or any other info
+    }
+
+    // Save the PDF
+    doc.save(`${recipe.title}.pdf`);
   };
 
   if (!recipe) return <p>Loading...</p>;
@@ -181,9 +272,15 @@ const RecipePage = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col items-center w-full my-4 justify-center">
-          <span className="material-symbols-outlined">arrow_upward</span>
-          <p>BACK TO TOP</p>
+        <div className="flex flex-col items-center w-full my-4 justify-center ">
+          <div
+            className="flex flex-col border-2 border-black items-center p-10 hover:p-12 duration-500 hover:bg-black hover:text-stone-200"
+            onClick={generatePDF}
+          >
+            {" "}
+            <span className="material-symbols-outlined">arrow_downward</span>
+            <p>DOWNLOAD RECIPE</p>
+          </div>
         </div>
       </div>
 
