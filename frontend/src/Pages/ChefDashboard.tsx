@@ -14,6 +14,10 @@ const ChefDashboard = () => {
     navigate("/addRecipe");
   };
 
+  const navigateProfile = () => {
+    navigate("/profileOther");
+  };
+
   const navigateChefViewRecipe = () => {
     navigate("/chefViewRecipe");
   };
@@ -73,7 +77,10 @@ const ChefDashboard = () => {
         >
           VIEW RECIPES
         </p>
-        <p className="cursor-pointer hover:text-green-600 duration-700">
+        <p
+          className="cursor-pointer hover:text-green-600 duration-700"
+          onClick={navigateProfile}
+        >
           PROFILE MANAGEMENT
         </p>
         <p className="mt-32 text-red-600 cursor-pointer hover:text-red-700 duration-700">

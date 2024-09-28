@@ -31,6 +31,8 @@ import UserManagement from "./Pages/Driver/UserManagement";
 import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
 import OrderManagement from "./Pages/OrderManagement";
 import OrderManagementNC from "./Pages/OrderManagementNC";
+import ProfileCustomer from "./Pages/ProfileCustomer.tsx";
+import ProfileOther from "./Pages/ProfileOther.tsx";
 import AddSupplies from "./Pages/AddSupplies.tsx";
 import ManageSupplies from "./Pages/ManageSupplies.tsx";
 import EditSupplies from "./Pages/EditSupplies.tsx";
@@ -78,10 +80,8 @@ function App() {
                 />
                 <Route path="/ticketDashboard" element={<TicketDashboard />} />
 
-                <Route path="/driverdashboard" element={<DriverDashboard />} />
-                <Route path="/role-management" element={<Role />} />
                 <Route path="/orderdetails/:id" element={<UpOrder />} />
-                <Route path="/user-management" element={<UserManagement />} />
+
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
                 <Route path="/recipePage/:recipeId" element={<RecipePage />} />
@@ -121,6 +121,8 @@ function App() {
                   path="/orderManagementNC"
                   element={<OrderManagementNC />}
                 />
+                <Route path="/profileCustomer" element={<ProfileCustomer />} />
+                <Route path="/profileOther" element={<ProfileOther />} />
                 <Route path="/addSupplies" element={<AddSupplies />} />
                 <Route path="/manageSupplies" element={<ManageSupplies />} />
                 <Route
