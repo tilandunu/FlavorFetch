@@ -23,11 +23,19 @@ import { TicketUserAccount } from "./Pages/TicketUserAccount";
 import { ViewMyTickets } from "./Pages/ViewMyTickets";
 import { EditSupportTicket } from "./Pages/EditSupportTicket";
 import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
+
+import DriverDashboard from "./Pages/Driver/Dashboard";
+import Role from "./Pages/Driver/DeleveryHistory.tsx";
+import UserManagement from "./Pages/Driver/UserManagement";
+
 import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
 import OrderManagement from "./Pages/OrderManagement";
 import OrderManagementNC from "./Pages/OrderManagementNC";
 import ProfileCustomer from "./Pages/ProfileCustomer.tsx";
 import ProfileOther from "./Pages/ProfileOther.tsx";
+import AddSupplies from "./Pages/AddSupplies.tsx";
+import ManageSupplies from "./Pages/ManageSupplies.tsx";
+import EditSupplies from "./Pages/EditSupplies.tsx";
 
 function App() {
   return (
@@ -115,6 +123,12 @@ function App() {
                 />
                 <Route path="/profileCustomer" element={<ProfileCustomer />} />
                 <Route path="/profileOther" element={<ProfileOther />} />
+                <Route path="/addSupplies" element={<AddSupplies />} />
+                <Route path="/manageSupplies" element={<ManageSupplies />} />
+                <Route
+                  path="/editSupplies/:orderId"
+                  element={<EditSupplies />}
+                />
               </Routes>
 
               <ToastContainer />
