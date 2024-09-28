@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -9,6 +9,16 @@ const ManageSupplies = () => {
   const [orders, setOrders] = useState([]);
   const [query, setQuery] = useState("");
   const supplierID = Cookies.get("userID");
+
+  const navigate = useNavigate();
+
+  const navigateAddSupplies = () => {
+    navigate("/addSupplies");
+  };
+
+  const navigateProfile = () => {
+    navigate("/profileOther");
+  };
 
   // Fetch supply orders
   useEffect(() => {
@@ -75,22 +85,31 @@ const ManageSupplies = () => {
       {/* Content Container - Positioned in the center of the image */}
       <div className="relative z-10 flex justify-center items-center min-h-screen">
         <div className="lg:mt-0 mt-0">
-          <div className="w-[1200px] h-[600px] rounded-3xl shadow-sm bg-gray-100 p-4">
-            <div className="ml-4">
+          <div className="w-[1400px] h-[600px] rounded-3xl shadow-sm bg-gray-100 p-4">
+            <div className="flex gap-6 ml-10">
               <button
-                className="absolute mt-8 w-32 h-10 rounded-full border-2 uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 "
+                className="mt-8 w-32 h-10 rounded-full border-2 uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
                 onClick={generatePDFReport} // Add the report function here
               >
                 Report
               </button>
 
-              <Link to={`/addSupplies`}>
-                <button className="absolute mt-8 w-32 h-10 rounded-full border-2 ml-36 uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 ">
-                  Add New
-                </button>
-              </Link>
+              <button
+                className="mt-8 w-32 h-10 rounded-full border-2 uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
+                onClick={navigateProfile}
+                // Add the report function here
+              >
+                Profile
+              </button>
+
+              <button
+                className="mt-8 w-32 h-10 rounded-full border-2  uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
+                onClick={navigateAddSupplies}
+              >
+                Add New
+              </button>
             </div>
-            <div className="flex justify-center items-center mt-4">
+            <div className="flex justify-center items-center relative bottom-8">
               <div className="flex flex-col items-center">
                 <h1 className="font-serif text-2xl opacity-70 mt-8 uppercase">
                   Supply List
