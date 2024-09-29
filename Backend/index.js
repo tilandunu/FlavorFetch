@@ -11,6 +11,7 @@ const orderRouter = require("./routes/orders");
 const driverRouters = require("./routes/driverRoutes");
 const orderRouters = require("./routes/orderRoutes");
 const supplyOrderRouters = require("./routes/supplyRoute");
+const preferenceRouters = require("./routes/preferenceRoute");
 
 const app = express();
 app.use(express.json());
@@ -40,6 +41,7 @@ app.use("/api/order", orderRouter);
 app.use("/api/orders", orderRouters);
 app.use("/api/drivers", driverRouters);
 app.use("/api/supplyOrder", supplyOrderRouters);
+app.use("/api/preference", preferenceRouters);
 
 app.listen(3001, () => {
   console.log("Server is running");

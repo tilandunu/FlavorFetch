@@ -29,6 +29,9 @@ import ProfileOther from "./Pages/ProfileOther.tsx";
 import AddSupplies from "./Pages/AddSupplies.tsx";
 import ManageSupplies from "./Pages/ManageSupplies.tsx";
 import EditSupplies from "./Pages/EditSupplies.tsx";
+import Preference from "./Pages/Preference.tsx";
+import EditPreferences from "./Pages/EditPreferences.tsx";
+import UpdatePreference from "./Pages/UpdatePreference.tsx";
 
 function App() {
   return (
@@ -115,6 +118,12 @@ function App() {
                   path="/editSupplies/:orderId"
                   element={<EditSupplies />}
                 />
+                <Route
+                  path="/editSupplies/:orderId"
+                  element={<EditSupplies />}
+                />
+                <Route path="/preference" element={<Preference />} />
+                <Route path="/editpreference" element={<EditPreferences />} />
               </Routes>
 
               <ToastContainer />

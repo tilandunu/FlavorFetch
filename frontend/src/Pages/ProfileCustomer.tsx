@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/firebase";
 import { getDoc, doc } from "firebase/firestore";
-import Cookies from "js-cookie"; // Importing the js-cookie library
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify"; // Assuming react-toastify is used for toast notifications
 
 const ProfileCustomer = () => {
   const [userData, setUserData] = useState({
@@ -14,25 +16,29 @@ const ProfileCustomer = () => {
     email: "",
   });
 
+  const [showPreferences, setShowPreferences] = useState(false);
+
   const navigate = useNavigate();
+  const customerUID = Cookies.get("userID");
 
   const handleLogout = () => {
-    // Clear the userID cookie
     Cookies.remove("userID");
-    // Navigate to the login or home page
-    navigate("/signin"); // Change this to your desired route
+    navigate("/signin");
+  };
+
+  const navigatePreferences = () => {
+    if (showPreferences) {
+      navigate("/editpreference");
+    } else {
+      toast.error("No preferences found. Please set your preferences first.");
+    }
   };
 
   useEffect(() => {
     const fetchUserData = async () => {
-      // Retrieve the user ID from the cookie
-      const userId = Cookies.get("userID");
-
-      if (userId) {
-        // Fetch user data from Firestore
-        const docRef = doc(db, "Users", userId);
+      if (customerUID) {
+        const docRef = doc(db, "Users", customerUID);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const data = docSnap.data();
           setUserData({
@@ -49,8 +55,21 @@ const ProfileCustomer = () => {
       }
     };
 
+    // Check if customer has preferences
+    const checkPreferences = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/api/preference/check/${customerUID}`
+        );
+        setShowPreferences(res.data.exists); // Set state based on whether preferences exist
+      } catch (error) {
+        console.error("Error checking preferences:", error);
+      }
+    };
+
     fetchUserData();
-  }, []);
+    checkPreferences();
+  }, [customerUID]);
 
   return (
     <div className="bg-[#d8d8d8] p-2 font-poppins">
@@ -58,7 +77,9 @@ const ProfileCustomer = () => {
         <div className="flex flex-col items-center gap-10">
           <img src="../trans black.png" alt="" className="w-28 mb-10" />
           <div className="flex flex-col gap-10">
-            <Button className="bg-stone-600 w-44">YOUR PREFERENCES</Button>
+            <Button className="bg-stone-600 w-44" onClick={navigatePreferences}>
+              YOUR PREFERENCES
+            </Button>
             <Button className="bg-stone-600 w-44">YOUR FAVORITES</Button>
           </div>
         </div>
