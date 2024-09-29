@@ -67,7 +67,7 @@ const Preference = () => {
     <div>
       <form onSubmit={handleSubmit}>
         {step === 1 && (
-          <div className="flex flex-col font-poppins items-center gap-8 mt-10">
+          <div className="flex flex-col font-poppins items-center gap-12 mt-10">
             <p>SELECT YOUR FAVORITE VARIETY</p>
             <div className="flex gap-10">
               {[

@@ -26,12 +26,20 @@ const ProfileCustomer = () => {
     navigate("/signin");
   };
 
+  const navigateHome = () => {
+    navigate("/home"); // Change this to your desired route
+  };
+
   const navigatePreferences = () => {
     if (showPreferences) {
       navigate("/editpreference");
     } else {
       toast.error("No preferences found. Please set your preferences first.");
     }
+  };
+
+  const navigateFavorites = () => {
+    navigate("/favRecipes");
   };
 
   useEffect(() => {
@@ -80,23 +88,36 @@ const ProfileCustomer = () => {
             <Button className="bg-stone-600 w-44" onClick={navigatePreferences}>
               YOUR PREFERENCES
             </Button>
-            <Button className="bg-stone-600 w-44">YOUR FAVORITES</Button>
+            <Button className="bg-stone-600 w-44" onClick={navigateFavorites}>
+              YOUR FAVORITES
+            </Button>
           </div>
         </div>
 
         <div className="flex">
-          <Separator orientation="vertical" className="bg-black h-[500px]" />
+          <Separator
+            orientation="vertical"
+            className="bg-stone-300 h-[500px]"
+          />
         </div>
 
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
             <p className="flex text-6xl text-[#717171] mr-96">YOUR PROFILE</p>
-            <Button
-              className="bg-[#CC3838] text-white w-44"
-              onClick={handleLogout}
-            >
-              LOGOUT
-            </Button>
+            <div className="flex items-center gap-5 cursor-pointer">
+              <span
+                className="material-symbols-outlined"
+                onClick={navigateHome}
+              >
+                home
+              </span>{" "}
+              <Button
+                className="bg-[#CC3838] text-white w-44"
+                onClick={handleLogout}
+              >
+                LOGOUT
+              </Button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-10 my-12">

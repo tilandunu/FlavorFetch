@@ -31,7 +31,7 @@ import ManageSupplies from "./Pages/ManageSupplies.tsx";
 import EditSupplies from "./Pages/EditSupplies.tsx";
 import Preference from "./Pages/Preference.tsx";
 import EditPreferences from "./Pages/EditPreferences.tsx";
-import UpdatePreference from "./Pages/UpdatePreference.tsx";
+import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
 
 function App() {
   return (
@@ -124,6 +124,7 @@ function App() {
                 />
                 <Route path="/preference" element={<Preference />} />
                 <Route path="/editpreference" element={<EditPreferences />} />
+                <Route path="/favRecipes" element={<FavoriteRecipes />} />
               </Routes>
 
               <ToastContainer />
