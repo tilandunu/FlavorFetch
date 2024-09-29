@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 
 // Custom modal component
 const CustomModal = ({ isOpen, onClose, children }) => {
@@ -131,6 +132,12 @@ const EditPreferences = () => {
     );
   };
 
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate("/profileCustomer");
+  };
+
   if (loading) {
     return <p>Loading preferences...</p>;
   }
@@ -139,7 +146,12 @@ const EditPreferences = () => {
     <div className="flex flex-col px-32 py-20">
       <div className="flex justify-between">
         <p className="text-3xl mb-4">MANAGE PREFERENCES</p>
-        <span className="material-symbols-outlined">arrow_back</span>
+        <span
+          className="material-symbols-outlined cursor-pointer"
+          onClick={handleBack}
+        >
+          arrow_back
+        </span>
       </div>
       <Separator className="mb-14" />
       <div className="flex flex-col gap-10">
