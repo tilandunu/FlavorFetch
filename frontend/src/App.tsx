@@ -3,7 +3,6 @@ import { ToastContainer } from "react-toastify";
 import { Signup } from "./Pages/Signup";
 import { Signin } from "./Pages/Signin";
 import ChefDashboard from "./Pages/ChefDashboard";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./Pages/Home";
 import AdminDashboard from "./Pages/AdminDashboard";
 import { SignupDriver } from "./Pages/SignupDriver";
