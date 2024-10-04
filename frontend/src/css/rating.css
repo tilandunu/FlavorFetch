@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1b1b1b;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+.rating-page{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 20px;
+}
+.review-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+    color: #732d1d;
+    font-size: 1.5rem;
+    /* margin-bottom: 15px; */
+}
+
+.rating-star{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.write-review {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* margin-bottom: 20px; */
+}
+
+ .review {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    /* margin-bottom: 20px; */
+}
+
+.write-review, .review {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    /* margin-bottom: 20px; */
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 20px 0;
+}
+
+.review-content {
+    flex-grow: 1;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.name {
+    font-weight: bold;
+}
+
+.rating {
+    color: gold;
+    margin-bottom: 10px;
+}
+
+.unrated {
+    color: #ccc;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+button.edit:hover {
+    color: #732d1d;
+}
+
+button.delete:hover {
+    color: red;
+}
+
+.submit-button{
+    background-color: #732d1d;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

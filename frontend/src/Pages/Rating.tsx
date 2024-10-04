@@ -12,7 +12,7 @@ const Rating = () => {
             </div>
             <div className="review-container">
                 <div className="write-review">
-                    <div className="avatar"></div>
+                    
                     <input type="text" placeholder="Write your review or comment"/>
                     <select className="rating-star">
                         <option>⭐</option>
@@ -28,7 +28,7 @@ const Rating = () => {
             <div className="review-container">
                 <hr/>
                 <div className="review">
-                    <div className="avatar"></div>
+                   
                     <div className="review-content">
                         <div className="review-header">
                             <span className="name">D. Fernando</span>
@@ -52,7 +52,7 @@ const Rating = () => {
             <div className="review-container">
                 <hr/>
                 <div className="review">
-                    <div className="avatar"></div>
+                    
                     <div className="review-content">
                         <div className="review-header">
                             <span className="name">D. Fernando</span>
@@ -76,7 +76,7 @@ const Rating = () => {
             <div className="review-container">
                 <hr/>
                 <div className="review">
-                    <div className="avatar"></div>
+                    
                     <div className="review-content">
                         <div className="review-header">
                             <span className="name">D. Fernando</span>

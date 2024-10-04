@@ -19,6 +19,11 @@ const RecipePage = () => {
 
   const navigate = useNavigate();
 
+  const goToRatingsPage = () => {
+    navigate("/ratings");
+  };
+
+
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
@@ -238,6 +243,12 @@ const RecipePage = () => {
           <span className="material-symbols-outlined" onClick={handleBackClick}>
             arrow_back
           </span>
+          <button
+        onClick={goToRatingsPage}
+        className="w-full bg-blue-500 text-white p-2 rounded-lg uppercase font-semibold mt-4"
+      >
+        Go to Ratings Page
+      </button>
         </div>
         <div className="flex gap-9">
           {" "}
