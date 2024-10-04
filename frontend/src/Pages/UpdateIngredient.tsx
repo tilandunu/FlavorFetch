@@ -12,52 +12,50 @@ function UpdateIngredient() {
 
   // State variables with appropriate types
   const [name, setName] = useState<string>("");
-  const [catagory, setCatagory] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
   const [minQuantity, setMinQuantity] = useState<number>(0);
-  const [lowStock, setLowStock] = useState<number>(0);
-  const [price, setPrice] = useState<number>(0);
+  const [lowStock, setLowStock] = useState<boolean>(false); // Use boolean type for lowStock
+  const [pricePerUnit, setPricePerUnit] = useState<number>(0);
   const [date, setDate] = useState<string>("");
-  const [image, setImage] = useState<File | null>(null); // For file input
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/getIngredient/${id}`)
+      .get(`http://localhost:3001/api/ingredients/getIngredient/${id}`)
       .then((result) => {
         setName(result.data.name);
-        setCatagory(result.data.catagory);
+        setCategory(result.data.category);
         setQuantity(result.data.quantity);
         setMinQuantity(result.data.minQuantity);
         setLowStock(result.data.lowStock);
-        setPrice(result.data.price);
+        setPricePerUnit(result.data.pricePerUnit);
         setDate(result.data.date);
         // Image handling would depend on your backend
       })
       .catch((err) => console.log(err));
   }, [id]);
 
-  const Update = (e: FormEvent) => {
+  const updateIngredient = (e: FormEvent) => {
     e.preventDefault();
 
     // Create form data to handle file uploads
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("catagory", catagory);
-    formData.append("quantity", quantity.toString());
-    formData.append("minQuantity", minQuantity.toString());
-    formData.append("price", price.toString());
-    formData.append("date", date);
-    if (image) {
-      formData.append("image", image);
-    }
+    // Use JSON to update ingredient details
+    const updatedIngredient = {
+      name,
+      category,
+      quantity,
+      minQuantity,
+      pricePerUnit,
+      date,
+    };
 
-    axios
-      .put(`http://localhost:3001/updateIngredient/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+    axios.put(`http://localhost:3001/api/ingredients/updateIngredient/${id}`, updatedIngredient, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+
       .then((result) => {
         console.log(result);
         navigate("/");
@@ -66,9 +64,9 @@ function UpdateIngredient() {
   };
 
   return (
-    <div className="d-flix vh-100 bg-primary justify-content-center align-items-center">
+    <div className="d-flex vh-100 bg-primary justify-content-center align-items-center">
       <div className="w-50 bg-white rounded p-3">
-        <form onSubmit={Update}>
+        <form onSubmit={updateIngredient}>
           <h2>Update Ingredient</h2>
           <div className="mb-2">
             <label htmlFor="name">Name</label>
@@ -81,13 +79,13 @@ function UpdateIngredient() {
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="catagory">Catagory</label>
+            <label htmlFor="category">Category</label>
             <input
               type="text"
-              placeholder="Enter Ingredient Type"
+              placeholder="Enter Ingredient Category"
               className="form-control"
-              value={catagory}
-              onChange={(e) => setCatagory(e.target.value)}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
             />
           </div>
           <div className="mb-2">
@@ -104,20 +102,20 @@ function UpdateIngredient() {
             <label htmlFor="minQuantity">Minimum Quantity</label>
             <input
               type="number"
-              placeholder="Enter minimum quantity to notify supplier management"
+              placeholder="Enter Minimum Quantity"
               className="form-control"
               value={minQuantity}
               onChange={(e) => setMinQuantity(Number(e.target.value))}
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="price">Unit Price</label>
+            <label htmlFor="pricePerUnit">Unit Price</label>
             <input
               type="number"
               placeholder="Enter Unit Price"
               className="form-control"
-              value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
+              value={pricePerUnit}
+              onChange={(e) => setPricePerUnit(Number(e.target.value))}
             />
           </div>
           <div className="mb-2">
@@ -130,16 +128,7 @@ function UpdateIngredient() {
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="image">Image</label>
-            <input
-              type="file"
-              className="form-control"
-              onChange={(e) =>
-                setImage(e.target.files ? e.target.files[0] : null)
-              }
-            />
-          </div>
+          
           <button className="btn btn-success">Submit</button>
         </form>
       </div>
@@ -148,3 +137,4 @@ function UpdateIngredient() {
 }
 
 export default UpdateIngredient;
+

@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import { Signup } from "./Pages/Signup";
 import { Signin } from "./Pages/Signin";
 import ChefDashboard from "./Pages/ChefDashboard";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import SupplierDashboard from "./Pages/SupplierDashboard";
 import Home from "./Pages/Home";
 import AdminDashboard from "./Pages/AdminDashboard";
@@ -30,7 +30,7 @@ import UserManagement from "./Pages/Driver/UserManagement";
 import Ingredients from "./Pages/Ingredients";
 import CreateIngredient from "./Pages/CreateIngredient";
 import UpdateIngredient from "./Pages/UpdateIngredient";
-import RequestIngredient from "./Pages/Thila";
+//import RequestIngredient from "./Pages/Thila";
 import StockNotification from "./Pages/StockNotification";
 
 import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
@@ -87,7 +87,7 @@ function App() {
                 <Route path="/ingredientHome" element={<Ingredients />} />
                 <Route path="/create" element={<CreateIngredient />} />
                 <Route path="/update/:id" element={<UpdateIngredient />} />
-                <Route path="/requestIng" element={<RequestIngredient />} />
+                {/* <Route path="/requestIng" element={<RequestIngredient />} /> */}
                 <Route path="/stocknt" element={<StockNotification />} />
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />

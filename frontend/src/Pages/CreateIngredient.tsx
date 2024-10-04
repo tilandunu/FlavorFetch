@@ -2,52 +2,27 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-interface IngredientData {
-  name: string;
-  catagory: string;
-  quantity: number;
-  minQuantity: number;
-  price: number;
-  date: string;
-  image: File | null;
-}
-
 function CreateIngredient() {
   const [name, setName] = useState<string>("");
-  const [catagory, setCatagory] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
   const [minQuantity, setMinQuantity] = useState<number>(0);
-  const [price, setPrice] = useState<number>(0);
-  const [date, setDate] = useState<string>("");
-  const [image, setImage] = useState<File | null>(null);
+  const [pricePerUnit, setPricePerUnit] = useState<number>(0);
   const navigate = useNavigate();
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImage(e.target.files[0]);
-    }
-  };
-
-  const Submit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("catagory", catagory);
-    formData.append("stockQuantity", quantity.toString());
-    formData.append("minQuantity", minQuantity.toString());
-    formData.append("pricePerUnit", price.toString());
-    formData.append("date", date);
-    if (image) {
-      formData.append("image", image);
-    }
+    const ingredientData = {
+      name,
+      category,
+      quantity,
+      minQuantity,
+      pricePerUnit,
+    };
 
     axios
-      .post("http://localhost:3001/createIngredient", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .post("http://localhost:3001/api/ingredients/createIngredient", ingredientData)
       .then((result) => {
         console.log(result);
         navigate("/");
@@ -58,7 +33,7 @@ function CreateIngredient() {
   return (
     <div className="d-flex vh-100 bg-primary justify-content-center align-items-center">
       <div className="w-50 bg-white rounded p-3">
-        <form onSubmit={Submit}>
+        <form onSubmit={handleSubmit}>
           <h2>Add Ingredient</h2>
           <div className="mb-2">
             <label htmlFor="">Name</label>
@@ -66,16 +41,18 @@ function CreateIngredient() {
               type="text"
               placeholder="Enter Ingredient Name"
               className="form-control"
+              value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="">Catagory</label>
+            <label htmlFor="">Category</label>
             <input
               type="text"
-              placeholder="Enter Ingredient Type"
+              placeholder="Enter Ingredient Category"
               className="form-control"
-              onChange={(e) => setCatagory(e.target.value)}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
             />
           </div>
           <div className="mb-2">
@@ -84,6 +61,7 @@ function CreateIngredient() {
               type="number"
               placeholder="Enter Stock Quantity"
               className="form-control"
+              value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
             />
           </div>
@@ -91,40 +69,23 @@ function CreateIngredient() {
             <label htmlFor="">Minimum Quantity</label>
             <input
               type="number"
-              placeholder="Enter minimum quantity to notify supplier management?"
+              placeholder="Enter Minimum Quantity"
               className="form-control"
               value={minQuantity}
               onChange={(e) => setMinQuantity(Number(e.target.value))}
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="">Unit Price</label>
+            <label htmlFor="">Price Per Unit</label>
             <input
               type="number"
-              placeholder="Enter Unit Price"
+              placeholder="Enter Price Per Unit"
               className="form-control"
-              onChange={(e) => setPrice(Number(e.target.value))}
+              value={pricePerUnit}
+              onChange={(e) => setPricePerUnit(Number(e.target.value))}
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="">Added Date</label>
-            <input
-              type="date"
-              placeholder="Enter the date"
-              className="form-control"
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="">Image</label>
-            <input
-              type="file"
-              placeholder="Add image here"
-              className="form-control"
-              onChange={handleImageChange}
-            />
-          </div>
-          <button className="btn btn-success">Add</button>
+          <button className="btn btn-success">Add Ingredient</button>
         </form>
       </div>
     </div>
