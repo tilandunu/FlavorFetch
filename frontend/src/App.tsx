@@ -4,7 +4,6 @@ import { Signup } from "./Pages/Signup";
 import { Signin } from "./Pages/Signin";
 import ChefDashboard from "./Pages/ChefDashboard";
 import "bootstrap/dist/css/bootstrap.min.css";
-import SupplierDashboard from "./Pages/SupplierDashboard";
 import Home from "./Pages/Home";
 import AdminDashboard from "./Pages/AdminDashboard";
 import { SignupDriver } from "./Pages/SignupDriver";
@@ -24,13 +23,9 @@ import { ViewMyTickets } from "./Pages/ViewMyTickets";
 import { EditSupportTicket } from "./Pages/EditSupportTicket";
 import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
 
-import DriverDashboard from "./Pages/Driver/Dashboard";
-import Role from "./Pages/Driver/DeleveryHistory.tsx";
-import UserManagement from "./Pages/Driver/UserManagement";
 import Ingredients from "./Pages/Ingredients";
 import CreateIngredient from "./Pages/CreateIngredient";
 import UpdateIngredient from "./Pages/UpdateIngredient";
-//import RequestIngredient from "./Pages/Thila";
 import StockNotification from "./Pages/StockNotification";
 
 import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
@@ -83,7 +78,6 @@ function App() {
                 />
                 <Route path="/ticketDashboard" element={<TicketDashboard />} />
                 <Route path="/orderdetails/:id" element={<UpOrder />} />
-                <Route path="/user-management" element={<UserManagement />} />
                 <Route path="/ingredientHome" element={<Ingredients />} />
                 <Route path="/create" element={<CreateIngredient />} />
                 <Route path="/update/:id" element={<UpdateIngredient />} />
