@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import {
   Card,
   CardContent,
@@ -33,26 +34,26 @@ export function SupportTicketDashboard() {
       </div>
 
       {/* Welcome Section */}
-      <Card className="w-full max-w-6xl bg-red-600 shadow-lg mb-12 rounded-xl ">
+      <Card className="w-full max-w-6xl bg-white shadow-lg mb-12 rounded-xl ">
         <CardHeader className="border border-black p-6flex items-center p-6 ">
           <div className="flex-1">
-            <CardTitle className="text-xl font-semibold text-white">
+            <CardTitle className="text-xl font-semibold text-black ">
               WELCOME TO FLAVOR FETCH SUPPORT SERVICES
             </CardTitle>
-            <CardDescription className="text-sm text-white 600 mt-2">
+            <CardDescription className="text-sm text-black  mt-2">
               Should you wish to connect with us, please fill the support ticket
               form. We are constantly updating this site to provide up-to-date
               services for you.
             </CardDescription>
           </div>
-          <img src="../chef24.jpg" alt="Support" className="w-32 h-32 ml-6" />
+          <img src="../girl.jpg" alt="Support" className="w-32 h-32 ml-6" />
         </CardHeader>
       </Card>
 
       {/* Buttons */}
       <div className="  bottom-40 left-1/2 transform -translate-x-1/2 flex space-x-12  mt-8  ml-96">
         <Link to="/Feedback">
-          <button className="bg-amber-100 text-brown-800 border border-black font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-lg  hover:bg-amber-300 text-black">
+          <button className="bg-amber-100 text-brown-800 border border-black font-semibold py-4 px-6  rounded-full  shadow-md hover:shadow-lg  hover:bg-amber-300 text-black">
             FEEDBACK
             <p className="text-xs text-white-500 mt-1   ">
               View feedback our customers provided
@@ -60,7 +61,7 @@ export function SupportTicketDashboard() {
           </button>
         </Link>
         <Link to="/SupportTicket">
-          <button className="bg-amber-100 text-brown-800 border border-black  font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-lg hover:bg-amber-300 text-black duration-300">
+          <button className="bg-amber-100 text-brown-800 border border-black  font-semibold py-4 px-6  rounded-full shadow-md hover:shadow-lg hover:bg-amber-300 text-black duration-300">
             CUSTOMER SUPPORT
             <p className="text-xs text-white-500 mt-1   text-black">
               Get in touch for help{" "}

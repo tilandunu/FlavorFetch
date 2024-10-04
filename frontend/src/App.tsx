@@ -21,6 +21,7 @@ import { TicketUserAccount } from "./Pages/TicketUserAccount";
 import { ViewMyTickets } from "./Pages/ViewMyTickets";
 import { EditSupportTicket } from "./Pages/EditSupportTicket";
 import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
+import { ResponseDashboard } from "./Pages/ResponseDashboard";
 
 import Ingredients from "./Pages/Ingredients";
 import CreateIngredient from "./Pages/CreateIngredient";
@@ -136,6 +137,10 @@ function App() {
                 <Route path="/preference" element={<Preference />} />
                 <Route path="/editpreference" element={<EditPreferences />} />
                 <Route path="/favRecipes" element={<FavoriteRecipes />} />
+                <Route
+                  path="/ResponseDashboard"
+                  element={<ResponseDashboard />}
+                />
               </Routes>
 
               <ToastContainer />

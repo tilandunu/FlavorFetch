@@ -46,6 +46,7 @@ app.use("/api/supplyOrder", supplyOrderRouters);
 app.use("/api/preference", preferenceRouters);
 app.use("/api/favorites", favoriteRouters);
 app.use("/api/ingredients", ingredientRouters);
+app.use("/api/admin/tickets", ticketRouter);
 
 app.listen(3001, () => {
   console.log("Server is running");
