@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { CardFooter } from "@/components/ui/card";
 import FlavorFooter from "@/components/FlavorFooter";
-import FlavorHeader from "@/components/FlavorHeader";
 
 const AllRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [chefs, setChefs] = useState({});
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     const fetchRecipesAndChefs = async () => {
@@ -55,6 +55,15 @@ const AllRecipes = () => {
     navigate(`/home`);
   };
 
+  const filteredRecipes = recipes.filter((recipe) => {
+    const matchesQuery = recipe.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesType =
+      selectedCategory === "" || recipe.type === selectedCategory; // Changed 'recipe.category' to 'recipe.type'
+    return matchesQuery && matchesType;
+  });
+
   return (
     <div className="font-poppins">
       <div className="flex gap-7 mx-16 my-10 justify-between">
@@ -78,81 +87,117 @@ const AllRecipes = () => {
         <p className="text-stone-500 text-xs">
           "a traditional Yorkshire recipe"
         </p>
-        <div>
+        <div className="flex items-center mt-10">
           {" "}
-          <Input className="m-full"></Input>
+          <Input
+            className="w-96 border-2 border-gray-400 placeholder:text-center"
+            placeholder="search for recipes"
+            value={searchQuery} // Bind input to searchQuery state
+            onChange={(e) => setSearchQuery(e.target.value)} // Update searchQuery state on input change
+          ></Input>
         </div>
       </div>
-      {/* <div className="flex items-center justify-center my-10">
-        <Input className="w-1/2 border-2 border-gray-400"></Input>
-      </div> */}
       <div className="flex justify-center gap-7 mt-20">
-        <div className="bg-rose-900 w-32 h-10 flex items-center justify-center text-xs text-rose-100 rounded-2xl">
+        <div
+          className={`${
+            selectedCategory === "Main Courses" ? "bg-rose-900" : "bg-stone-500"
+          } w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl cursor-pointer`}
+          onClick={() => setSelectedCategory("Main Courses")}
+        >
           <p>MAIN COURSES</p>
         </div>
-        <div className="bg-stone-500 w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl">
+        <div
+          className={`${
+            selectedCategory === "Desserts" ? "bg-rose-900" : "bg-stone-500"
+          } w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl cursor-pointer`}
+          onClick={() => setSelectedCategory("Desserts")}
+        >
           <p>DESSERTS</p>
         </div>
-        <div className="bg-stone-500 w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl">
+        <div
+          className={`${
+            selectedCategory === "Beverages" ? "bg-rose-900" : "bg-stone-500"
+          } w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl cursor-pointer`}
+          onClick={() => setSelectedCategory("Beverages")}
+        >
           <p>BEVERAGES</p>
         </div>
-        <div className="bg-stone-500 w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl">
+        <div
+          className={`${
+            selectedCategory === "Breakfast" ? "bg-rose-900" : "bg-stone-500"
+          } w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl cursor-pointer`}
+          onClick={() => setSelectedCategory("Breakfast")}
+        >
           <p>BREAKFAST</p>
         </div>
-        <div className="bg-stone-500 w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl">
+        <div
+          className={`${
+            selectedCategory === "Salads" ? "bg-rose-900" : "bg-stone-500"
+          } w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl cursor-pointer`}
+          onClick={() => setSelectedCategory("Salads")}
+        >
           <p>SALADS</p>
         </div>
-        <div className="bg-stone-500 w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl">
+        <div
+          className={`${
+            selectedCategory === "Soups" ? "bg-rose-900" : "bg-stone-500"
+          } w-32 h-10 flex items-center justify-center text-xs text-white rounded-2xl cursor-pointer`}
+          onClick={() => setSelectedCategory("Soups")}
+        >
           <p>SOUPS</p>
         </div>
       </div>
 
       <div className="flex items-center justify-center mt-10">
         <div className="flex gap-10 justify-center px-32 py-10 flex-wrap">
-          {recipes.map((recipe) => (
-            <section key={recipe._id} className="flex">
-              <div className="flex flex-col bg-stone-200 rounded-3xl">
-                <img
-                  src={recipe.recipeImageUrl || "../defaultImage.jpg"}
-                  alt="Recipe Image"
-                  className="rounded-3xl w-30 h-30 object-cover p-3"
-                  style={{ width: "300px", height: "300px" }}
-                />
-                <div className="flex justify-between px-3 items-center">
-                  <p className="flex text-lg uppercase">{recipe.title}</p>
-                  <p className="text-sm">{recipe.servingCount}</p>
-                </div>
-                <p className="px-3 text-xs relative bottom-1 text-stone-600">
-                  {chefs[recipe.chefUID] || "Anonymous"}
-                </p>
-                <div className="flex px-3 mt-1">
-                  <span className="material-symbols-outlined  text-sm text-orange-500">
-                    star
-                  </span>
-                  <span className="material-symbols-outlined  text-sm text-orange-500">
-                    star
-                  </span>
-                  <span className="material-symbols-outlined  text-sm text-orange-500">
-                    star
-                  </span>
-                  <span className="material-symbols-outlined  text-sm text-orange-500">
-                    star
-                  </span>
-                  <span className="material-symbols-outlined  text-sm text-orange-500">
-                    star
-                  </span>
-                </div>
-                <div
-                  className="flex justify-end px-3 items-center align-middle mb-5"
-                  onClick={() => handleGoToRecipe(recipe._id)}
-                >
-                  <p className="text-[10px] bg-stone-700 w-20 text-center py-1 rounded-3xl text-stone-300 hover:cursor-pointer">
-                    GO TO &gt;
+          {filteredRecipes.length > 0 ? (
+            filteredRecipes.map((recipe) => (
+              <section key={recipe._id} className="flex">
+                <div className="flex flex-col bg-stone-200 rounded-3xl">
+                  <img
+                    src={recipe.recipeImageUrl || "../defaultImage.jpg"}
+                    alt="Recipe Image"
+                    className="rounded-3xl w-30 h-30 object-cover p-3"
+                    style={{ width: "300px", height: "300px" }}
+                  />
+                  <div className="flex justify-between px-3 items-center">
+                    <p className="flex text-lg uppercase">{recipe.title}</p>
+                    <p className="text-sm">{recipe.servingCount}</p>
+                  </div>
+                  <p className="px-3 text-xs relative bottom-1 text-stone-600">
+                    {chefs[recipe.chefUID] || "Anonymous"}
                   </p>
+                  <div className="flex px-3 mt-1">
+                    <span className="material-symbols-outlined  text-sm text-orange-500">
+                      star
+                    </span>
+                    <span className="material-symbols-outlined  text-sm text-orange-500">
+                      star
+                    </span>
+                    <span className="material-symbols-outlined  text-sm text-orange-500">
+                      star
+                    </span>
+                    <span className="material-symbols-outlined  text-sm text-orange-500">
+                      star
+                    </span>
+                    <span className="material-symbols-outlined  text-sm text-orange-500">
+                      star
+                    </span>
+                  </div>
+                  <div
+                    className="flex justify-end px-3 items-center align-middle mb-5"
+                    onClick={() => handleGoToRecipe(recipe._id)}
+                  >
+                    <p className="text-[10px] bg-stone-700 w-20 text-center py-1 rounded-3xl text-stone-300 hover:cursor-pointer">
+                      GO TO &gt;
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </section>
-          ))}
+              </section>
+            ))
+          ) : (
+            <p>No recipes found</p> // Display message if no recipes match the search query
+          )}
         </div>
       </div>
       <div className="mt-32">
