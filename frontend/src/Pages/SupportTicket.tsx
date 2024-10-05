@@ -23,12 +23,28 @@ export function SupportTicket() {
   const [visibilityForm, setVisibilityForm] = useState("hidden");
   const [visibilityType, setVisibilityType] = useState("visible");
 
+  const [issueError, setIssueError] = useState("");
+  const [typeError, setTypeError] = useState("");
+
   const customerUID = Cookies.get("userID"); // Updated to match the cookie name
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
+    setIssueError("");
+    setTypeError("");
+
     // Validation to ensure all fields are filled out
+    if (!issueType) {
+      setTypeError("Please select an issue type.");
+    }
+    if (!issue) {
+      setIssueError("Please describe your issue.");
+    }
+
+    if (!issueType || !issue) {
+      return; // If there are validation errors, exit the function
+    }
 
     try {
       const user = auth.currentUser;

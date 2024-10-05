@@ -54,7 +54,7 @@ export function ViewMyTickets() {
           issue: updatedIssue,
         };
         const response = await axios.put(
-          "http://localhost:3001/api/tickets", // Using customerUID directly
+          `http://localhost:3001/api/tickets/${editTicketId}`, // Using customerUID directly
           updatedTicket
         );
         setTickets((prevTickets) =>
@@ -67,6 +67,10 @@ export function ViewMyTickets() {
         console.error("Failed to update ticket", error);
       }
     }
+  };
+
+  const handleCloseEditTicket = () => {
+    setEditTicketId(null); // Set the editTicketId back to null to close the edit modal
   };
 
   const handleCancelEdit = () => {
@@ -100,9 +104,6 @@ export function ViewMyTickets() {
     // Save the PDF with the ticket UID as the filename
     doc.save(`ticket_${ticket.customerUID}.pdf`);
   };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
 
   const filteredTickets = tickets.filter(
     (ticket) =>

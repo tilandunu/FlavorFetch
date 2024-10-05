@@ -49,12 +49,13 @@ router.delete("/:customerUID", async (req, res) => {
 });
 
 // Update ticket by customerUID
-router.put("/:customerUID", async (req, res) => {
-  const { customerUID, issueType, issue, responseMessage, status } = req.body;
+router.put("/tickets", async (req, res) => {
+  const { customerUID } = req.params;
+  const { issueType, issue, responseMessage, status } = req.body;
 
   try {
     const updatedTicket = await Ticket.findOneAndUpdate(
-      { customerUID }, // Adjust the query to find the correct ticket
+      { customerUID }, // Search by customerUID
       { issueType, issue, responseMessage, status },
       { new: true } // Return the updated ticket
     );
