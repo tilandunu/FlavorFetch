@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
 
 const RecipePage = () => {
   const { recipeId } = useParams();
