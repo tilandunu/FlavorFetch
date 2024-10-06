@@ -38,7 +38,7 @@ import EditSupplies from "./Pages/EditSupplies.tsx";
 import Preference from "./Pages/Preference.tsx";
 import EditPreferences from "./Pages/EditPreferences.tsx";
 import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
-import Rating from "./Pages/rating.tsx";
+import Rating from "./Pages/Rating.tsx";
 
 function App() {
   return (
