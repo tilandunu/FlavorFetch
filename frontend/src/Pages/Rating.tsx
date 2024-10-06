@@ -7,6 +7,73 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@/components/ui/button";
 
+// Modal component for editing the user's rating
+const Modal = ({
+  show,
+  onClose,
+  onSubmit,
+  editRating,
+  editComment,
+  setEditRating,
+  setEditComment,
+  loading,
+}) => {
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-5 rounded-lg w-[400px]">
+        <h2 className="text-xl font-semibold mb-4">Edit Your Rating</h2>
+        <form onSubmit={onSubmit}>
+          <div className="flex flex-col gap-3">
+            <input
+              type="text"
+              value={editComment}
+              onChange={(e) => setEditComment(e.target.value)}
+              placeholder="Update your comment"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              required
+            />
+            <select
+              value={editRating}
+              onChange={(e) => setEditRating(Number(e.target.value))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              required
+            >
+              <option value={0} disabled>
+                Select Rating
+              </option>
+              <option value={1}>⭐</option>
+              <option value={2}>⭐⭐</option>
+              <option value={3}>⭐⭐⭐</option>
+              <option value={4}>⭐⭐⭐⭐</option>
+              <option value={5}>⭐⭐⭐⭐⭐</option>
+            </select>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 bg-gray-400 text-white rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-4 py-2 bg-[#732d1d] text-white rounded-lg"
+              >
+                {loading ? "Updating..." : "Update"}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const Rating = () => {
   const { recipeID } = useParams(); // Get recipeID from the URL
   const [rating, setRating] = useState(0);
@@ -17,6 +84,11 @@ const Rating = () => {
   const [averageRating, setAverageRating] = useState(0); // Store the overall rating
   const customerUID = Cookies.get("userID"); // Get the customer UID from cookies
   const navigate = useNavigate();
+
+  // Modal state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editRating, setEditRating] = useState(0); // Store edited rating
+  const [editComment, setEditComment] = useState(""); // Store edited comment
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -53,7 +125,9 @@ const Rating = () => {
         }
       } catch (error) {
         console.error("Failed to fetch ratings:", error);
-        toast.error("Failed to fetch ratings.");
+        if (error.response && error.response.status !== 404) {
+          toast.error("Failed to fetch ratings.");
+        }
       }
     };
     fetchRatings();
@@ -91,6 +165,36 @@ const Rating = () => {
     }
   };
 
+  const handleEdit = (userRating) => {
+    setIsEditing(true); // Open the modal
+    setEditRating(userRating.rating);
+    setEditComment(userRating.comment);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/api/ratings/update/${userRating._id}`,
+        {
+          rating: editRating,
+          comment: editComment,
+        }
+      );
+      if (response.status === 200) {
+        toast.success("Rating updated successfully!");
+        setIsEditing(false); // Close the modal
+        window.location.reload(); // Reload page to reflect changes
+      }
+    } catch (err) {
+      toast.error("Failed to update rating.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async (ratingID) => {
     // Show confirmation dialog before deletion
     const confirmed = window.confirm(
@@ -112,16 +216,36 @@ const Rating = () => {
     }
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="flex flex-col items-start pt-10 px-20 gap-5 p-5 bg-stone-100 min-h-screen font-poppins">
       <ToastContainer />
+
+      {/* Modal Component */}
+      <Modal
+        show={isEditing}
+        onClose={() => setIsEditing(false)} // Close modal
+        onSubmit={handleUpdate} // Handle form submission
+        editRating={editRating}
+        editComment={editComment}
+        setEditRating={setEditRating}
+        setEditComment={setEditComment}
+        loading={loading}
+      />
+
       <div className=" p-9 py-9  w-full bg-white shadow-md rounded-lg ">
         <div className="flex justify-between items-center">
           {" "}
           <h2 className="text-2xl font-semibold text-[#000000]">
             RECIPE RATINGS
           </h2>
-          <span className="material-symbols-outlined cursor-pointer">
+          <span
+            className="material-symbols-outlined cursor-pointer"
+            onClick={goBack}
+          >
             arrow_back
           </span>
         </div>
@@ -131,7 +255,6 @@ const Rating = () => {
         <h3 className="text-sm font-light px-4">Overall Rating:</h3>
         <div className="flex items-center justify-between text-yellow-400 text-3xl mt-5 px-3">
           {"⭐".repeat(Math.floor(averageRating))}{" "}
-          {/* Only display full stars */}
           <span className="text-gray-700 text-lg font-light">
             ({averageRating}/5.0 based on{" "}
             {ratings.length + (userRating ? 1 : 0)} reviews)
@@ -219,7 +342,10 @@ const Rating = () => {
                       </p>
                     </div>
                     <div className="flex gap-5 cursor-pointer">
-                      <span className="material-symbols-outlined p-5 rounded-full shadow-md hover:bg-stone-700 duration-300 hover:text-stone-300">
+                      <span
+                        className="material-symbols-outlined p-5 rounded-full shadow-md hover:bg-stone-700 duration-300 hover:text-stone-300"
+                        onClick={() => handleEdit(userRating)} // Open edit modal
+                      >
                         edit
                       </span>
                       <span
@@ -272,7 +398,7 @@ const Rating = () => {
             </section>
           ))
         ) : (
-          <p>No ratings yet for this recipe.</p>
+          <p></p>
         )}
       </div>
     </div>

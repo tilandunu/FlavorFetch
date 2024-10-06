@@ -34,6 +34,40 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.put("/update/:id", async (req, res) => {
+  const { id } = req.params;
+  const { rating, comment } = req.body;
+
+  // Validate the required fields
+  if (!rating) {
+    return res.status(400).json({
+      error: "Rating is required for update.",
+    });
+  }
+
+  try {
+    // Find the rating by its ID and update it
+    const updatedRating = await RatingModel.findByIdAndUpdate(
+      id,
+      { rating, comment },
+      { new: true } // Return the updated document
+    );
+
+    // Check if the rating was found and updated
+    if (!updatedRating) {
+      return res.status(404).json({ message: "Rating not found." });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Rating updated successfully!", updatedRating });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Failed to update rating. Please try again." });
+  }
+});
+
 router.get("/getRatings/:recipeID", async (req, res) => {
   const { recipeID } = req.params;
 
