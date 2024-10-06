@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Button } from "@/components/ui/button";
+import Cookies from "js-cookie";
 
 // Define the interface for ingredient
 interface Ingredient {
@@ -81,13 +82,22 @@ function Ingredients() {
     doc.save("ingredient_report.pdf");
   };
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Cookies.remove("userID");
+    navigate("/signin");
+  };
+
   return (
     <div className="d-flix vh-100 bg-stone-100 justify-content-center align-items-center  font-poppins cursor-default">
       <div>
         {" "}
         <div className="mx-32 pt-20 pb-14 flex justify-between items-center">
           <h1 className="px-4 text-3xl">STOCK MANAGEMENT</h1>
-          <Button className="bg-red-600">LOGOUT</Button>
+          <Button className="bg-red-600" onClick={handleLogout}>
+            LOGOUT
+          </Button>
         </div>
         <div className="flex items-center justify-between mx-32 bg-white px-10 py-10 rounded-xl shadow-lg">
           <div className="flex items-center gap-1">
