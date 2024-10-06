@@ -65,8 +65,8 @@ const AllRecipes = () => {
   });
 
   return (
-    <div className="font-poppins">
-      <div className="flex gap-7 mx-16 my-10 justify-between">
+    <div className="font-poppins bg-stone-100">
+      <div className="flex gap-7 mx-16 py-10 justify-between">
         <div className="flex gap-7">
           <span
             className="material-symbols-outlined cursor-pointer"
@@ -149,11 +149,11 @@ const AllRecipes = () => {
       </div>
 
       <div className="flex items-center justify-center mt-10">
-        <div className="flex gap-10 justify-center px-32 py-10 flex-wrap">
+        <div className="flex gap-10 justify-center px-22 py-10 flex-wrap">
           {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <section key={recipe._id} className="flex">
-                <div className="flex flex-col bg-stone-200 rounded-3xl">
+                <div className="flex flex-col bg-white rounded-3xl shadow-lg">
                   <img
                     src={recipe.recipeImageUrl || "../defaultImage.jpg"}
                     alt="Recipe Image"

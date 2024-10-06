@@ -6,6 +6,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import ForYou from "./ForYou";
 
 const Home = () => {
   const [showPreferences, setShowPreferences] = useState(false);
@@ -75,8 +76,12 @@ const Home = () => {
           </div>
         )}
 
-        <div className="flex justify-center mx-16 px-10 py-10 mb-20 h-[600px] bg-white rounded-3xl">
+        <div className="flex mx-10 py-10 mb-20 h-[600px] bg-white rounded-3xl flex-col items-center">
           <p>FOR YOU</p>
+          <div>
+            {" "}
+            <ForYou />
+          </div>
         </div>
 
         <FlavorFooter />
