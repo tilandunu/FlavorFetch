@@ -103,6 +103,10 @@ const RecipePage = () => {
     confirmNavigation("/home");
   };
 
+  const handleViewRatings = () => {
+    navigate(`/ratings/${recipeId}`);
+  };
+
   const generatePDF = async () => {
     const doc = new jsPDF();
 
@@ -230,16 +234,22 @@ const RecipePage = () => {
 
   return (
     <div className="font-poppins cursor-default bg-stone-100">
-      <div className="flex gap-7 mx-16 py-10 justify-between">
-        <div className="flex gap-7 hover:cursor-pointer">
+      <div className="flex gap-7 mx-16 py-10 justify-between items-center">
+        <div className="flex gap-7 hover:cursor-pointer items-center">
           <span className="material-symbols-outlined" onClick={handleHomeClick}>
             home
           </span>
           <span className="material-symbols-outlined" onClick={handleBackClick}>
             arrow_back
           </span>
+          <p
+            className="border-2  rounded-xl p-2 px-4  duration-500 hover:bg-black hover:text-white text-sm uppercase"
+            onClick={handleViewRatings}
+          >
+            View Ratings
+          </p>
         </div>
-        <div className="flex gap-9">
+        <div className="flex gap-9 items-center">
           {" "}
           <span
             className="material-symbols-outlined z-50"
