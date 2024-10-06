@@ -81,33 +81,37 @@ const ForYou = () => {
   return (
     <div className="flex gap-10 justify-center px-22 py-10 flex-wrap">
       {filteredRecipes.length > 0 ? (
-        filteredRecipes.map((recipe) => (
-          <section key={recipe._id} className="flex">
-            <div className="flex flex-col bg-white rounded-3xl shadow-lg">
-              <img
-                src={recipe.recipeImageUrl || "../defaultImage.jpg"}
-                alt="Recipe Image"
-                className="rounded-3xl w-30 h-30 object-cover p-3"
-                style={{ width: "300px", height: "300px" }}
-              />
-              <div className="flex justify-between px-3 items-center">
-                <p className="flex text-lg uppercase">{recipe.title}</p>
-                <p className="text-sm">{recipe.servingCount}</p>
-              </div>
-              <p className="px-3 text-xs relative bottom-1 text-stone-600">
-                {chefs[recipe.chefUID] || "Anonymous"}
-              </p>
-              <div
-                className="flex justify-end px-3 items-center align-middle mb-5"
-                onClick={() => handleGoToRecipe(recipe._id)}
-              >
-                <p className="text-[10px] bg-stone-700 w-20 text-center py-1 rounded-3xl text-stone-300 hover:cursor-pointer">
-                  GO TO &gt;
+        filteredRecipes.slice(0, 4).map(
+          (
+            recipe // Limit to 4 recipes
+          ) => (
+            <section key={recipe._id} className="flex">
+              <div className="flex flex-col bg-white rounded-3xl shadow-lg">
+                <img
+                  src={recipe.recipeImageUrl || "../defaultImage.jpg"}
+                  alt="Recipe Image"
+                  className="rounded-3xl w-30 h-30 object-cover p-3"
+                  style={{ width: "300px", height: "300px" }}
+                />
+                <div className="flex justify-between px-3 items-center">
+                  <p className="flex text-lg uppercase">{recipe.title}</p>
+                  <p className="text-sm">{recipe.servingCount}</p>
+                </div>
+                <p className="px-3 text-xs relative bottom-1 text-stone-600">
+                  {chefs[recipe.chefUID] || "Anonymous"}
                 </p>
+                <div
+                  className="flex justify-end px-3 items-center align-middle mb-5"
+                  onClick={() => handleGoToRecipe(recipe._id)}
+                >
+                  <p className="text-[10px] bg-stone-700 w-20 text-center py-1 rounded-3xl text-stone-300 hover:cursor-pointer">
+                    GO TO &gt;
+                  </p>
+                </div>
               </div>
-            </div>
-          </section>
-        ))
+            </section>
+          )
+        )
       ) : (
         <p>No recipes found</p> // Display message if no recipes match the search query
       )}
