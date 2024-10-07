@@ -15,7 +15,6 @@ export function ResponseDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [responseText, setResponseText] = useState<string>("");
   const [currentTicketId, setCurrentTicketId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -31,13 +30,6 @@ export function ResponseDashboard() {
 
     fetchTickets();
   }, []);
-
-  // Filter tickets based on search query
-  const filteredTickets = tickets.filter(
-    (ticket) =>
-      ticket.issueType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.issue.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const handleResponse = async (ticketId: string) => {
     try {
@@ -67,59 +59,46 @@ export function ResponseDashboard() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search by issue type or issue..."
-          className="border border-gray-300 p-2 rounded-lg w-full"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
       <ul className="space-y-4">
-        {filteredTickets.map(
-          (
-            ticket // Use filteredTickets here
-          ) => (
-            <li
-              key={ticket.customerUID}
-              className="border border-gray-300 p-4 rounded-lg shadow-lg"
+        {tickets.map((ticket) => (
+          <li
+            key={ticket.customerUID}
+            className="border border-gray-300 p-4 rounded-lg shadow-lg"
+          >
+            <h2 className="text-xl font-semibold">{ticket.issueType}</h2>
+            <p>{ticket.issue}</p>
+            <p>Status: {ticket.status}</p>
+            {ticket.responseMessage && (
+              <p>Response: {ticket.responseMessage}</p>
+            )}
+            <button
+              onClick={() => {
+                setCurrentTicketId(ticket.customerUID);
+                setResponseText(""); // Reset response text
+              }}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
             >
-              <h2 className="text-xl font-semibold">{ticket.issueType}</h2>
-              <p>{ticket.issue}</p>
-              <p>Status: {ticket.status}</p>
-              {ticket.responseMessage && (
-                <p>Response: {ticket.responseMessage}</p>
-              )}
-              <button
-                onClick={() => {
-                  setCurrentTicketId(ticket.customerUID);
-                  setResponseText(""); // Reset response text
-                }}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                Respond
-              </button>
+              Respond
+            </button>
 
-              {currentTicketId === ticket.customerUID && (
-                <div>
-                  <textarea
-                    value={responseText}
-                    onChange={(e) => setResponseText(e.target.value)}
-                    placeholder="Type your response here..."
-                    className="border border-gray-400 p-2 w-full mt-2"
-                  />
-                  <button
-                    onClick={() => handleResponse(ticket.customerUID)}
-                    className="bg-green-500 text-white px-4 py-2 rounded mt-2"
-                  >
-                    Submit Response
-                  </button>
-                </div>
-              )}
-            </li>
-          )
-        )}
+            {currentTicketId === ticket.customerUID && (
+              <div>
+                <textarea
+                  value={responseText}
+                  onChange={(e) => setResponseText(e.target.value)}
+                  placeholder="Type your response here..."
+                  className="border border-gray-400 p-2 w-full mt-2"
+                />
+                <button
+                  onClick={() => handleResponse(ticket.customerUID)}
+                  className="bg-green-500 text-white px-4 py-2 rounded mt-2"
+                >
+                  Submit Response
+                </button>
+              </div>
+            )}
+          </li>
+        ))}
       </ul>
     </div>
   );

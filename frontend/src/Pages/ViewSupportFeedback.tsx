@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { EditSupportFeedback } from "./EditSupportFeedback"; // Uncomment when ready
 import { Link, useNavigate } from "react-router-dom"; // Moved useNavigate here
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+
 import { toast } from "react-toastify";
 
 interface Feedback {
@@ -76,22 +75,6 @@ export function ViewSupportFeedback() {
     } catch (error) {
       console.error("Failed to delete feedback", error);
     }
-  };
-
-  const generatePDF = async (feedback: Feedback) => {
-    const doc = new jsPDF();
-
-    // Create a canvas for the PDF content
-    const canvas = await html2canvas(
-      document.querySelector(`#feedback-${feedback.customerUID}`) as HTMLElement
-    );
-    const imgData = canvas.toDataURL("image/png");
-
-    // Add the image to the PDF
-    doc.addImage(imgData, "PNG", 10, 10, 190, 0); // X, Y, Width, Height (Height is auto-scaled)
-
-    // Save the PDF
-    doc.save(`Feedback_${feedback.customerUID}.pdf`);
   };
 
   if (loading) return <p>Loading...</p>;
