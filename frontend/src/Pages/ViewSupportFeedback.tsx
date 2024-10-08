@@ -63,6 +63,10 @@ export function ViewSupportFeedback() {
     setEditFeedbackId(null);
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   const handleDelete = async (feedbackId: string) => {
     try {
       await axios.delete(`http://localhost:3001/api/feedback`); // Use feedbackId in the endpoint
@@ -89,12 +93,12 @@ export function ViewSupportFeedback() {
           className="w-40 mb-8"
         />
         My Feedback
-        <Link
-          to="/TicketUserAccount"
+        <p
           className="text-black text-right col-span-1 text-2xl"
+          onClick={goBack}
         >
           Back
-        </Link>
+        </p>
       </h1>
       {editFeedbackId ? (
         <EditSupportFeedback
