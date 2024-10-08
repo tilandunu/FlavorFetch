@@ -15,6 +15,7 @@ const preferenceRouters = require("./routes/preferenceRoute");
 const favoriteRouters = require("./routes/favoriteRecipes");
 const ingredientRouters = require("./routes/ingredients");
 const ratingRouters = require("./routes/ratingRoutes")
+const ratingRouter = require("./routes/rating");
 
 const app = express();
 app.use(express.json());
@@ -48,6 +49,7 @@ app.use("/api/preference", preferenceRouters);
 app.use("/api/favorites", favoriteRouters);
 app.use("/api/ingredients", ingredientRouters);
 app.use("/api/ratings", ratingRouters);
+app.use("/api/rating", ratingRouter);
 
 app.listen(3001, () => {
   console.log("Server is running");
