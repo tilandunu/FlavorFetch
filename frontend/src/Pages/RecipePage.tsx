@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
 
 const RecipePage = () => {
   const { recipeId } = useParams();
@@ -83,24 +82,24 @@ const RecipePage = () => {
   };
 
   const handleBackClick = () => {
-    confirmNavigation("/allrecipes");
+    confirmNavigation();
   };
 
-  const confirmNavigation = (destination) => {
+  const confirmNavigation = () => {
     if (cartItems.length > 0) {
       const userConfirmed = window.confirm(
         "You will lose your current cart details. Are you sure you want to leave this page?"
       );
       if (userConfirmed) {
-        navigate(destination);
+        navigate(-1); // Navigate to the previous page
       }
     } else {
-      navigate(destination); // No cart items, navigate directly
+      navigate(-1); // No cart items, navigate directly to the previous page
     }
   };
 
-  const handleHomeClick = () => {
-    confirmNavigation("/home");
+  const handleViewRatings = () => {
+    navigate(`/ratings/${recipeId}`);
   };
 
   const generatePDF = async () => {
@@ -230,16 +229,19 @@ const RecipePage = () => {
 
   return (
     <div className="font-poppins cursor-default bg-stone-100">
-      <div className="flex gap-7 mx-16 py-10 justify-between">
-        <div className="flex gap-7 hover:cursor-pointer">
-          <span className="material-symbols-outlined" onClick={handleHomeClick}>
-            home
-          </span>
+      <div className="flex gap-7 mx-16 py-10 justify-between items-center">
+        <div className="flex gap-7 hover:cursor-pointer items-center">
           <span className="material-symbols-outlined" onClick={handleBackClick}>
             arrow_back
           </span>
+          <p
+            className="border-2  rounded-xl p-2 px-4  duration-500 hover:bg-black hover:text-white text-sm uppercase"
+            onClick={handleViewRatings}
+          >
+            View Ratings
+          </p>
         </div>
-        <div className="flex gap-9">
+        <div className="flex gap-9 items-center">
           {" "}
           <span
             className="material-symbols-outlined z-50"
@@ -305,7 +307,7 @@ const RecipePage = () => {
                   key={index}
                   className="flex gap-4 hover:text-green-600 duration-500 cursor-pointer font-light items-center"
                 >
-                  <Button onClick={() => addToCart(ingredient)}>Add+</Button>
+                  <Button onClick={() => addToCart(ingredient)}>+</Button>
                   <p className="uppercase text-sm">{ingredient.name}</p>
                 </div>
               ))}

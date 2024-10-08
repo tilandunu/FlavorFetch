@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { Button } from "@/components/ui/button";
+import Cookies from "js-cookie";
 
 // Define the interface for ingredient
 interface Ingredient {
@@ -80,77 +82,114 @@ function Ingredients() {
     doc.save("ingredient_report.pdf");
   };
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Cookies.remove("userID");
+    navigate("/signin");
+  };
+
   return (
-    <div className="d-flix vh-100 bg-primary justify-content-center align-items-center">
-      <div className="w-50 bg-white rounded p-3"></div>
-      <Link to="/create" className="btn btn-success">
-        Add +
-      </Link>
-      <Link to="/requestIng" className="btn btn-success">
-        Request Ingredient
-      </Link>
+    <div className="d-flix vh-100 bg-stone-100 justify-content-center align-items-center  font-poppins cursor-default">
+      <div>
+        {" "}
+        <div className="mx-32 pt-20 pb-14 flex justify-between items-center">
+          <h1 className="px-4 text-3xl">STOCK MANAGEMENT</h1>
+          <Button className="bg-red-600" onClick={handleLogout}>
+            LOGOUT
+          </Button>
+        </div>
+        <div className="flex items-center justify-between mx-32 bg-white px-10 py-10 rounded-xl shadow-lg">
+          <div className="flex items-center gap-1">
+            <Link
+              to="/create"
+              className="bg-stone-700 mx-2 px-6 py-2 text-white rounded-lg hover:bg-black hover:text-white duration-500 text-sm"
+            >
+              Add +
+            </Link>
+          </div>
 
-      <input
-        type="text"
-        placeholder="Search by name..."
-        className="form-control my-3"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+          <div className="flex gap-7">
+            {" "}
+            <input
+              type="text"
+              placeholder="Search by name..."
+              className="border-2 border-stone-500 py-2 pl-3 pr-20 rounded-2xl placeholder:text-xs"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button
+              className="btn btn-primary my-3 border-b-2 hover:border-black duration-500 text-sm"
+              onClick={downloadReport}
+            >
+              Download Report
+            </button>
+          </div>
+        </div>
+      </div>
 
-      <button className="btn btn-primary my-3" onClick={downloadReport}>
-        Download Report
-      </button>
-
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Stock Quantity</th>
-            <th>Minimum Quantity</th>
-            <th>Unit Price</th>
-            <th>Stock status</th>
-            <th>Created Date</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredIngredients.length > 0 ? (
-            filteredIngredients.map((ingredient) => (
-              <tr key={ingredient._id}>
-                <td>{ingredient.name}</td>
-                <td>{ingredient.category}</td>
-                <td>{ingredient.quantity}</td>
-                <td>{ingredient.minQuantity}</td>
-                <td>{ingredient.pricePerUnit}</td>
-                <td>{ingredient.lowStock ? "low stock" : "available"}</td>
-                <td>{ingredient.date}</td>
-                <td>
-                  <Link
-                    to={`/update/${ingredient._id}`}
-                    className="btn btn-success"
-                  >
-                    Update
-                  </Link>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(ingredient._id)}
-                  >
-                    Delete
-                  </button>
+      <div className="flex justify-center mt-16 pb-12">
+        <table className="table">
+          <thead>
+            <tr className="bg-[#252525] text-left text-stone-200 text-sm">
+              <th className="px-5 py-4 border-2">Name</th>
+              <th className="px-5 py-4 border-2">Category</th>
+              <th className="px-5 py-4 border-2">Stock Quantity</th>
+              <th className="px-5 py-4 border-2">Minimum Quantity</th>
+              <th className="px-5 py-4 border-2">Unit Price</th>
+              <th className="px-5 py-4 border-2">Stock status</th>
+              <th className="px-5 py-4 border-2">Created Date</th>
+              <th className="px-5 py-4 border-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredIngredients.length > 0 ? (
+              filteredIngredients.map((ingredient) => (
+                <tr
+                  key={ingredient._id}
+                  className="text-left text-black text-sm bg-white"
+                >
+                  <td className="px-5 py-4 border-2">{ingredient.name}</td>
+                  <td className="px-5 py-4 border-2">{ingredient.category}</td>
+                  <td className="px-5 py-4 border-2">{ingredient.quantity}</td>
+                  <td className="px-5 py-4 border-2">
+                    {ingredient.minQuantity}
+                  </td>
+                  <td className="px-5 py-4 border-2">
+                    {ingredient.pricePerUnit}
+                  </td>
+                  <td className="px-5 py-4 border-2">
+                    {ingredient.lowStock ? "low stock" : "available"}
+                  </td>
+                  <td className="px-5 py-4 border-2">{ingredient.date}</td>
+                  <td className="px-5 py-4 border-2">
+                    <div className="flex gap-5 cursor-pointer">
+                      <Link
+                        to={`/update/${ingredient._id}`}
+                        className="btn btn-success"
+                      >
+                        <span class="material-symbols-outlined">edit</span>
+                      </Link>
+                      <span
+                        class="material-symbols-outlined text-red-600"
+                        onClick={() => handleDelete(ingredient._id)}
+                      >
+                        delete
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8} className="text-center px-4 py-2">
+                  No ingredients found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={8} className="text-center">
-                No ingredients found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -6,6 +6,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import ForYou from "./ForYou";
+import { Separator } from "@/components/ui/separator";
 
 const Home = () => {
   const [showPreferences, setShowPreferences] = useState(false);
@@ -75,8 +77,17 @@ const Home = () => {
           </div>
         )}
 
-        <div className="flex justify-center mx-16 px-10 py-10 mb-20 h-[600px] bg-white rounded-3xl">
-          <p>FOR YOU</p>
+        <div className="flex mx-10 py-10 mb-20 h-[600px] bg-white rounded-3xl flex-col items-center">
+          <p className="flex mb-5 font-semibold">FOR YOU</p>
+          <Separator className="w-1/2" />
+          <div>
+            {" "}
+            <ForYou />
+          </div>
+        </div>
+
+        <div className="my-10 flex justify-center">
+          <img src="./Banner 1.jpg" alt="" />
         </div>
 
         <FlavorFooter />

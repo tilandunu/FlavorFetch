@@ -1,6 +1,9 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 function CreateIngredient() {
   const [name, setName] = useState<string>("");
@@ -28,67 +31,88 @@ function CreateIngredient() {
       )
       .then((result) => {
         console.log(result);
-        navigate("/");
+        navigate("/ingredientHome");
       })
       .catch((err) => console.log(err));
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
-    <div className="d-flex vh-100 bg-primary justify-content-center align-items-center">
-      <div className="w-50 bg-white rounded p-3">
-        <form onSubmit={handleSubmit}>
-          <h2>Add Ingredient</h2>
-          <div className="mb-2">
-            <label htmlFor="">Name</label>
-            <input
-              type="text"
-              placeholder="Enter Ingredient Name"
-              className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+    <div className="flex bg-stone-200 py-10 h-screen font-poppins">
+      <div className="flex bg-white rounded-lg px-20 pt-16 pb-20 w-full mx-20 shadow-xl">
+        <form onSubmit={handleSubmit} className="w-full">
+          <div className="flex justify-between items-baseline">
+            <p className="text-4xl uppercase pb-12 font-semibold pt-1">
+              Add Ingredient
+            </p>
+            <span
+              className="material-symbols-outlined hover:text-red-800 cursor-pointer duration-300"
+              onClick={goBack}
+            >
+              arrow_back
+            </span>
           </div>
-          <div className="mb-2">
-            <label htmlFor="">Category</label>
-            <input
-              type="text"
-              placeholder="Enter Ingredient Category"
-              className="form-control"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            />
+          <div className="flex flex-col gap-2">
+            <div className="flex mb-3 justify-between gap-40 items-center">
+              <Label htmlFor="">Name</Label>
+              <Input
+                type="text"
+                placeholder="Enter Ingredient Name"
+                className="w-1/2"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="flex mb-2 justify-between gap-40 items-center">
+              <Label htmlFor="">Category</Label>
+              <Input
+                type="text"
+                placeholder="Enter Ingredient Category"
+                className="w-1/2"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
+            <div className="flex mb-2 justify-between gap-40 items-center">
+              <Label htmlFor="quantity">Stock Quantity</Label>
+              <Input
+                type="number"
+                placeholder="Enter Stock Quantity"
+                className="w-1/2"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              />
+            </div>
+            <div className="flex mb-2 justify-between gap-40 items-center">
+              <Label htmlFor="">Minimum Quantity</Label>
+              <Input
+                type="number"
+                placeholder="Enter Minimum Quantity"
+                className="w-1/2"
+                value={minQuantity}
+                onChange={(e) => setMinQuantity(Number(e.target.value))}
+              />
+            </div>
+            <div className="flex mb-2 justify-between gap-40 items-center">
+              <Label htmlFor="">Price Per Unit</Label>
+              <Input
+                type="number"
+                placeholder="Enter Price Per Unit"
+                className="w-1/2"
+                value={pricePerUnit}
+                onChange={(e) => setPricePerUnit(Number(e.target.value))}
+              />
+            </div>
           </div>
-          <div className="mb-2">
-            <label htmlFor="">Stock Quantity</label>
-            <input
-              type="number"
-              placeholder="Enter Stock Quantity"
-              className="form-control"
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-            />
+          <div className="flex justify-end">
+            {" "}
+            <Button className="my-10 w-40" type="submit">
+              Add Ingredient
+            </Button>
           </div>
-          <div className="mb-2">
-            <label htmlFor="">Minimum Quantity</label>
-            <input
-              type="number"
-              placeholder="Enter Minimum Quantity"
-              className="form-control"
-              value={minQuantity}
-              onChange={(e) => setMinQuantity(Number(e.target.value))}
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="">Price Per Unit</label>
-            <input
-              type="number"
-              placeholder="Enter Price Per Unit"
-              className="form-control"
-              value={pricePerUnit}
-              onChange={(e) => setPricePerUnit(Number(e.target.value))}
-            />
-          </div>
-          <button className="btn btn-success">Add Ingredient</button>
         </form>
       </div>
     </div>

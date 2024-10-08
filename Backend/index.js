@@ -14,6 +14,7 @@ const supplyOrderRouters = require("./routes/supplyRoute");
 const preferenceRouters = require("./routes/preferenceRoute");
 const favoriteRouters = require("./routes/favoriteRecipes");
 const ingredientRouters = require("./routes/ingredients");
+const ratingRoutes = require("./routes/ratingRoute");
 
 const app = express();
 app.use(express.json());

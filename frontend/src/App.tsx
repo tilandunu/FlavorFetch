@@ -39,6 +39,8 @@ import EditSupplies from "./Pages/EditSupplies.tsx";
 import Preference from "./Pages/Preference.tsx";
 import EditPreferences from "./Pages/EditPreferences.tsx";
 import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
+import Rating from "./Pages/Rating.tsx";
+import ForYou from "./Pages/ForYou.tsx";
 
 function App() {
   return (
@@ -137,6 +139,8 @@ function App() {
                 <Route path="/preference" element={<Preference />} />
                 <Route path="/editpreference" element={<EditPreferences />} />
                 <Route path="/favRecipes" element={<FavoriteRecipes />} />
+                <Route path="/ratings/:recipeID" element={<Rating />} />
+                <Route path="/forYou" element={<ForYou />} />
                 <Route
                   path="/ResponseDashboard"
                   element={<ResponseDashboard />}
