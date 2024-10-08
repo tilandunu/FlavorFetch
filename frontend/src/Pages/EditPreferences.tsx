@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
+import { jsPDF } from "jspdf"; // Import jsPDF library
 
 // Custom modal component
 const CustomModal = ({ isOpen, onClose, children }) => {
@@ -138,6 +139,35 @@ const EditPreferences = () => {
     navigate("/profileCustomer");
   };
 
+  // Generate PDF function
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("User Preferences Report", 20, 20);
+    doc.setFontSize(12);
+
+    // Add preferences to PDF
+    doc.text(`Diet Type: ${preferences.dietTypes || "None"}`, 20, 40);
+    doc.text(
+      `Allergies: ${
+        preferences.allergyInfo.length > 0
+          ? preferences.allergyInfo.join(", ")
+          : "None"
+      }`,
+      20,
+      60
+    );
+    doc.text(
+      `Varieties: ${
+        preferences.variety.length > 0 ? preferences.variety.join(", ") : "None"
+      }`,
+      20,
+      80
+    );
+
+    doc.save("UserPreferencesReport.pdf");
+  };
+
   if (loading) {
     return <p>Loading preferences...</p>;
   }
@@ -188,6 +218,14 @@ const EditPreferences = () => {
           onClick={handleDelete}
         >
           <span className="material-symbols-outlined">delete</span>
+        </div>
+        {/* Generate Report Button */}
+        <div
+          className="flex items-center p-4 bg-stone-100 rounded-full hover:bg-black hover:text-white duration-500 cursor-pointer"
+          onClick={generatePDF}
+        >
+          <span className="material-symbols-outlined">download</span>
+          <p className="ml-2">Generate Report</p>
         </div>
       </div>
 
