@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/firebase";
 import { getDoc, doc } from "firebase/firestore";
-import Cookies from "js-cookie"; // Importing the js-cookie library
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify"; // Assuming react-toastify is used for toast notifications
 
 const ProfileCustomer = () => {
   const [userData, setUserData] = useState({
@@ -14,25 +16,37 @@ const ProfileCustomer = () => {
     email: "",
   });
 
+  const [showPreferences, setShowPreferences] = useState(false);
+
   const navigate = useNavigate();
+  const customerUID = Cookies.get("userID");
 
   const handleLogout = () => {
-    // Clear the userID cookie
     Cookies.remove("userID");
-    // Navigate to the login or home page
-    navigate("/signin"); // Change this to your desired route
+    navigate("/signin");
+  };
+
+  const navigateHome = () => {
+    navigate("/home"); // Change this to your desired route
+  };
+
+  const navigatePreferences = () => {
+    if (showPreferences) {
+      navigate("/editpreference");
+    } else {
+      toast.error("No preferences found. Please set your preferences first.");
+    }
+  };
+
+  const navigateFavorites = () => {
+    navigate("/favRecipes");
   };
 
   useEffect(() => {
     const fetchUserData = async () => {
-      // Retrieve the user ID from the cookie
-      const userId = Cookies.get("userID");
-
-      if (userId) {
-        // Fetch user data from Firestore
-        const docRef = doc(db, "Users", userId);
+      if (customerUID) {
+        const docRef = doc(db, "Users", customerUID);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const data = docSnap.data();
           setUserData({
@@ -49,8 +63,21 @@ const ProfileCustomer = () => {
       }
     };
 
+    // Check if customer has preferences
+    const checkPreferences = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/api/preference/check/${customerUID}`
+        );
+        setShowPreferences(res.data.exists); // Set state based on whether preferences exist
+      } catch (error) {
+        console.error("Error checking preferences:", error);
+      }
+    };
+
     fetchUserData();
-  }, []);
+    checkPreferences();
+  }, [customerUID]);
 
   return (
     <div className="bg-[#d8d8d8] p-2 font-poppins">
@@ -58,24 +85,39 @@ const ProfileCustomer = () => {
         <div className="flex flex-col items-center gap-10">
           <img src="../trans black.png" alt="" className="w-28 mb-10" />
           <div className="flex flex-col gap-10">
-            <Button className="bg-stone-600 w-44">YOUR PREFERENCES</Button>
-            <Button className="bg-stone-600 w-44">YOUR FAVORITES</Button>
+            <Button className="bg-stone-600 w-44" onClick={navigatePreferences}>
+              YOUR PREFERENCES
+            </Button>
+            <Button className="bg-stone-600 w-44" onClick={navigateFavorites}>
+              YOUR FAVORITES
+            </Button>
           </div>
         </div>
 
         <div className="flex">
-          <Separator orientation="vertical" className="bg-black h-[500px]" />
+          <Separator
+            orientation="vertical"
+            className="bg-stone-300 h-[500px]"
+          />
         </div>
 
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
             <p className="flex text-6xl text-[#717171] mr-96">YOUR PROFILE</p>
-            <Button
-              className="bg-[#CC3838] text-white w-44"
-              onClick={handleLogout}
-            >
-              LOGOUT
-            </Button>
+            <div className="flex items-center gap-5 cursor-pointer">
+              <span
+                className="material-symbols-outlined"
+                onClick={navigateHome}
+              >
+                home
+              </span>{" "}
+              <Button
+                className="bg-[#CC3838] text-white w-44"
+                onClick={handleLogout}
+              >
+                LOGOUT
+              </Button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-10 my-12">

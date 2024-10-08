@@ -6,8 +6,8 @@ const RatingSchema = new mongoose.Schema({
     ref: "Recipe",
     required: true,
   },
-  customer: {
-    type: mongoose.Schema.Types.ObjectId,
+  customerUID: {
+    type: String,
     ref: "Customer",
     required: true,
   },

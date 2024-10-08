@@ -4,12 +4,13 @@ const RatingModel = require("../models/Rating");
 
 // POST route to create a new rating
 router.post("/save", async (req, res) => {
-    const { recipe, customer, rating, comment } = req.body;
+    const { recipe, customerUID, rating, comment, image } = req.body;
     const newRating = new RatingModel({ 
         recipe,
-        customer,
+        customerUID,
         rating,
-        comment
+        comment,
+        image
     });
     try {
         const savedRating = await newRating.save();
@@ -22,15 +23,7 @@ router.post("/save", async (req, res) => {
 // GET route to get all ratings
 router.get("/get/all", async (req, res) => {
     try {
-        const ratings = await RatingModel.find()
-        .populate({
-            path: 'customer',
-            strictPopulate: false
-          })
-        .populate({
-            path: 'recipe',
-            strictPopulate: false
-          });
+        const ratings = await RatingModel.find();
         res.json(ratings);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -66,15 +59,7 @@ router.get("/get/customer/:customerUID", async (req, res) => {
 router.get("/get/recipe/:recipe", async (req, res) => {
     const recipe = req.params.recipe;
     try {
-        const ratings = await RatingModel.find({ recipe })
-        .populate({
-            path: 'customer',
-            strictPopulate: false
-          })
-        .populate({
-            path: 'recipe',
-            strictPopulate: false
-          });
+        const ratings = await RatingModel.find({ recipe });
         res.json(ratings);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -98,11 +83,11 @@ router.delete("/delete/:id", async (req, res) => {
 // PUT route to update a rating
 router.put("/update/:id", async (req, res) => {
     const id = req.params.id;
-    const { rating, comment } = req.body;
+    const { rating, comment, image } = req.body;
     try {
         const updatedRating = await RatingModel.findByIdAndUpdate(
             id,
-            { rating, comment },  
+            { rating, comment, image },  
             { new: true }
         );
         if (!updatedRating) {

@@ -56,7 +56,7 @@ export function Signin() {
         } else if (userData.userType === "driver") {
           navigate("/driverdashboard");
         } else if (userData.userType === "supplier") {
-          navigate("/supplierDashboard");
+          navigate("/manageSupplies");
         } else if (userData.userType === "admin") {
           navigate("/ingredientHome");
         } else {

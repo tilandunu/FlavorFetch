@@ -3,13 +3,6 @@ import { ToastContainer } from "react-toastify";
 import { Signup } from "./Pages/Signup";
 import { Signin } from "./Pages/Signin";
 import ChefDashboard from "./Pages/ChefDashboard";
-import TimeAgo from 'javascript-time-ago';
-
-import en from 'javascript-time-ago/locale/en'
-import ru from 'javascript-time-ago/locale/ru'
-
-
-import SupplierDashboard from "./Pages/SupplierDashboard";
 import Home from "./Pages/Home";
 import AdminDashboard from "./Pages/AdminDashboard";
 import { SignupDriver } from "./Pages/SignupDriver";
@@ -28,18 +21,24 @@ import { TicketUserAccount } from "./Pages/TicketUserAccount";
 import { ViewMyTickets } from "./Pages/ViewMyTickets";
 import { EditSupportTicket } from "./Pages/EditSupportTicket";
 import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
+
+import Ingredients from "./Pages/Ingredients";
+import CreateIngredient from "./Pages/CreateIngredient";
+import UpdateIngredient from "./Pages/UpdateIngredient";
+import StockNotification from "./Pages/StockNotification";
+
 import UpOrder from "./components/UpdateOrder/UpOrder.tsx";
 import OrderManagement from "./Pages/OrderManagement";
 import OrderManagementNC from "./Pages/OrderManagementNC";
 import ProfileCustomer from "./Pages/ProfileCustomer.tsx";
 import ProfileOther from "./Pages/ProfileOther.tsx";
+import AddSupplies from "./Pages/AddSupplies.tsx";
+import ManageSupplies from "./Pages/ManageSupplies.tsx";
+import EditSupplies from "./Pages/EditSupplies.tsx";
+import Preference from "./Pages/Preference.tsx";
+import EditPreferences from "./Pages/EditPreferences.tsx";
+import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
 import Rating from "./Pages/Rating.tsx";
-import RatingReport from "./Pages/RatingReport.tsx";
-
-TimeAgo.addDefaultLocale(en)
-TimeAgo.addLocale(ru)
-
-
 
 function App() {
   return (
@@ -53,11 +52,6 @@ function App() {
                 <Route path="/signup" element={<Signup></Signup>} />
                 <Route path="/signin" element={<Signin></Signin>} />
                 <Route path="/chefDashboard" element={<ChefDashboard />} />
-
-                <Route
-                  path="/supplierDashboard"
-                  element={<SupplierDashboard />}
-                />
                 <Route path="/home" element={<Home />} />
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/signupDriver" element={<SignupDriver />} />
@@ -78,16 +72,17 @@ function App() {
                 <Route path="/ViewMyTickets" element={<ViewMyTickets />} />
                 <Route path="/signupSupplier" element={<SignupSupplier />} />
                 <Route path="/allrecipes" element={<AllRecipes />} />
-                <Route path="/rating/:id" element={<Rating />} />
-                <Route path="/rating_report" element={<RatingReport />} />
                 <Route
                   path="/customerUserProfile"
                   element={<CustomerUserProfile />}
                 />
                 <Route path="/ticketDashboard" element={<TicketDashboard />} />
-
                 <Route path="/orderdetails/:id" element={<UpOrder />} />
-
+                <Route path="/ingredientHome" element={<Ingredients />} />
+                <Route path="/create" element={<CreateIngredient />} />
+                <Route path="/update/:id" element={<UpdateIngredient />} />
+                {/* <Route path="/requestIng" element={<RequestIngredient />} /> */}
+                <Route path="/stocknt" element={<StockNotification />} />
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
                 <Route path="/recipePage/:recipeId" element={<RecipePage />} />
@@ -129,6 +124,20 @@ function App() {
                 />
                 <Route path="/profileCustomer" element={<ProfileCustomer />} />
                 <Route path="/profileOther" element={<ProfileOther />} />
+                <Route path="/addSupplies" element={<AddSupplies />} />
+                <Route path="/manageSupplies" element={<ManageSupplies />} />
+                <Route
+                  path="/editSupplies/:orderId"
+                  element={<EditSupplies />}
+                />
+                <Route
+                  path="/editSupplies/:orderId"
+                  element={<EditSupplies />}
+                />
+                <Route path="/preference" element={<Preference />} />
+                <Route path="/editpreference" element={<EditPreferences />} />
+                <Route path="/favRecipes" element={<FavoriteRecipes />} />
+                <Route path="/ratings" element={<Rating/>} />
               </Routes>
 
               <ToastContainer />
