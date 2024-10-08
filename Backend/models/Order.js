@@ -13,7 +13,14 @@ const OrderSchema = new mongoose.Schema({
         ref: "Ingredient",
         required: true,
       },
-      quantity: { type: Number, required: true },
+      ingredientName: {
+        type: String,
+        required: true,
+      }, // Store the name of the ingredient
+      quantity: {
+        type: Number,
+        required: true,
+      },
     },
   ],
   totalAmount: { type: Number, required: true },

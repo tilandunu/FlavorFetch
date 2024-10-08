@@ -64,9 +64,12 @@ const OrderManagementNC = () => {
     }
 
     try {
-      await axios.put(`http://localhost:3001/api/order/${selectedOrder._id}`, {
-        deliveryAddress: newAddress,
-      });
+      await axios.put(
+        `http://localhost:3001/api/order/updateAddress/${selectedOrder._id}`,
+        {
+          deliveryAddress: newAddress,
+        }
+      );
       // Update the orders list with the new address
       const updatedOrders = orders.map((order) =>
         order._id === selectedOrder._id

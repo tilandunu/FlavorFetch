@@ -41,6 +41,8 @@ import EditPreferences from "./Pages/EditPreferences.tsx";
 import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
 import Rating from "./Pages/Rating.tsx";
 import ForYou from "./Pages/ForYou.tsx";
+import Payment from "./Pages/Payment.tsx";
+import Success from "./Pages/Success.tsx";
 
 function App() {
   return (
@@ -145,6 +147,8 @@ function App() {
                   path="/ResponseDashboard"
                   element={<ResponseDashboard />}
                 />
+                <Route path="/payment/:orderID" element={<Payment />} />
+                <Route path="/success" element={<Success />} />
               </Routes>
 
               <ToastContainer />

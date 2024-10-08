@@ -358,7 +358,7 @@ const RecipePage = () => {
   );
 };
 
-const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
+const Modal = ({ isOpen, onClose, cartItems }) => {
   if (!isOpen) return null;
 
   // You can add state to track quantities if needed
@@ -387,6 +387,7 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
       customerUID: customerUID,
       ingredients: cartItems.map((item, index) => ({
         ingredient: item._id,
+        ingredientName: item.name,
         quantity: quantities[index],
       })),
       totalAmount: cartItems.reduce(
@@ -394,7 +395,7 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
         0
       ),
       paymentMethod: "Cash on Delivery", // Default payment method
-      status: "To-Be-Delivered", // Default status
+      status: "Pending", // Default status
       deliveryAddress: "123 Main Street", // You can replace this with actual user input
     };
 
@@ -403,8 +404,10 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
         "http://localhost:3001/api/order/create", // Adjust the API endpoint if necessary
         orderData
       );
+      const orderID = response.data.orderID;
       toast.success("Order placed successfully!", { position: "top-right" });
-      onClose(); // Close the modal after successful checkout
+      onClose();
+      window.location.href = `/payment/${orderID}`;
     } catch (error) {
       console.error("Error during checkout:", error);
       toast.error("Failed to place the order", { position: "top-right" });
