@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -12,12 +13,22 @@ const AdminDashboard = () => {
     navigate("/ingredientHome");
   };
 
+  const handleLogout = () => {
+    Cookies.remove("userID");
+    navigate("/signin");
+  };
+
   return (
     <div className="font-poppins cursor-default">
       <div className="flex flex-col bg-[#CCCCCC] h-screen p-10">
         <div className="flex flex-col justify-center items-center bg-white rounded-lg">
           <p className="text-3xl mt-24 mb-4">ADMIN DASHBOARD</p>
-          <Button className="mb-20 w-40 bg-red-600 duration-500">LOGOUT</Button>
+          <Button
+            className="mb-20 w-40 bg-red-600 duration-500"
+            onClick={handleLogout}
+          >
+            LOGOUT
+          </Button>
         </div>
 
         <div className="flex flex-row gap-14 justify-center items-center bg-[#EFEFEF] rounded-b-lg h-full">

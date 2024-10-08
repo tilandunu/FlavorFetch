@@ -58,7 +58,7 @@ export function Signin() {
         } else if (userData.userType === "supplier") {
           navigate("/manageSupplies");
         } else if (userData.userType === "admin") {
-          navigate("/ingredientHome");
+          navigate("/admin");
         } else {
           console.log("No such document!");
           navigate("/");

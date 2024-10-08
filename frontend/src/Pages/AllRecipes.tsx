@@ -167,23 +167,7 @@ const AllRecipes = () => {
                   <p className="px-3 text-xs relative bottom-1 text-stone-600">
                     {chefs[recipe.chefUID] || "Anonymous"}
                   </p>
-                  <div className="flex px-3 mt-1">
-                    <span className="material-symbols-outlined  text-sm text-orange-500">
-                      star
-                    </span>
-                    <span className="material-symbols-outlined  text-sm text-orange-500">
-                      star
-                    </span>
-                    <span className="material-symbols-outlined  text-sm text-orange-500">
-                      star
-                    </span>
-                    <span className="material-symbols-outlined  text-sm text-orange-500">
-                      star
-                    </span>
-                    <span className="material-symbols-outlined  text-sm text-orange-500">
-                      star
-                    </span>
-                  </div>
+
                   <div
                     className="flex justify-end px-3 items-center align-middle mb-5"
                     onClick={() => handleGoToRecipe(recipe._id)}
