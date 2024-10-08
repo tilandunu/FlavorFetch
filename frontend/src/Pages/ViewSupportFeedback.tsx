@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { EditSupportFeedback } from "./EditSupportFeedback"; // Uncomment when ready
-import { Link } from "react-router-dom";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import { Link, useNavigate } from "react-router-dom"; // Moved useNavigate here
+
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 interface Feedback {
   customerUID: string;
@@ -44,11 +42,9 @@ export function ViewSupportFeedback() {
   const handleSaveEdit = async () => {
     if (editFeedbackId) {
       try {
-        const updatedFeedback = {
-          message: updatedMessage,
-        };
+        const updatedFeedback = { message: updatedMessage };
         const response = await axios.put(
-          `http://localhost:3001/api/feedback`, // Update endpoint with customerUID
+          `http://localhost:3001/api/feedback/${editFeedbackId}`, // Include customerUID in the URL
           updatedFeedback
         );
         setFeedbacks((prevFeedbacks) =>
@@ -73,7 +69,6 @@ export function ViewSupportFeedback() {
       setFeedbacks((prevFeedbacks) =>
         prevFeedbacks.filter((feedback) => feedback.customerUID !== feedbackId)
       );
-
       toast.success("Feedback deleted successfully", {
         position: "top-center",
       });
@@ -82,23 +77,6 @@ export function ViewSupportFeedback() {
     }
   };
 
-  navigate("/ViewSupportFeedback");
-
-  const generatePDF = async (feedback: Feedback) => {
-    const doc = new jsPDF();
-
-    // Create a canvas for the PDF content
-    const canvas = await html2canvas(
-      document.querySelector(`#feedback-${feedback.customerUID}`) as HTMLElement
-    );
-    const imgData = canvas.toDataURL("image/png");
-
-    // Add the image to the PDF
-    doc.addImage(imgData, "PNG", 10, 10, 190, 0); // X, Y, Width, Height (Height is auto-scaled)
-
-    // Save the PDF
-    doc.save(`Feedback_${feedback.customerUID}.pdf`);
-  };
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -113,7 +91,7 @@ export function ViewSupportFeedback() {
         My Feedback
         <Link
           to="/TicketUserAccount"
-          className="text-black  text-right col-span-1 text-2xl"
+          className="text-black text-right col-span-1 text-2xl"
         >
           Back
         </Link>
@@ -129,10 +107,11 @@ export function ViewSupportFeedback() {
         />
       ) : (
         <ul className="space-y-4">
-          {feedbacks.map((feedback, index) => (
+          {feedbacks.map((feedback) => (
             <li
-              key={index}
+              key={feedback.customerUID} // Use customerUID as key
               className="border border-gray-300 p-4 rounded-lg shadow-lg bg-amber-100"
+              id={`feedback-${feedback.customerUID}`} // Added id for PDF generation
             >
               <h2 className="text-xl font-semibold text-blue-600">
                 Feedback from {feedback.customerUID}
@@ -140,7 +119,7 @@ export function ViewSupportFeedback() {
               <p className="mt-2 text-gray-700">{feedback.message}</p>
               <div className="flex space-x-4 mt-4">
                 <Link
-                  to="/EditSupportFeedback" // Use the customer's UID in the URL
+                  to="/EditSupportFeedback"
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                   onClick={() => handleEdit(feedback)} // Trigger edit
                 >
@@ -151,12 +130,6 @@ export function ViewSupportFeedback() {
                   className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 >
                   Delete
-                </button>
-                <button
-                  onClick={() => generatePDF(feedback)} // Generate PDF
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                >
-                  Download PDF
                 </button>
               </div>
             </li>
