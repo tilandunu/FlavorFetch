@@ -127,12 +127,12 @@ const OrderManagement = () => {
             <h2 className="text-xl font-semibold mb-4">Order Details</h2>
             <p>Order ID: {selectedOrder._id}</p>
             <p>Status: {selectedOrder.status}</p>
-            <p>Total Amount: ${selectedOrder.totalAmount.toFixed(2)}</p>
+            <p>Total Amount: Rs.{selectedOrder.totalAmount.toFixed(2)}</p>
             <h3 className="font-semibold mt-4">Ingredients:</h3>
             <ul>
               {selectedOrder.ingredients.map((item, index) => (
                 <li key={index}>
-                  {item.ingredient.name}: {item.quantity}
+                  {item.ingredientName}: {item.quantity}
                 </li>
               ))}
             </ul>
