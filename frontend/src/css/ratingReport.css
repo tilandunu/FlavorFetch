@@ -1,0 +1,84 @@
+.report-rating-report{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.report-review-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    min-width: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.report-heading {
+    color: #732d1d;
+    font-size: 1.5rem;
+    display: inline-block;
+    margin: 15px;
+
+}
+
+.report-review-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.report-review-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+.report-review-title{
+    /* font-weight: bold; */
+    /* color: #732d1d; */
+}
+.report-review-body{
+    flex-grow: 1;
+    width: 100%;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+.report-review-rating{
+    font-size: 1rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+}
+.report-review-text{
+    font-size: 1rem;
+    width: 100%;
+    text-align: start;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+}

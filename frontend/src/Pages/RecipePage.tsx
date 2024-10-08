@@ -15,14 +15,8 @@ const RecipePage = () => {
   const [ingredients, setIngredients] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
-  const [isFavorite, setIsFavorite] = useState(false);
 
   const navigate = useNavigate();
-
-  const goToRatingsPage = () => {
-    navigate("/ratings");
-  };
-
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -32,14 +26,6 @@ const RecipePage = () => {
         );
         const recipeData = recipeResponse.data;
         setRecipe(recipeData);
-
-        const customerUID = Cookies.get("userID");
-        if (customerUID) {
-          const favoriteResponse = await axios.get(
-            `http://localhost:3001/api/favorites/checkFavorite/${customerUID}/${recipeId}`
-          );
-          setIsFavorite(favoriteResponse.data.isFavorite);
-        }
 
         if (recipeData.chefUID) {
           const chefResponse = await axios.get(
@@ -87,25 +73,21 @@ const RecipePage = () => {
     toast.success("Item removed from the cart", { position: "top-right" });
   };
 
-  const handleBackClick = () => {
-    confirmNavigation("/allrecipes");
-  };
-
   const confirmNavigation = (destination) => {
-    if (cartItems.length > 0) {
-      const userConfirmed = window.confirm(
-        "You will lose your current cart details. Are you sure you want to leave this page?"
-      );
-      if (userConfirmed) {
-        navigate(destination);
-      }
-    } else {
-      navigate(destination); // No cart items, navigate directly
+    const userConfirmed = window.confirm(
+      "You will lose your current cart details. Are you sure you want to leave this page?"
+    );
+    if (userConfirmed) {
+      navigate(destination);
     }
   };
 
   const handleHomeClick = () => {
     confirmNavigation("/home");
+  };
+
+  const handleBackClick = () => {
+    confirmNavigation("/allrecipes");
   };
 
   const generatePDF = async () => {
@@ -197,39 +179,9 @@ const RecipePage = () => {
     doc.save(`${recipe.title}.pdf`);
   };
 
-  const toggleFavorite = async () => {
-    const customerUID = Cookies.get("userID");
-    if (!customerUID) {
-      toast.error("You must be logged in to add favorites", {
-        position: "top-right",
-      });
-      return;
-    }
-
-    try {
-      if (isFavorite) {
-        // Remove favorite
-        await axios.delete(
-          `http://localhost:3001/api/favorites/removeFavorite/${customerUID}/${recipeId}`
-        );
-        toast.success("Recipe removed from favorites", {
-          position: "top-right",
-        });
-      } else {
-        // Add favorite
-        await axios.post(`http://localhost:3001/api/favorites/addFavorite`, {
-          customerUID,
-          recipeID: recipeId,
-        });
-        toast.success("Recipe added to favorites", { position: "top-right" });
-      }
-
-      setIsFavorite(!isFavorite); // Toggle the favorite state
-    } catch (error) {
-      console.error("Error updating favorites:", error);
-      toast.error("Failed to update favorite", { position: "top-right" });
-    }
-  };
+  const handleViewRatings = () => {
+    navigate(`/rating/${recipeId}`);
+  }
 
   if (!recipe) return <p>Loading...</p>;
 
@@ -243,30 +195,10 @@ const RecipePage = () => {
           <span className="material-symbols-outlined" onClick={handleBackClick}>
             arrow_back
           </span>
-          <button
-        onClick={goToRatingsPage}
-        className="w-full bg-blue-500 text-white p-2 rounded-lg uppercase font-semibold mt-4"
-      >
-        Go to Ratings Page
-      </button>
         </div>
-        <div className="flex gap-9">
-          {" "}
-          <span
-            className="material-symbols-outlined z-50"
-            onClick={toggleModal}
-          >
-            shopping_cart
-          </span>
-          <span
-            className={`material-symbols-outlined z-50 ${
-              isFavorite ? "text-red-500" : ""
-            }`}
-            onClick={toggleFavorite}
-          >
-            favorite
-          </span>
-        </div>
+        <span className="material-symbols-outlined z-50" onClick={toggleModal}>
+          shopping_cart
+        </span>
       </div>
       <div className="flex justify-center gap-32">
         <div className="flex flex-col items-end mt-12 min-w-96">
@@ -282,6 +214,8 @@ const RecipePage = () => {
           <p className="flex text-orange-700 text-lg">
             SERVES : {recipe.servingCount}
           </p>
+          <br/>
+          <Button onClick={handleViewRatings} variant="contained" style={{backgroundColor: "orange"}}>View Ratings</Button>
         </div>
         <div className="flex flex-col">
           <Separator orientation="vertical" className="bg-black opacity-50" />

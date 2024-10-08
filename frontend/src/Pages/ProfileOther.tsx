@@ -16,10 +16,6 @@ const ProfileOther = () => {
     navigate("/signin"); // Change this to your desired route
   };
 
-  const navigateHome = () => {
-    navigate(-1); // Change this to your desired route
-  };
-
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -64,29 +60,18 @@ const ProfileOther = () => {
         </div>
 
         <div className="flex">
-          <Separator
-            orientation="vertical"
-            className="bg-stone-300 h-[500px]"
-          />
+          <Separator orientation="vertical" className="bg-black h-[500px]" />
         </div>
 
         <div className="flex flex-col">
           <div className="flex justify-between items-center">
             <p className="flex text-6xl text-[#717171] mr-96">YOUR PROFILE</p>
-            <div className="flex items-center gap-5 cursor-pointer">
-              <span
-                className="material-symbols-outlined"
-                onClick={navigateHome}
-              >
-                home
-              </span>{" "}
-              <Button
-                className="bg-[#CC3838] text-white w-44"
-                onClick={handleLogout}
-              >
-                LOGOUT
-              </Button>
-            </div>
+            <Button
+              className="bg-[#CC3838] text-white w-44"
+              onClick={handleLogout}
+            >
+              LOGOUT
+            </Button>
           </div>
 
           <div className="flex flex-col gap-10 my-12">
