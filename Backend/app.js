@@ -5,6 +5,7 @@ import cors from 'cors';
 import { connect } from 'mongoose';
 import orders from './routes/orderRoutes.js'; // Path to order routes
 import drivers from './routes/driverRoutes.js'; // Path to driver routes
+import deliveryOrderRoutes from "./routes/deliveryOrderRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001; // Use the environment variable for PORT or fallback to 3001
@@ -29,6 +30,7 @@ connect('mongodb+srv://tilandunu:1234@cluster0.kacglu2.mongodb.net/FlavorFetch?r
 // Use Routes
 app.use('/api/orders', orders);
 app.use('/api/drivers', drivers);
+app.use("/api", deliveryOrderRoutes);
 
 // Start the server
 app.listen(PORT, () => {
