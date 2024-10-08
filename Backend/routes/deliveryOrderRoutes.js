@@ -5,7 +5,7 @@ import OrderModel from "../models/Order.js";
 const router = express.Router();
 
 // GET route to fetch all delivery orders
-router.get("/deliveryOrders", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const deliveryOrders = await DeliveryOrderModel.find();
     res.status(200).json({ deliveryOrders });
@@ -16,7 +16,7 @@ router.get("/deliveryOrders", async (req, res) => {
 });
 
 // POST route to create a delivery order
-router.post("/deliveryOrders", async (req, res) => {
+router.post("/", async (req, res) => {
   const { orderId, customerId, deliveryAddress } = req.body;
 
   try {
@@ -50,27 +50,26 @@ router.post("/deliveryOrders", async (req, res) => {
   }
 });
 
-// DELETE route to delete a delivery order by orderId
-router.delete("/deliveryOrders/:id", async (req, res) => {
-    const { id } = req.params; // Use _id
-  
-    try {
-      // Find the delivery order by _id
-      const deliveryOrder = await DeliveryOrderModel.findById(id);
-  
-      if (!deliveryOrder) {
-        return res.status(404).json({ error: "Delivery order not found" });
-      }
-  
-      // Delete the delivery order
-      await DeliveryOrderModel.deleteOne({ _id: id });
-  
-      res.status(200).json({ message: "Delivery order deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting delivery order:", error);
-      res.status(500).json({ error: "Failed to delete delivery order" });
+// DELETE route to delete a delivery order by orderId (_id)
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params; // Use _id
+
+  try {
+    // Find the delivery order by _id
+    const deliveryOrder = await DeliveryOrderModel.findById(id);
+
+    if (!deliveryOrder) {
+      return res.status(404).json({ error: "Delivery order not found" });
     }
-  });
-  
+
+    // Delete the delivery order
+    await DeliveryOrderModel.deleteOne({ _id: id });
+
+    res.status(200).json({ message: "Delivery order deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting delivery order:", error);
+    res.status(500).json({ error: "Failed to delete delivery order" });
+  }
+});
 
 export default router;

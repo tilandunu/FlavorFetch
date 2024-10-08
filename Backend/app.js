@@ -30,7 +30,7 @@ connect('mongodb+srv://tilandunu:1234@cluster0.kacglu2.mongodb.net/FlavorFetch?r
 // Use Routes
 app.use('/api/orders', orders);
 app.use('/api/drivers', drivers);
-app.use("/api", deliveryOrderRoutes);
+app.use("/api/deliveryOrders", deliveryOrderRoutes);
 
 // Start the server
 app.listen(PORT, () => {

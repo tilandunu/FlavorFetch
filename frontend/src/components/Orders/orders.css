@@ -23,7 +23,7 @@
 
 /* Delete button styling */
 .delete-button {
-    background-color: #00868b; /* Dark teal */
+    background-color: #bf3434; 
     color: white;
     padding: 5px 10px;
     border: none;
@@ -35,7 +35,7 @@
 }
 
 .delete-button:hover {
-    background-color: #005f5f; /* Slightly darker teal */
+    background-color: #ab0707; 
 }
 
 .confirm-button{
