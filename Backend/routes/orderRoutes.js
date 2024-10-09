@@ -73,14 +73,14 @@ router.delete('/:id', async (req, res) => {
 
 
 
-// Route to get the count of orders
+// Route to get order count
 router.get('/count', async (req, res) => {
   try {
-    const orderCount = await OrderModel.countDocuments();
-    res.json({ count: orderCount });
+    const count = await OrderModel.countDocuments(); 
+    res.json({ count });
   } catch (error) {
-    console.error("Error fetching order count:", error);
-    res.status(500).json({ error: 'Failed to retrieve order count' });
+    console.error('Error fetching order count:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

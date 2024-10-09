@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";  // Import Axios for API requests
+import axios from "axios";
 import "../Orders/orders.css";
 
 interface OrderSumProps {
@@ -10,7 +10,7 @@ interface OrderSumProps {
     paymentMethod: string;
     status: string;
     deliveryAddress: string;
-    customerUID: string; // Added customerUID to send it to DeliveryOrder model
+    customerUID: string; 
   };
 }
 
@@ -19,19 +19,48 @@ const OrderSum: React.FC<OrderSumProps> = (props) => {
 
   const confirmOrder = async () => {
     try {
-      // POST request to store the order in DeliveryOrder model
-      await axios.post("http://localhost:3001/api/deliveryOrders", {
-        orderId: _id,
-        customerId: customerUID,
-        deliveryAddress,
-      });
-      alert("Order confirmed for delivery.");
-    } catch (error) {
-      console.error("Failed to confirm order", error);
-      alert("Failed to confirm order.");
+     
+      const response = await axios.get(`http://localhost:3001/api/deliveryOrders/${_id}`);
+      
+      if (response.data) {
+        
+        alert("Order is already confirmed for delivery.");
+      } else {
+       
+        await axios.post("http://localhost:3001/api/deliveryOrders", {
+          orderId: _id,
+          customerId: customerUID,
+          deliveryAddress,
+        });
+        alert("Order confirmed for delivery.");
+      }
+    } catch (error: unknown) {
+    
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 404) {
+         
+          try {
+            await axios.post("http://localhost:3001/api/deliveryOrders", {
+              orderId: _id,
+              customerId: customerUID,
+              deliveryAddress,
+            });
+            alert("Order confirmed for delivery.");
+          } catch (err) {
+            console.error("Failed to confirm order", err);
+            alert("Order is already confirmed");
+          }
+        } else {
+          console.error("Failed to check order confirmation status", error);
+          alert("Failed to check order confirmation status.");
+        }
+      } else {
+        console.error("An unexpected error occurred:", error);
+        alert("An unexpected error occurred.");
+      }
     }
   };
-  
+
   return (
     <tr>
       <td>{_id}</td>
@@ -41,8 +70,9 @@ const OrderSum: React.FC<OrderSumProps> = (props) => {
       <td>{deliveryAddress}</td>
       <td className="order-actions">
         <Link to={`/orderdetails/${_id}`} className="update-button">
-          Update Status
-        </Link>
+          Update
+        </Link></td>
+        <td>
         <button onClick={confirmOrder} className="confirm-button">
           Confirm
         </button>

@@ -1,32 +1,15 @@
-import mongoose from 'mongoose';
+// models/DeliveryOrderModel.js
 
-const DeliveryOrderSchema = new mongoose.Schema({
-  orderId: {
-    type: String,
-    required: true,  // Unique identifier for the delivery order
-  },
-  customerId: {
-    type: String,
-    ref: "Customer",
-    required: true,  // ID of the customer placing the order
-  },
-  driverId: {
-    type: String,
-  },
-  deliveryAddress: {
-    type: String,
-    required: true,  // Address for delivery
-  },
- createdAt: {
-    type: Date,
-    default: Date.now,  // Timestamp of when the order was created
-  },
-  updatedAt: {
-    type: Date,         // Timestamp of the last update (nullable)
-    default: null,
-  },
+import mongoose from "mongoose";
+
+const deliveryOrderSchema = new mongoose.Schema({
+  orderId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Order' },
+  customerId: { type: String, required: true },
+  deliveryAddress: { type: String, required: true },
+  note: { type: String }, 
+  estimatedTime: { type: String }, 
+  createdAt: { type: Date, default: Date.now }
 });
 
-const DeliveryOrderModel = mongoose.model("DeliveryOrder", DeliveryOrderSchema);
-
+const DeliveryOrderModel = mongoose.model("DeliveryOrder", deliveryOrderSchema);
 export default DeliveryOrderModel;

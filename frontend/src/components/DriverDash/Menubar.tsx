@@ -12,8 +12,8 @@ const Menubar: React.FC = () => {
 
   const menuItems: MenuItem[] = [
     { name: "Orders", icon: dashboard, link: "/driverdashboard" },
-    { name: "Delevery History", icon: role, link: "/role-management" },
-    { name: "My Profile", icon: user, link: "/user-management" },
+    { name: "Confirmed Orders", icon: role, link: "/role-management" },
+    { name: "My Profile", icon: user, link: "" },   //my profile 
   ];
 
   const handleItemClick = (item: MenuItem) => {

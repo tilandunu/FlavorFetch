@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './upOrder.css'; // Import the CSS file for styling
+import './upOrder.css'; 
 
 const UpdateOrder: React.FC = () => {
     const [inputs, setInputs] = useState<{
@@ -20,26 +20,26 @@ const UpdateOrder: React.FC = () => {
         ingredients: [], 
     });
 
-    const { id } = useParams<{ id: string }>(); // Get order ID from the URL
+    const { id } = useParams<{ id: string }>(); 
     const navigate = useNavigate();
 
-    // Fetch the order data when the component mounts
+   
     useEffect(() => {
         const fetchOrder = async () => {
             try {
                 const response = await axios.get(`http://localhost:3001/api/orders/${id}`);
-                setInputs(response.data); // Populate the form fields with the order data
+                setInputs(response.data); 
             } catch (error) {
                 console.error("Error fetching order:", error);
             }
         };
 
         if (id) {
-            fetchOrder(); // Fetch the order data if ID exists
+            fetchOrder(); 
         }
     }, [id]);
 
-    // Handle input changes and update state
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setInputs((prevState) => ({
             ...prevState,
@@ -47,22 +47,22 @@ const UpdateOrder: React.FC = () => {
         }));
     };
 
-    // Handle form submission for updating the order
+  
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:3001/api/orders/${id}`, inputs); // Update order data via API
+            await axios.put(`http://localhost:3001/api/orders/${id}`, inputs); 
             toast.success("Order status updated successfully!", { position: "top-center" });
-            navigate('/driverdashboard'); // Redirect after successful update
+            navigate('/driverdashboard'); 
         } catch (error) {
             console.error("Error updating order:", error);
             toast.error("Failed to update order status.", { position: "top-center" });
         }
     };
 
-    // Handle back navigation
+    // back navigation
     const handleBack = () => {
-        navigate('/driverdashboard'); // Navigate back to the dashboard
+        navigate('/driverdashboard'); 
     };
 
     return (
@@ -77,7 +77,7 @@ const UpdateOrder: React.FC = () => {
                         type="number"
                         name="totalAmount"
                         onChange={handleChange}
-                        value={inputs.totalAmount} // Show current total amount
+                        value={inputs.totalAmount} 
                         required
                         readOnly
                     />
@@ -87,7 +87,7 @@ const UpdateOrder: React.FC = () => {
                         id="paymentMethod"
                         name="paymentMethod"
                         onChange={handleChange}
-                        value={inputs.paymentMethod} // Show current payment method
+                        value={inputs.paymentMethod} 
                         required
                     >
                         <option value="">Select a method</option>
@@ -100,7 +100,7 @@ const UpdateOrder: React.FC = () => {
                         id="status"
                         name="status"
                         onChange={handleChange}
-                        value={inputs.status} // Show current status
+                        value={inputs.status} 
                         required
                     >
                         <option value="">Select status</option>
@@ -117,7 +117,7 @@ const UpdateOrder: React.FC = () => {
                         type="text"
                         name="deliveryAddress"
                         onChange={handleChange}
-                        value={inputs.deliveryAddress} // Show current delivery address
+                        value={inputs.deliveryAddress} 
                         required
                         readOnly
                     />
@@ -127,7 +127,7 @@ const UpdateOrder: React.FC = () => {
                         id="ingredients"
                         name="ingredients"
                         onChange={handleChange}
-                        value={inputs.ingredients.join(', ')} // Display ingredients as a comma-separated list
+                        value={inputs.ingredients.join(', ')} 
                         required
                         readOnly
                     />

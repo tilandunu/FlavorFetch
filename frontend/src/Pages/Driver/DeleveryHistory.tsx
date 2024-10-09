@@ -19,7 +19,7 @@ const RoleManagement: React.FC = () => {
       </div>
       <div className="w-3/4 h-screen">
         <MenuToggle showMenu={showMenu} handleMenuToggle={handleMenuToggle} />
-        <Navbar pagename={"Delivery History"} />
+        <Navbar pagename={"Confirmed Orders"} />
         <div>
           <OrderList />
         </div>
