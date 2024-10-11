@@ -117,7 +117,13 @@ function Ingredients() {
               to="/create"
               className="bg-stone-700 mx-2 px-6 py-2 text-white rounded-lg hover:bg-black hover:text-white duration-500 text-sm"
             >
-              Add +
+              ADD +
+            </Link>
+            <Link
+              to="/pendingSuppliesNotification"
+              className="bg-stone-700 mx-2 px-6 py-2 text-white rounded-lg hover:bg-black hover:text-white duration-500 text-sm"
+            >
+              PENDING ORDERS
             </Link>
           </div>
 

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CreateIngredient() {
   const [name, setName] = useState<string>("");
@@ -13,8 +15,44 @@ function CreateIngredient() {
   const [pricePerUnit, setPricePerUnit] = useState<number>(0);
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    const categoryRegex = /^[a-zA-Z\s]+$/;
+
+    if (!nameRegex.test(name)) {
+      toast.error("Name cannot contain special characters or numbers!");
+      return false;
+    }
+
+    if (!categoryRegex.test(category)) {
+      toast.error("Category cannot contain special characters or numbers!");
+      return false;
+    }
+
+    if (quantity < 0) {
+      toast.error("Stock Quantity cannot be negative!");
+      return false;
+    }
+
+    if (minQuantity < 0) {
+      toast.error("Minimum Quantity cannot be negative!");
+      return false;
+    }
+
+    if (pricePerUnit < 0) {
+      toast.error("Price per Unit cannot be negative!");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return; // Stop if validation fails
+    }
 
     const ingredientData = {
       name,

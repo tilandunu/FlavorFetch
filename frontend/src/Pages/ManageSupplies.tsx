@@ -86,45 +86,56 @@ const ManageSupplies = () => {
       <div className="relative z-10 flex justify-center items-center min-h-screen">
         <div className="lg:mt-0 mt-0">
           <div className="w-[1400px] h-[600px] rounded-3xl shadow-sm bg-gray-100 p-4">
-            <div className="flex gap-6 ml-10">
-              <button
-                className="mt-8 w-32 h-10 rounded-full border-2 uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
-                onClick={generatePDFReport} // Add the report function here
-              >
-                Report
-              </button>
-
-              <button
-                className="mt-8 w-32 h-10 rounded-full border-2 uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
-                onClick={navigateProfile}
-                // Add the report function here
-              >
-                Profile
-              </button>
-
-              <button
-                className="mt-8 w-32 h-10 rounded-full border-2  uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
-                onClick={navigateAddSupplies}
-              >
-                Add New
-              </button>
+            <div className="flex justify-center">
+              <h1 className="font-serif text-2xl opacity-70 mt-8 uppercase">
+                Supply List
+              </h1>
             </div>
-            <div className="flex justify-center items-center relative bottom-8">
-              <div className="flex flex-col items-center">
-                <h1 className="font-serif text-2xl opacity-70 mt-8 uppercase">
-                  Supply List
-                </h1>
-
-                <form>
-                  <div className="opacity-50">
-                    <input
-                      type="text"
-                      placeholder="Search... "
-                      className="w-[320px] h-10 mt-4 rounded-full shadow-xl border border-white bg-opacity-10 px-10 text-sm"
-                      onChange={(e) => setQuery(e.target.value)}
-                    />
-                  </div>
-                </form>
+            <div className="flex justify-between items-center mx-10 my-5">
+              <div className="flex gap-10">
+                {" "}
+                <button
+                  className="w-32 h-10 rounded-full border-2 uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
+                  onClick={generatePDFReport} // Add the report function here
+                >
+                  Report
+                </button>
+                <button
+                  className="w-32 h-10 rounded-full border-2 uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
+                  onClick={navigateProfile}
+                  // Add the report function here
+                >
+                  Profile
+                </button>
+                <button
+                  className="w-32 h-10 rounded-full border-2  uppercase bg-slate-200 hover:bg-red-600 hover:text-white duration-300 z-10"
+                  onClick={navigateAddSupplies}
+                >
+                  Add New
+                </button>
+              </div>
+              <div className="flex gap-5 items-center">
+                {" "}
+                <div className="flex flex-col items-center">
+                  <form>
+                    <div className="opacity-50">
+                      <input
+                        type="text"
+                        placeholder="Search... "
+                        className="w-[320px] h-10 rounded-full shadow-xl border border-black bg-opacity-10 px-10 text-sm"
+                        onChange={(e) => setQuery(e.target.value)}
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div className="fle justify-center items-center bg-stone-500 mx-2 py-2 px-6 text-white rounded-lg hover:bg-black hover:text-white duration-500 text-sm">
+                  {" "}
+                  <Link to="/stocknt">
+                    <span className="material-symbols-outlined flex my-1">
+                      notifications
+                    </span>
+                  </Link>
+                </div>
               </div>
             </div>
 
