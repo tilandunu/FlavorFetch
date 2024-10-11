@@ -164,7 +164,7 @@ router.get("/populateIngredients", async (req, res) => {
   try {
     const ingredients = await IngredientModel.find({
       _id: { $in: ingredientIds },
-    }).select("_id name pricePerUnit ingredientImage"); // Fetch only the _id and name fields
+    }).select("_id name pricePerUnit quantity minQuantity"); // Fetch only the _id and name fields
 
     res.status(200).json(ingredients);
   } catch (error) {

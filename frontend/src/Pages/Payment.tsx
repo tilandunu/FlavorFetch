@@ -21,9 +21,11 @@ const Payment = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("CashOnDelivery");
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cvv, setCvv] = useState("");
   const [ingredients, setIngredients] = useState([]);
-  const [loading, setLoading] = useState(false); // Loading state
-  const [progress, setProgress] = useState(0); // Start progress from 0
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -42,7 +44,6 @@ const Payment = () => {
 
         setIngredients(processedIngredients);
       } catch (error) {
-        console.error("Error fetching order details:", error);
         toast.error("Failed to fetch order details");
       }
     };
@@ -52,6 +53,40 @@ const Payment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if delivery address is empty
+    if (!deliveryAddress.trim()) {
+      toast.error("Delivery address is required");
+      return;
+    }
+
+    // If payment method is "Debit/Credit", validate card number and CVV
+    if (paymentMethod === "Debit/Credit") {
+      // Card number should not be empty
+      if (!cardNumber.trim()) {
+        toast.error("Card number is required");
+        return;
+      }
+
+      // Card number validation: only digits, length of 16
+      if (!/^\d{16}$/.test(cardNumber)) {
+        toast.error("Card number must be exactly 16 digits");
+        return;
+      }
+
+      // CVV should not be empty
+      if (!cvv.trim()) {
+        toast.error("CVV is required");
+        return;
+      }
+
+      // CVV validation: only digits, length of 3
+      if (!/^\d{3}$/.test(cvv)) {
+        toast.error("CVV must be exactly 3 digits");
+        return;
+      }
+    }
+
     setLoading(true); // Start loading
     setProgress(0); // Reset progress
 
@@ -59,15 +94,14 @@ const Payment = () => {
       await axios.put(`http://localhost:3001/api/order/save/${orderID}`, {
         paymentMethod,
         deliveryAddress,
-        status: "To-Be-Delivered", // Update status to "To-Be-Delivered"
+        status: "To-Be-Delivered",
       });
 
       setTimeout(() => {
-        setLoading(false); // Stop loading when progress is done
-        navigate("/success"); // Redirect to success page
-      }, 2000); // Allow progress bar to finish smoothly
+        setLoading(false);
+        navigate("/success");
+      }, 2000);
     } catch (error) {
-      console.error("Error updating order:", error);
       toast.error("Failed to update the order");
       setLoading(false);
     }
@@ -80,15 +114,15 @@ const Payment = () => {
       progressInterval = setInterval(() => {
         setProgress((prev) => {
           if (prev < 100) {
-            return prev + 1; // Increment progress gradually
+            return prev + 1;
           } else {
             clearInterval(progressInterval);
             return prev;
           }
         });
-      }, 50); // Adjust the delay to control speed (50ms for smoother increment)
+      }, 50);
     }
-    return () => clearInterval(progressInterval); // Cleanup the interval
+    return () => clearInterval(progressInterval);
   }, [loading]);
 
   if (loading) {
@@ -160,11 +194,19 @@ const Payment = () => {
                 <>
                   <div className="flex flex-col gap-2">
                     <p className="text-sm">DEBIT/CREDIT CARD NUMBER</p>
-                    <Input type="text" />
+                    <Input
+                      type="text"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
+                    />
                   </div>
                   <div className="flex flex-col gap-2">
                     <p className="text-sm">CVV</p>
-                    <Input type="text" />
+                    <Input
+                      type="text"
+                      value={cvv}
+                      onChange={(e) => setCvv(e.target.value)}
+                    />
                   </div>
                 </>
               )}

@@ -69,16 +69,16 @@ const RecipePage = () => {
     const existingItem = cartItems.find((item) => item._id === ingredient._id);
 
     if (existingItem) {
-      toast.error("Item is already in the cart", { position: "top-right" });
+      toast.error("Item is already in the cart", { position: "top-center" });
     } else {
       setCartItems((prev) => [...prev, ingredient]);
-      toast.success("Item added successfully", { position: "top-right" });
+      toast.success("Item added successfully", { position: "top-center" });
     }
   };
 
   const removeFromCart = (ingredient) => {
     setCartItems(cartItems.filter((item) => item._id !== ingredient._id));
-    toast.success("Item removed from the cart", { position: "top-right" });
+    toast.success("Item removed from the cart", { position: "top-center" });
   };
 
   const handleBackClick = () => {
@@ -243,14 +243,11 @@ const RecipePage = () => {
         </div>
         <div className="flex gap-9 items-center">
           {" "}
-          <span
-            className="material-symbols-outlined z-50"
-            onClick={toggleModal}
-          >
+          <span className="material-symbols-outlined" onClick={toggleModal}>
             shopping_cart
           </span>
           <span
-            className={`material-symbols-outlined z-50 ${
+            className={`material-symbols-outlined ${
               isFavorite ? "text-red-500" : ""
             }`}
             onClick={toggleFavorite}
@@ -358,24 +355,40 @@ const RecipePage = () => {
   );
 };
 
-const Modal = ({ isOpen, onClose, cartItems }) => {
+const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
+  const [quantities, setQuantities] = useState(cartItems.map(() => 1));
+  const [exceededStock, setExceededStock] = useState(false);
+
   if (!isOpen) return null;
 
-  // You can add state to track quantities if needed
-  const [quantities, setQuantities] = useState(cartItems.map(() => 1));
+  const handleQuantityChange = (index, value) => {
+    const availableStock =
+      cartItems[index].quantity - cartItems[index].minQuantity;
 
-  const handleQuantityChange = (index, delta) => {
     setQuantities((prev) => {
       const newQuantities = [...prev];
-      newQuantities[index] = Math.max(1, newQuantities[index] + delta);
+      // Make sure the quantity is at least 1
+      newQuantities[index] = Math.max(1, value);
+
+      if (newQuantities[index] > availableStock) {
+        setExceededStock(true);
+      } else {
+        setExceededStock(false);
+      }
+
       return newQuantities;
     });
   };
 
-  //the checkout part
   const handleCheckout = async () => {
-    const customerUID = Cookies.get("userID"); // Assuming you have imported Cookies
+    if (exceededStock) {
+      toast.error("Stock limit exceeded. Adjust quantities to proceed.", {
+        position: "top-right",
+      });
+      return;
+    }
 
+    const customerUID = Cookies.get("userID");
     if (!customerUID) {
       toast.error("You must be logged in to checkout", {
         position: "top-right",
@@ -394,14 +407,14 @@ const Modal = ({ isOpen, onClose, cartItems }) => {
         (total, item, index) => total + item.pricePerUnit * quantities[index],
         0
       ),
-      paymentMethod: "Cash on Delivery", // Default payment method
-      status: "Pending", // Default status
-      deliveryAddress: "123 Main Street", // You can replace this with actual user input
+      paymentMethod: "Cash on Delivery",
+      status: "Pending",
+      deliveryAddress: "123 Main Street",
     };
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/order/create", // Adjust the API endpoint if necessary
+        "http://localhost:3001/api/order/create",
         orderData
       );
       const orderID = response.data.orderID;
@@ -427,12 +440,13 @@ const Modal = ({ isOpen, onClose, cartItems }) => {
         </div>
         <div className="flex p-10">
           <div className="flex-grow">
-            <table className="w-full ">
+            <table className="w-full">
               <thead>
                 <tr className="border-b">
                   <th className="p-2 text-center">Ingredient</th>
                   <th className="p-2 text-center">Price</th>
                   <th className="p-2 text-center">Quantity</th>
+                  <th className="p-2 text-center">Maximum Quantity</th>
                   <th className="p-2 text-center">Actions</th>
                 </tr>
               </thead>
@@ -442,21 +456,23 @@ const Modal = ({ isOpen, onClose, cartItems }) => {
                     <td className="p-2 text-center">{item.name}</td>
                     <td className="p-2 text-center">{item.pricePerUnit}</td>
                     <td className="p-2 text-center">
-                      <div className="flex justify-center items-center">
-                        <button
-                          className="w-8 h-8 bg-gray-300 text-black rounded-full"
-                          onClick={() => handleQuantityChange(index, -1)}
-                        >
-                          -
-                        </button>
-                        <span className="mx-4">{quantities[index]}</span>
-                        <button
-                          className="w-8 h-8 bg-gray-300 text-black rounded-full"
-                          onClick={() => handleQuantityChange(index, 1)}
-                        >
-                          +
-                        </button>
-                      </div>
+                      <input
+                        type="number"
+                        className="w-16 p-2 text-center border rounded"
+                        value={quantities[index]}
+                        onChange={(e) =>
+                          handleQuantityChange(index, parseInt(e.target.value))
+                        }
+                        min={1}
+                      />
+                      {quantities[index] > item.quantity - item.minQuantity && (
+                        <p className="text-red-500 text-sm">
+                          Exceeds available stock!
+                        </p>
+                      )}
+                    </td>
+                    <td className="p-2 text-center">
+                      {item.quantity - item.minQuantity}
                     </td>
                     <td className="p-2 text-center">
                       <button
@@ -474,7 +490,7 @@ const Modal = ({ isOpen, onClose, cartItems }) => {
           <div className="w-1/3 bg-gray-100 p-4 ml-6 rounded-lg px-10">
             <h3 className="text-lg font-semibold my-5">Order Summary</h3>
             <div className="flex justify-between mb-2">
-              <p className="text-sm  h-52">INGREDIENTS</p>
+              <p className="text-sm h-52">INGREDIENTS</p>
               <p className="text-sm">{cartItems.length}</p>
             </div>
             <div className="flex justify-between mb-4">
@@ -489,8 +505,9 @@ const Modal = ({ isOpen, onClose, cartItems }) => {
               </p>
             </div>
             <button
-              className="w-full bg-red-500 text-white p-2 rounded-lg uppercase font-semibold"
+              className="w-full bg-red-500 text-white p-2 rounded-lg uppercase font-semibold disabled:bg-gray-300"
               onClick={handleCheckout}
+              disabled={exceededStock} // Disable if stock exceeded
             >
               Checkout
             </button>
@@ -500,5 +517,4 @@ const Modal = ({ isOpen, onClose, cartItems }) => {
     </div>
   );
 };
-
 export default RecipePage;
