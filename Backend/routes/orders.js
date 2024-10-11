@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const OrderModel = require("../models/Order");
+const IngredientModel = require("../models/Ingredient");
 
 router.post("/create", async (req, res) => {
   const {
@@ -25,6 +26,7 @@ router.post("/create", async (req, res) => {
   }
 
   try {
+    // Step 1: Create the new order
     const newOrder = new OrderModel({
       customerUID,
       ingredients: ingredients.map((item) => ({
@@ -40,11 +42,33 @@ router.post("/create", async (req, res) => {
 
     const savedOrder = await newOrder.save();
 
-    // Return the orderID (_id) after successfully saving the order
+    // Step 2: Reduce the ingredient quantities in stock
+    for (const item of ingredients) {
+      const { ingredient, quantity } = item;
+
+      // Find the ingredient in stock by its ID
+      const stockIngredient = await IngredientModel.findById(ingredient);
+
+      if (stockIngredient) {
+        // Reduce the quantity in stock
+        stockIngredient.quantity -= quantity;
+
+        // If the quantity is below or equal to minQuantity, mark it as low stock
+
+        // Save the updated ingredient stock
+        await stockIngredient.save();
+      } else {
+        console.error(`Ingredient with ID ${ingredient} not found in stock`);
+      }
+    }
+
+    // Step 3: Return the orderID after successfully saving the order and updating stock
     res.status(201).json({ orderID: savedOrder._id });
   } catch (error) {
-    console.error("Error creating order:", error);
-    res.status(500).json({ message: "Failed to create order" });
+    console.error("Error creating order or updating stock:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to create order and update stock" });
   }
 });
 
