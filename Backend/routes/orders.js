@@ -53,8 +53,6 @@ router.post("/create", async (req, res) => {
         // Reduce the quantity in stock
         stockIngredient.quantity -= quantity;
 
-        // If the quantity is below or equal to minQuantity, mark it as low stock
-
         // Save the updated ingredient stock
         await stockIngredient.save();
       } else {
