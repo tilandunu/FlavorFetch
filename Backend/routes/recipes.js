@@ -121,67 +121,6 @@ router.get("/getRecipe/:id", async (req, res) => {
   }
 });
 
-// PUT route to update a recipe by ID
-router.put("/updateRecipe/:id", async (req, res) => {
-  const { id } = req.params;
-  const {
-    chefUID,
-    title,
-    description,
-    type,
-    variety,
-    dietTypes,
-    selectedAllergies,
-    prepTime,
-    cookTime,
-    servingCount,
-    selectedIngredients,
-    additionalIngredients,
-    instructions,
-    recipeImageUrl,
-  } = req.body;
-
-  try {
-    // Convert ingredient IDs to ObjectId if they are passed
-    const ingredientObjectIds = selectedIngredients.map(
-      (ingredient) => new mongoose.Types.ObjectId(ingredient._id)
-    );
-
-    const updatedRecipe = await RecipeModel.findByIdAndUpdate(
-      id,
-      {
-        chefUID,
-        title,
-        description,
-        type,
-        variety,
-        dietTypes,
-        selectedAllergies,
-        prepTime,
-        cookTime,
-        servingCount,
-        selectedIngredients: ingredientObjectIds,
-        additionalIngredients,
-        instructions,
-        recipeImageUrl,
-      },
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
-
-    if (!updatedRecipe) {
-      return res.status(404).json({ error: "Recipe not found" });
-    }
-
-    res.status(200).json(updatedRecipe);
-  } catch (error) {
-    console.error("Error updating recipe:", error);
-    res.status(500).json({ error: "Error updating recipe" });
-  }
-});
-
 // Fetch all recipes
 router.get("/allRecipes", async (req, res) => {
   try {
@@ -225,7 +164,7 @@ router.get("/populateIngredients", async (req, res) => {
   try {
     const ingredients = await IngredientModel.find({
       _id: { $in: ingredientIds },
-    }).select("_id name pricePerUnit ingredientImage"); // Fetch only the _id and name fields
+    }).select("_id name pricePerUnit quantity minQuantity"); // Fetch only the _id and name fields
 
     res.status(200).json(ingredients);
   } catch (error) {
@@ -245,6 +184,39 @@ router.get("/getSelectedIngredients/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching ingredient:", error);
     res.status(500).json({ error: "Error fetching ingredient" });
+  }
+});
+
+router.delete("/deleteRecipe/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedRecipe = await RecipeModel.findByIdAndDelete(id);
+    if (!deletedRecipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+    res.status(200).json({ message: "Recipe deleted successfully!" });
+  } catch (error) {
+    console.error("Error deleting recipe:", error);
+    res.status(500).json({ error: "Error deleting recipe" });
+  }
+});
+
+router.put("/updateRecipe/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, description, servingCount } = req.body;
+  try {
+    const updatedRecipe = await RecipeModel.findByIdAndUpdate(
+      id,
+      { title, description, servingCount },
+      { new: true }
+    );
+    if (!updatedRecipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+    res.status(200).json(updatedRecipe);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

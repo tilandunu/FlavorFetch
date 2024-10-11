@@ -14,8 +14,19 @@ const ChefDashboard = () => {
     navigate("/addRecipe");
   };
 
+  const navigateProfile = () => {
+    navigate("/profileOther");
+  };
+
   const navigateChefViewRecipe = () => {
     navigate("/chefViewRecipe");
+  };
+
+  const handleLogout = () => {
+    // Clear the userID cookie
+    Cookies.remove("userID");
+    // Navigate to the login or home page
+    navigate("/signin"); // Change this to your desired route
   };
 
   const [firstName, setFirstName] = useState("");
@@ -66,7 +77,10 @@ const ChefDashboard = () => {
         >
           VIEW RECIPES
         </p>
-        <p className="cursor-pointer hover:text-green-600 duration-700">
+        <p
+          className="cursor-pointer hover:text-green-600 duration-700"
+          onClick={navigateProfile}
+        >
           PROFILE MANAGEMENT
         </p>
         <p className="mt-32 text-red-600 cursor-pointer hover:text-red-700 duration-700">
@@ -84,7 +98,10 @@ const ChefDashboard = () => {
           </p>{" "}
           <p> </p>
           <div className="flex content-center align-middle justify-center items-center gap-4">
-            <p className="flex mr-8 border-b-2 hover:border-black duration-500 cursor-pointer">
+            <p
+              className="flex mr-8 border-b-2 hover:border-black duration-500 cursor-pointer"
+              onClick={handleLogout}
+            >
               LOGOUT
             </p>
           </div>

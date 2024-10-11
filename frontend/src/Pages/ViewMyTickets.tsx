@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { EditSupportTicket } from "./EditSupportTicket";
 import { Link } from "react-router-dom";
+import jsPDF from "jspdf"; // Import jsPDF
+import html2canvas from "html2canvas";
 
 interface Ticket {
   customerUID: string;
@@ -20,6 +22,7 @@ export function ViewMyTickets() {
   const [editTicketId, setEditTicketId] = useState<string | null>(null);
   const [updatedIssueType, setUpdatedIssueType] = useState<string>("");
   const [updatedIssue, setUpdatedIssue] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -51,7 +54,7 @@ export function ViewMyTickets() {
           issue: updatedIssue,
         };
         const response = await axios.put(
-          "http://localhost:3001/api/tickets", // Using customerUID directly
+          `http://localhost:3001/api/tickets/${editTicketId}`, // Using customerUID directly
           updatedTicket
         );
         setTickets((prevTickets) =>
@@ -66,13 +69,17 @@ export function ViewMyTickets() {
     }
   };
 
+  const handleCloseEditTicket = () => {
+    setEditTicketId(null); // Set the editTicketId back to null to close the edit modal
+  };
+
   const handleCancelEdit = () => {
     setEditTicketId(null);
   };
 
   const handleDelete = async (ticketId: string) => {
     try {
-      await axios.delete("http://localhost:3001/api/tickets");
+      await axios.delete(`http://localhost:3001/api/tickets/${ticketId}`);
       setTickets((prevTickets) =>
         prevTickets.filter((ticket) => ticket.customerUID !== ticketId)
       );
@@ -83,6 +90,26 @@ export function ViewMyTickets() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
+
+  const downloadPDF = (ticket: Ticket) => {
+    const doc = new jsPDF();
+
+    // Add ticket details to the PDF
+    doc.text("Support Ticket Details", 14, 20);
+    doc.text(`Issue Type: ${ticket.issueType}`, 14, 30);
+    doc.text(`Issue: ${ticket.issue}`, 14, 40);
+    doc.text(`Status: ${ticket.status}`, 14, 50);
+    doc.text(`Response: ${ticket.responseMessage || "No response"}`, 14, 60);
+
+    // Save the PDF with the ticket UID as the filename
+    doc.save(`ticket_${ticket.customerUID}.pdf`);
+  };
+
+  const filteredTickets = tickets.filter(
+    (ticket) =>
+      ticket.issueType.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ticket.issue.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="container mx-auto p-4">
@@ -100,6 +127,16 @@ export function ViewMyTickets() {
           Back
         </Link>
       </h1>
+      {/* Search Input */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search by issue type or issue..."
+          className="border border-gray-300 p-2 rounded-lg w-full"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
       {editTicketId ? (
         <EditSupportTicket
           ticket={
@@ -109,7 +146,7 @@ export function ViewMyTickets() {
         />
       ) : (
         <ul className="space-y-4">
-          {tickets.map((ticket, index) => (
+          {filteredTickets.map((ticket, index) => (
             <li
               key={index}
               className="border border-gray-300 p-4 rounded-lg shadow-lg bg-amber-100"
@@ -145,6 +182,12 @@ export function ViewMyTickets() {
                   className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 >
                   Delete
+                </button>
+                <button
+                  onClick={() => downloadPDF(ticket)}
+                  className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+                >
+                  Download PDF
                 </button>
               </div>
             </li>

@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const ChefViewRecipes = () => {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
+  const [selectedRecipe, setSelectedRecipe] = useState(null); // State for the selected recipe
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    servingCount: 0,
+  });
+
   const chefUID = Cookies.get("userID");
 
   useEffect(() => {
@@ -27,17 +38,83 @@ const ChefViewRecipes = () => {
     };
 
     fetchRecipes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chefUID]);
 
   const navigateChefDashboard = () => {
     navigate("/chefDashboard");
   };
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const handleEditRecipe = (recipeId) => {
-    navigate(`/updateRecipe/${recipeId}`); // Navigate to the update recipe page with recipeId
+  const handleEditRecipe = (recipe) => {
+    setSelectedRecipe(recipe); // Set selected recipe
+    setFormData({
+      title: recipe.title,
+      description: recipe.description,
+      servingCount: recipe.servingCount,
+    });
+    setIsModalOpen(true); // Open modal
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/recipes/updateRecipe/${selectedRecipe._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        const updatedRecipe = await response.json();
+        setRecipes((prevRecipes) =>
+          prevRecipes.map((recipe) =>
+            recipe._id === updatedRecipe._id ? updatedRecipe : recipe
+          )
+        );
+        setIsModalOpen(false); // Close modal
+      } else {
+        console.error("Error updating recipe");
+      }
+    } catch (error) {
+      console.error("Error updating recipe:", error);
+    }
+  };
+
+  const handleDeleteRecipe = async (recipeId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this recipe?"
+    );
+
+    if (confirmDelete) {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/api/recipes/deleteRecipe/${recipeId}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (response.ok) {
+          setRecipes((prevRecipes) =>
+            prevRecipes.filter((recipe) => recipe._id !== recipeId)
+          );
+          console.log("Recipe deleted successfully");
+        } else {
+          const errorData = await response.json();
+          console.error("Error deleting recipe:", errorData.error);
+        }
+      } catch (error) {
+        console.error("Error deleting recipe:", error);
+      }
+    }
   };
 
   return (
@@ -94,12 +171,15 @@ const ChefViewRecipes = () => {
               <div className="flex gap-10">
                 <div
                   className="flex bg-white p-4 rounded-full items-center shadow-md cursor-pointer hover:bg-black hover:text-white duration-500"
-                  onClick={() => handleEditRecipe(recipe._id)} // Pass recipe ID to handleEditRecipe
+                  onClick={() => handleEditRecipe(recipe)}
                 >
                   {" "}
                   <span className="material-symbols-outlined">edit</span>
                 </div>
-                <div className="flex bg-white p-4 rounded-full items-center shadow-md cursor-pointer hover:bg-black hover:text-white duration-500">
+                <div
+                  className="flex bg-white p-4 rounded-full items-center shadow-md cursor-pointer hover:bg-black hover:text-white duration-500"
+                  onClick={() => handleDeleteRecipe(recipe._id)}
+                >
                   <span className="material-symbols-outlined">delete</span>
                 </div>
               </div>
@@ -109,6 +189,59 @@ const ChefViewRecipes = () => {
           <p className="text-center text-gray-500 mt-10">No recipes found.</p>
         )}
       </div>
+
+      {/* Modal Popup */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg w-1/3">
+            <h2 className="text-2xl font-semibold mb-4">Edit Recipe</h2>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Title</label>
+              <Input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                className="border border-gray-300 p-2 rounded w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Description</label>
+              <Textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                className="border border-gray-300 p-2 rounded w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">Serving Count</label>
+              <Input
+                type="number"
+                name="servingCount"
+                value={formData.servingCount}
+                onChange={handleInputChange}
+                className="border border-gray-300 p-2 rounded w-full"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                className="bg-gray-300 p-2 rounded mr-4"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <Button
+                className="bg-blue-500 text-white p-2 rounded"
+                onClick={handleSubmit}
+                type="button"
+              >
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

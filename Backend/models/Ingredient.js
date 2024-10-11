@@ -1,17 +1,41 @@
 const mongoose = require("mongoose");
 
 const IngredientSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  category: {
+  name: {
     type: String,
-    enum: ["Fruit", "Vegetable", "Dairy", "Meat", "Grain", "Spice", "Other"],
     required: true,
   },
-  stockQuantity: { type: Number, required: true }, // Total quantity available
-  pricePerUnit: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now },
-  ingredientImage: { type: String },
+  category: {
+    type: String,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  minQuantity: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  lowStock: {
+    type: Boolean,
+    default: false,
+  },
+  pricePerUnit: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+
 });
+
+
 
 const IngredientModel = mongoose.model("Ingredient", IngredientSchema);
 

@@ -4,6 +4,8 @@ import axios from "axios";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import { jsPDF } from "jspdf";
 
 const RecipePage = () => {
   const { recipeId } = useParams();
@@ -12,6 +14,7 @@ const RecipePage = () => {
   const [ingredients, setIngredients] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,6 +26,14 @@ const RecipePage = () => {
         );
         const recipeData = recipeResponse.data;
         setRecipe(recipeData);
+
+        const customerUID = Cookies.get("userID");
+        if (customerUID) {
+          const favoriteResponse = await axios.get(
+            `http://localhost:3001/api/favorites/checkFavorite/${customerUID}/${recipeId}`
+          );
+          setIsFavorite(favoriteResponse.data.isFavorite);
+        }
 
         if (recipeData.chefUID) {
           const chefResponse = await axios.get(
@@ -58,45 +69,192 @@ const RecipePage = () => {
     const existingItem = cartItems.find((item) => item._id === ingredient._id);
 
     if (existingItem) {
-      toast.error("Item is already in the cart", { position: "top-right" });
+      toast.error("Item is already in the cart", { position: "top-center" });
     } else {
       setCartItems((prev) => [...prev, ingredient]);
-      toast.success("Item added successfully", { position: "top-right" });
+      toast.success("Item added successfully", { position: "top-center" });
     }
   };
 
   const removeFromCart = (ingredient) => {
     setCartItems(cartItems.filter((item) => item._id !== ingredient._id));
-    toast.success("Item removed from the cart", { position: "top-right" });
+    toast.success("Item removed from the cart", { position: "top-center" });
   };
 
-  const navigateHome = () => {
-    navigate("/home");
+  const handleBackClick = () => {
+    confirmNavigation();
   };
 
-  const navigateAllRecipes = () => {
-    navigate("/allrecipes");
+  const confirmNavigation = () => {
+    if (cartItems.length > 0) {
+      const userConfirmed = window.confirm(
+        "You will lose your current cart details. Are you sure you want to leave this page?"
+      );
+      if (userConfirmed) {
+        navigate(-1); // Navigate to the previous page
+      }
+    } else {
+      navigate(-1); // No cart items, navigate directly to the previous page
+    }
+  };
+
+  const handleViewRatings = () => {
+    navigate(`/ratings/${recipeId}`);
+  };
+
+  const generatePDF = async () => {
+    const doc = new jsPDF();
+
+    // Set a modern font and a clean title layout
+    doc.setFont("Helvetica ", "bold");
+    doc.setTextColor(40, 44, 52); // Dark modern text color
+    doc.setFontSize(24);
+    doc.text(recipe.title, 20, 20);
+
+    // Add chef name with a stylish format
+    doc.setFontSize(14);
+    doc.setFont("Helvetica ", "italic");
+    doc.text(`Chef: ${chef}`, 20, 35);
+
+    // Add a horizontal line to separate sections
+    doc.setDrawColor(180, 180, 180); // Light gray for the line
+    doc.line(20, 40, 190, 40);
+
+    // Add recipe description in a smaller, lighter font
+    doc.setFont("Helvetica ", "normal");
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100); // Lighter text for description
+    doc.text(recipe.description, 20, 50, { maxWidth: 170 });
+
+    // Add serving count with a larger, bold font
+
+    doc.setFont("Helvetica ", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0); // Green color for emphasis
+    doc.text(`Serves: ${recipe.servingCount}`, 20, 65);
+
+    // Add main ingredients section
+    doc.setFont("Helvetica ", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0); // Back to modern dark text
+    doc.text("Ingredients:", 20, 80);
+
+    // Use a bullet list format for the ingredients
+    doc.setFont("Helvetica ", "normal");
+    doc.setFontSize(12);
+    ingredients.forEach((ingredient, index) => {
+      doc.text(`• ${ingredient.name}`, 25, 90 + index * 10);
+    });
+
+    // Add additional ingredients section if applicable
+    if (recipe.additionalIngredients.length > 0) {
+      const additionalStartY = 90 + ingredients.length * 10 + 10;
+      doc.setFont("Helvetica ", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0); // Light blue for additional ingredients
+      doc.text("Additional Ingredients:", 20, additionalStartY);
+
+      doc.setFont("Helvetica ", "normal");
+      doc.setFontSize(12);
+      recipe.additionalIngredients.forEach((ingredient, index) => {
+        doc.text(`• ${ingredient}`, 25, additionalStartY + 10 + index * 10);
+      });
+    }
+
+    // Add a page break and instructions
+    doc.addPage();
+    doc.setFont("Helvetica ", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Instructions:", 20, 20);
+
+    // Use a clean and spaced-out layout for instructions
+    doc.setFont("Helvetica ", "normal");
+    doc.setFontSize(12);
+    recipe.instructions.forEach((instruction, index) => {
+      doc.text(`${index + 1}. ${instruction}`, 20, 30 + index * 10, {
+        maxWidth: 170,
+      });
+    });
+
+    // Add a footer with page number and branding
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Page ${i} of ${pageCount}`, 180, 290);
+      doc.text("FlavorFetch Recipe", 20, 290); // Branding or any other info
+    }
+
+    // Save the PDF
+    doc.save(`${recipe.title}.pdf`);
+  };
+
+  const toggleFavorite = async () => {
+    const customerUID = Cookies.get("userID");
+    if (!customerUID) {
+      toast.error("You must be logged in to add favorites", {
+        position: "top-right",
+      });
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        // Remove favorite
+        await axios.delete(
+          `http://localhost:3001/api/favorites/removeFavorite/${customerUID}/${recipeId}`
+        );
+        toast.success("Recipe removed from favorites", {
+          position: "top-right",
+        });
+      } else {
+        // Add favorite
+        await axios.post(`http://localhost:3001/api/favorites/addFavorite`, {
+          customerUID,
+          recipeID: recipeId,
+        });
+        toast.success("Recipe added to favorites", { position: "top-right" });
+      }
+
+      setIsFavorite(!isFavorite); // Toggle the favorite state
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+      toast.error("Failed to update favorite", { position: "top-right" });
+    }
   };
 
   if (!recipe) return <p>Loading...</p>;
 
   return (
     <div className="font-poppins cursor-default bg-stone-100">
-      <div className="flex gap-7 mx-16 py-10 justify-between">
-        <div className="flex gap-7 hover:cursor-pointer">
-          <span className="material-symbols-outlined" onClick={navigateHome}>
-            home
-          </span>
-          <span
-            className="material-symbols-outlined"
-            onClick={navigateAllRecipes}
-          >
+      <div className="flex gap-7 mx-16 py-10 justify-between items-center">
+        <div className="flex gap-7 hover:cursor-pointer items-center">
+          <span className="material-symbols-outlined" onClick={handleBackClick}>
             arrow_back
           </span>
+          <p
+            className="border-2  rounded-xl p-2 px-4  duration-500 hover:bg-black hover:text-white text-sm uppercase"
+            onClick={handleViewRatings}
+          >
+            View Ratings
+          </p>
         </div>
-        <span className="material-symbols-outlined z-50" onClick={toggleModal}>
-          shopping_cart
-        </span>
+        <div className="flex gap-9 items-center">
+          {" "}
+          <span className="material-symbols-outlined" onClick={toggleModal}>
+            shopping_cart
+          </span>
+          <span
+            className={`material-symbols-outlined ${
+              isFavorite ? "text-red-500" : ""
+            }`}
+            onClick={toggleFavorite}
+          >
+            favorite
+          </span>
+        </div>
       </div>
       <div className="flex justify-center gap-32">
         <div className="flex flex-col items-end mt-12 min-w-96">
@@ -146,7 +304,7 @@ const RecipePage = () => {
                   key={index}
                   className="flex gap-4 hover:text-green-600 duration-500 cursor-pointer font-light items-center"
                 >
-                  <Button onClick={() => addToCart(ingredient)}>Add+</Button>
+                  <Button onClick={() => addToCart(ingredient)}>+</Button>
                   <p className="uppercase text-sm">{ingredient.name}</p>
                 </div>
               ))}
@@ -174,9 +332,15 @@ const RecipePage = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col items-center w-full my-4 justify-center">
-          <span className="material-symbols-outlined">arrow_upward</span>
-          <p>BACK TO TOP</p>
+        <div className="flex flex-col items-center w-full my-4 justify-center ">
+          <div
+            className="flex flex-col border-2 border-black items-center p-10 hover:p-12 duration-500 hover:bg-black hover:text-stone-200"
+            onClick={generatePDF}
+          >
+            {" "}
+            <span className="material-symbols-outlined">arrow_downward</span>
+            <p>DOWNLOAD RECIPE</p>
+          </div>
         </div>
       </div>
 
@@ -192,17 +356,75 @@ const RecipePage = () => {
 };
 
 const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
+  const [quantities, setQuantities] = useState(cartItems.map(() => 1));
+  const [exceededStock, setExceededStock] = useState(false);
+
   if (!isOpen) return null;
 
-  // You can add state to track quantities if needed
-  const [quantities, setQuantities] = useState(cartItems.map(() => 1));
+  const handleQuantityChange = (index, value) => {
+    const availableStock =
+      cartItems[index].quantity - cartItems[index].minQuantity;
 
-  const handleQuantityChange = (index, delta) => {
     setQuantities((prev) => {
       const newQuantities = [...prev];
-      newQuantities[index] = Math.max(1, newQuantities[index] + delta);
+      // Make sure the quantity is at least 1
+      newQuantities[index] = Math.max(1, value);
+
+      if (newQuantities[index] > availableStock) {
+        setExceededStock(true);
+      } else {
+        setExceededStock(false);
+      }
+
       return newQuantities;
     });
+  };
+
+  const handleCheckout = async () => {
+    if (exceededStock) {
+      toast.error("Stock limit exceeded. Adjust quantities to proceed.", {
+        position: "top-right",
+      });
+      return;
+    }
+
+    const customerUID = Cookies.get("userID");
+    if (!customerUID) {
+      toast.error("You must be logged in to checkout", {
+        position: "top-right",
+      });
+      return;
+    }
+
+    const orderData = {
+      customerUID: customerUID,
+      ingredients: cartItems.map((item, index) => ({
+        ingredient: item._id,
+        ingredientName: item.name,
+        quantity: quantities[index],
+      })),
+      totalAmount: cartItems.reduce(
+        (total, item, index) => total + item.pricePerUnit * quantities[index],
+        0
+      ),
+      paymentMethod: "Cash on Delivery",
+      status: "Pending",
+      deliveryAddress: "123 Main Street",
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/api/order/create",
+        orderData
+      );
+      const orderID = response.data.orderID;
+      toast.success("Order placed successfully!", { position: "top-right" });
+      onClose();
+      window.location.href = `/payment/${orderID}`;
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      toast.error("Failed to place the order", { position: "top-right" });
+    }
   };
 
   return (
@@ -218,46 +440,39 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
         </div>
         <div className="flex p-10">
           <div className="flex-grow">
-            <table className="w-full ">
+            <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="p-2 text-center">Image</th>
                   <th className="p-2 text-center">Ingredient</th>
                   <th className="p-2 text-center">Price</th>
                   <th className="p-2 text-center">Quantity</th>
+                  <th className="p-2 text-center">Maximum Quantity</th>
                   <th className="p-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {cartItems.map((item, index) => (
                   <tr key={item._id} className="border-b">
-                    <td className="p-2 text-center">
-                      <div className="flex justify-center items-center">
-                        <img
-                          src={item.ingredientImage}
-                          alt={item.name}
-                          className="w-12 h-12 rounded"
-                        />
-                      </div>
-                    </td>
                     <td className="p-2 text-center">{item.name}</td>
                     <td className="p-2 text-center">{item.pricePerUnit}</td>
                     <td className="p-2 text-center">
-                      <div className="flex justify-center items-center">
-                        <button
-                          className="w-8 h-8 bg-gray-300 text-black rounded-full"
-                          onClick={() => handleQuantityChange(index, -1)}
-                        >
-                          -
-                        </button>
-                        <span className="mx-4">{quantities[index]}</span>
-                        <button
-                          className="w-8 h-8 bg-gray-300 text-black rounded-full"
-                          onClick={() => handleQuantityChange(index, 1)}
-                        >
-                          +
-                        </button>
-                      </div>
+                      <input
+                        type="number"
+                        className="w-16 p-2 text-center border rounded"
+                        value={quantities[index]}
+                        onChange={(e) =>
+                          handleQuantityChange(index, parseInt(e.target.value))
+                        }
+                        min={1}
+                      />
+                      {quantities[index] > item.quantity - item.minQuantity && (
+                        <p className="text-red-500 text-sm">
+                          Exceeds available stock!
+                        </p>
+                      )}
+                    </td>
+                    <td className="p-2 text-center">
+                      {item.quantity - item.minQuantity}
                     </td>
                     <td className="p-2 text-center">
                       <button
@@ -275,7 +490,7 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
           <div className="w-1/3 bg-gray-100 p-4 ml-6 rounded-lg px-10">
             <h3 className="text-lg font-semibold my-5">Order Summary</h3>
             <div className="flex justify-between mb-2">
-              <p className="text-sm  h-52">INGREDIENTS</p>
+              <p className="text-sm h-52">INGREDIENTS</p>
               <p className="text-sm">{cartItems.length}</p>
             </div>
             <div className="flex justify-between mb-4">
@@ -289,7 +504,11 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
                   .toFixed(2)}
               </p>
             </div>
-            <button className="w-full bg-red-500 text-white p-2 rounded-lg uppercase font-semibold">
+            <button
+              className="w-full bg-red-500 text-white p-2 rounded-lg uppercase font-semibold disabled:bg-gray-300"
+              onClick={handleCheckout}
+              disabled={exceededStock} // Disable if stock exceeded
+            >
               Checkout
             </button>
           </div>
@@ -298,5 +517,4 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
     </div>
   );
 };
-
 export default RecipePage;

@@ -1,5 +1,4 @@
-//const mongoose = require("mongoose");
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema({
   customerUID: {
@@ -14,7 +13,14 @@ const OrderSchema = new mongoose.Schema({
         ref: "Ingredient",
         required: true,
       },
-      quantity: { type: Number, required: true },
+      ingredientName: {
+        type: String,
+        required: true,
+      }, // Store the name of the ingredient
+      quantity: {
+        type: Number,
+        required: true,
+      },
     },
   ],
   totalAmount: { type: Number, required: true },
@@ -28,12 +34,11 @@ const OrderSchema = new mongoose.Schema({
     enum: ["Pending", "To-Be-Delivered", "Delivered", "Cancelled"],
     default: "Pending",
   },
-  driverUID: { type: String, ref: "Driver" }, // Driver reference
   deliveryAddress: { type: String, required: true }, // Delivery address
   createdAt: { type: Date, default: Date.now },
 });
 
-const OrderModel = mongoose.model('Order', OrderSchema);
+const OrderModel = mongoose.model("Order", OrderSchema);
 
 // Default export
-export default OrderModel;
+module.exports = OrderModel;

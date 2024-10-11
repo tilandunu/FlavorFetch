@@ -28,10 +28,9 @@ interface EditSupportTicketProps {
 
 export function EditSupportTicket({ ticket, onClose }: EditSupportTicketProps) {
   const [issue, setIssue] = useState(ticket.issue);
+  const [editTicketId, setEditTicketId] = useState<string | null>(null);
   const [issueType, setIssueType] = useState(ticket.issueType);
-  const responseMessage = "null";
-
-  const customerUID = Cookies.get("userId");
+  const customerUID = Cookies.get("userID");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,21 +38,34 @@ export function EditSupportTicket({ ticket, onClose }: EditSupportTicketProps) {
     const user = auth.currentUser;
 
     if (user) {
-      // Update existing ticket using customerUID
-      await axios.put("http://localhost:3001/api/tickets", {
-        customerUID,
-        issueType,
-        issue,
-        responseMessage,
-        status: "Open",
-      });
-      toast.success("Ticket updated successfully", {
-        position: "top-center",
-      });
-    }
+      try {
+        // Correct usage with backticks
+        await axios.put(`http://localhost:3001/api/tickets`, {
+          customerUID,
+          issueType,
+          issue,
+          responseMessage: null, // Define responseMessage as needed
+          status: "Open", // You can update the status as necessary
+        });
 
-    onClose(); // Close the edit modal or form
+        toast.success("Ticket updated successfully", {
+          position: "top-center",
+        });
+        onClose(); // Close the edit modal or form after successful update
+      } catch (error) {
+        console.error("Error updating ticket", error);
+        toast.error("Failed to update ticket");
+      }
+    }
   };
+
+  useEffect(() => {
+    // This effect runs when the ticket prop changes
+    if (ticket) {
+      setIssue(ticket.issue);
+      setIssueType(ticket.issueType);
+    }
+  }, [ticket]);
 
   return (
     <div className="py-8 font-poppins">
