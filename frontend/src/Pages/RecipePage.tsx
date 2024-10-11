@@ -82,24 +82,20 @@ const RecipePage = () => {
   };
 
   const handleBackClick = () => {
-    confirmNavigation("/allrecipes");
+    confirmNavigation();
   };
 
-  const confirmNavigation = (destination) => {
+  const confirmNavigation = () => {
     if (cartItems.length > 0) {
       const userConfirmed = window.confirm(
         "You will lose your current cart details. Are you sure you want to leave this page?"
       );
       if (userConfirmed) {
-        navigate(destination);
+        navigate(-1); // Navigate to the previous page
       }
     } else {
-      navigate(destination); // No cart items, navigate directly
+      navigate(-1); // No cart items, navigate directly to the previous page
     }
-  };
-
-  const handleHomeClick = () => {
-    confirmNavigation("/home");
   };
 
   const handleViewRatings = () => {
@@ -235,9 +231,6 @@ const RecipePage = () => {
     <div className="font-poppins cursor-default bg-stone-100">
       <div className="flex gap-7 mx-16 py-10 justify-between items-center">
         <div className="flex gap-7 hover:cursor-pointer items-center">
-          <span className="material-symbols-outlined" onClick={handleHomeClick}>
-            home
-          </span>
           <span className="material-symbols-outlined" onClick={handleBackClick}>
             arrow_back
           </span>
@@ -314,7 +307,7 @@ const RecipePage = () => {
                   key={index}
                   className="flex gap-4 hover:text-green-600 duration-500 cursor-pointer font-light items-center"
                 >
-                  <Button onClick={() => addToCart(ingredient)}>Add+</Button>
+                  <Button onClick={() => addToCart(ingredient)}>+</Button>
                   <p className="uppercase text-sm">{ingredient.name}</p>
                 </div>
               ))}
@@ -365,7 +358,7 @@ const RecipePage = () => {
   );
 };
 
-const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
+const Modal = ({ isOpen, onClose, cartItems }) => {
   if (!isOpen) return null;
 
   // You can add state to track quantities if needed
@@ -394,6 +387,7 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
       customerUID: customerUID,
       ingredients: cartItems.map((item, index) => ({
         ingredient: item._id,
+        ingredientName: item.name,
         quantity: quantities[index],
       })),
       totalAmount: cartItems.reduce(
@@ -401,7 +395,7 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
         0
       ),
       paymentMethod: "Cash on Delivery", // Default payment method
-      status: "To-Be-Delivered", // Default status
+      status: "Pending", // Default status
       deliveryAddress: "123 Main Street", // You can replace this with actual user input
     };
 
@@ -410,8 +404,10 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
         "http://localhost:3001/api/order/create", // Adjust the API endpoint if necessary
         orderData
       );
+      const orderID = response.data.orderID;
       toast.success("Order placed successfully!", { position: "top-right" });
-      onClose(); // Close the modal after successful checkout
+      onClose();
+      window.location.href = `/payment/${orderID}`;
     } catch (error) {
       console.error("Error during checkout:", error);
       toast.error("Failed to place the order", { position: "top-right" });

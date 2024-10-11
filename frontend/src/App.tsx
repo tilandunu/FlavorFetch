@@ -21,6 +21,7 @@ import { TicketUserAccount } from "./Pages/TicketUserAccount";
 import { ViewMyTickets } from "./Pages/ViewMyTickets";
 import { EditSupportTicket } from "./Pages/EditSupportTicket";
 import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
+import { ResponseDashboard } from "./Pages/ResponseDashboard";
 
 import Ingredients from "./Pages/Ingredients";
 import CreateIngredient from "./Pages/CreateIngredient";
@@ -40,8 +41,9 @@ import EditPreferences from "./Pages/EditPreferences.tsx";
 import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
 import Rating from "./Pages/Rating.tsx";
 import ForYou from "./Pages/ForYou.tsx";
+import Payment from "./Pages/Payment.tsx";
+import Success from "./Pages/Success.tsx";
 import PendingSuppliesNotification from "./Pages/PendingSuppliesNotification.tsx";
-
 
 function App() {
   return (
@@ -129,7 +131,10 @@ function App() {
                 <Route path="/profileOther" element={<ProfileOther />} />
                 <Route path="/addSupplies" element={<AddSupplies />} />
                 <Route path="/manageSupplies" element={<ManageSupplies />} />
-                <Route path="/pendingSuppliesNotification" element={<PendingSuppliesNotification/>} />
+                <Route
+                  path="/pendingSuppliesNotification"
+                  element={<PendingSuppliesNotification />}
+                />
                 <Route
                   path="/editSupplies/:orderId"
                   element={<EditSupplies />}
@@ -143,6 +148,12 @@ function App() {
                 <Route path="/favRecipes" element={<FavoriteRecipes />} />
                 <Route path="/ratings/:recipeID" element={<Rating />} />
                 <Route path="/forYou" element={<ForYou />} />
+                <Route
+                  path="/ResponseDashboard"
+                  element={<ResponseDashboard />}
+                />
+                <Route path="/payment/:orderID" element={<Payment />} />
+                <Route path="/success" element={<Success />} />
               </Routes>
 
               <ToastContainer />

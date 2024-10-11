@@ -103,12 +103,10 @@ router.post("/update", async (req, res) => {
     );
 
     if (updatedPreference) {
-      return res
-        .status(200)
-        .json({
-          message: "Preferences updated successfully",
-          updatedPreference,
-        });
+      return res.status(200).json({
+        message: "Preferences updated successfully",
+        updatedPreference,
+      });
     } else {
       return res.status(404).json({ error: "Preferences not found" });
     }

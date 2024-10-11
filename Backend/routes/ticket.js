@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/:customerUID", async (req, res) => {
   const { customerUID } = req.params;
 
   try {
@@ -49,12 +49,13 @@ router.delete("/", async (req, res) => {
 });
 
 // Update ticket by customerUID
-router.put("/", async (req, res) => {
-  const { customerUID, issueType, issue, responseMessage, status } = req.body;
+router.put("/tickets", async (req, res) => {
+  const { customerUID } = req.params;
+  const { issueType, issue, responseMessage, status } = req.body;
 
   try {
     const updatedTicket = await Ticket.findOneAndUpdate(
-      { customerUID }, // Adjust the query to find the correct ticket
+      { customerUID }, // Search by customerUID
       { issueType, issue, responseMessage, status },
       { new: true } // Return the updated ticket
     );
@@ -68,4 +69,25 @@ router.put("/", async (req, res) => {
     res.status(500).json({ message: "Error updating ticket", error });
   }
 });
+
+router.put("/", async (req, res) => {
+  const { customerUID, responseMessage, status } = req.body;
+
+  try {
+    const updatedTicket = await Ticket.findOneAndUpdate(
+      { customerUID },
+      { responseMessage, status },
+      { new: true }
+    );
+
+    if (!updatedTicket) {
+      return res.status(404).json({ message: "Ticket not found" });
+    }
+
+    res.status(200).json(updatedTicket);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating ticket", error });
+  }
+});
+
 module.exports = router;

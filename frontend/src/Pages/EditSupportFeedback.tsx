@@ -26,7 +26,7 @@ export function EditSupportFeedback({
 }: EditSupportFeedbackProps) {
   const [message, setMessage] = useState(feedback.message);
 
-  const responseMessage = "null"; // Adjust as necessary
+  // Adjust as necessary
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

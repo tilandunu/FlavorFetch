@@ -89,15 +89,27 @@ function Ingredients() {
     navigate("/signin");
   };
 
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="d-flix vh-100 bg-stone-100 justify-content-center align-items-center  font-poppins cursor-default">
       <div>
         {" "}
         <div className="mx-32 pt-20 pb-14 flex justify-between items-center">
           <h1 className="px-4 text-3xl">STOCK MANAGEMENT</h1>
-          <Button className="bg-red-600" onClick={handleLogout}>
-            LOGOUT
-          </Button>
+          <div className="flex items-center gap-10">
+            <span
+              className="material-symbols-outlined cursor-pointer"
+              onClick={goBack}
+            >
+              arrow_back
+            </span>{" "}
+            <Button className="bg-red-600" onClick={handleLogout}>
+              LOGOUT
+            </Button>
+          </div>
         </div>
         <div className="flex items-center justify-between mx-32 bg-white px-10 py-10 rounded-xl shadow-lg">
           <div className="flex items-center gap-1">
