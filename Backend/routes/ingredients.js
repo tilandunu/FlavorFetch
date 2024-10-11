@@ -92,5 +92,22 @@ router.post("/createIngredient", async (req, res) => {
     }
   });
 
+  router.get("/getLowStockItems",async(req,res)=>{
+    
+    try{
+    let reqStockResponse = await IngredientModel.find({lowStock:true})
+    if(reqStockResponse){
+       res.status(215).json(reqStockResponse) 
+
+    }else{
+       res.status(315).json("no low stock items")
+    }
+    }catch(error){
+        res.status(415).json("Connection error")
+        console.log(error)
+    }
+
+})
+
 
 module.exports = router;

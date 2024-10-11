@@ -17,7 +17,7 @@ function StockNotification() {
 
   async function callGetLowStock() {
     try {
-      let res = await axios.get("http://localhost:3001/getLowStockItems");
+      let res = await axios.get("http://localhost:3001/api/ingredients/getLowStockItems");
 
       if (res) {
         console.log(res);
