@@ -137,12 +137,20 @@ const AddRecipe = () => {
   };
 
   const handleAddAdditionalIngredient = () => {
-    if (newIngredient.trim()) {
-      setAdditionalIngredients((prev) => [...prev, newIngredient.trim()]);
-      setNewIngredient(""); // Clear the input field after adding
-    } else {
+    if (!newIngredient.trim()) {
       toast.error("Please enter an ingredient!");
+      return;
     }
+
+    // Validate ingredient using the regular expression
+    if (!validText.test(newIngredient)) {
+      toast.error("Ingredient contains invalid characters.");
+      return;
+    }
+
+    // If valid, add the ingredient
+    setAdditionalIngredients((prev) => [...prev, newIngredient.trim()]);
+    setNewIngredient(""); // Clear the input field after adding
   };
 
   const handleRemoveAdditionalIngredient = (ingredientToRemove: string) => {
@@ -186,10 +194,20 @@ const AddRecipe = () => {
   };
 
   const handleAddInstruction = () => {
-    if (currentInstruction.trim()) {
-      setInstructions((prev) => [...prev, currentInstruction.trim()]);
-      setCurrentInstruction("");
+    if (!currentInstruction.trim()) {
+      toast.error("Please enter an instruction!");
+      return;
     }
+
+    // Validate instruction using the regular expression
+    if (!validText.test(currentInstruction)) {
+      toast.error("Instruction contains invalid characters.");
+      return;
+    }
+
+    // If valid, add the instruction
+    setInstructions((prev) => [...prev, currentInstruction.trim()]);
+    setCurrentInstruction(""); // Clear the input field after adding
   };
 
   const handleRemoveInstruction = (index: number) => {
@@ -198,6 +216,50 @@ const AddRecipe = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Regular expression to allow only letters, numbers, and spaces
+    const validText = /^[a-zA-Z ]*$/;
+
+    // Validate title and description
+    if (!validText.test(title)) {
+      toast.error("Title contains invalid characters.");
+      return;
+    }
+
+    if (!validText.test(description)) {
+      toast.error("Description contains invalid characters.");
+      return;
+    }
+
+    if (
+      !type ||
+      !variety ||
+      !recipeImage ||
+      !dietTypes ||
+      !selectedIngredients.length ||
+      !instructions.length
+    ) {
+      if (!type) {
+        toast.error("Please select a recipe type.");
+      }
+      if (!variety) {
+        toast.error("Please select a variety.");
+      }
+      if (!recipeImage) {
+        toast.error("Please upload a recipe image.");
+      }
+      if (!dietTypes || dietTypes.length === 0) {
+        toast.error("Please select at least one diet type.");
+      }
+      if (!selectedIngredients.length) {
+        toast.error("Please add at least one ingredient.");
+      }
+      if (!instructions.length) {
+        toast.error("Please provide instructions for the recipe.");
+      }
+      return;
+    }
+
     console.log("Ingredients to submit:", selectedIngredients);
     const ingredientsToSubmit = selectedIngredients.map(
       (ing) => ing.ingredient
@@ -238,6 +300,7 @@ const AddRecipe = () => {
   };
 
   const navigate = useNavigate();
+  const validText = /^[a-zA-Z0-9 ]*$/;
 
   const navigateChefDashboard = () => {
     navigate("/chefDashboard");
@@ -271,7 +334,6 @@ const AddRecipe = () => {
           <div className="pt-16 pb-3">
             <div className="py-3 flex gap-5">
               <p>ADD A IMAGE</p>
-              <p className="text-stone-400">[ IMAGE SHOULD BE 1920x1080 ]</p>
             </div>
             <div className="flex gap-10">
               <Input
@@ -297,11 +359,7 @@ const AddRecipe = () => {
           </div>
           <div className="py-3">
             <p className="py-3">Type</p>
-            <Select
-              required
-              value={type}
-              onValueChange={(value) => setType(value)}
-            >
+            <Select value={type} onValueChange={(value) => setType(value)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
@@ -323,6 +381,7 @@ const AddRecipe = () => {
             <Input
               className="h-12"
               value={title}
+              placeholder="Add your title"
               onChange={(e) => setTitle(e.target.value)}
               required
             />
@@ -331,6 +390,7 @@ const AddRecipe = () => {
             <p className="py-3">Description</p>
             <Input
               className="h-12"
+              placeholder="Add your description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
@@ -343,44 +403,32 @@ const AddRecipe = () => {
               <div className="flex gap-10">
                 <div className="flex flex-col items-center">
                   <p className="py-4 text-stone-500">HOUR</p>
-                  <Select
+                  <Input
+                    type="number"
                     value={prepHours}
-                    onValueChange={(value) => setPrepHours(value)}
-                  >
-                    <SelectTrigger className="w-[180px] shadow-md">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0 HOUR">0</SelectItem>
-                      <SelectItem value="1 HOUR">1</SelectItem>
-                      <SelectItem value="2 HOUR">2</SelectItem>
-                      <SelectItem value="3 HOUR">3</SelectItem>
-                      <SelectItem value="4 HOUR">4</SelectItem>
-                      <SelectItem value="5 HOUR">5</SelectItem>
-                      <SelectItem value="6 HOUR">6</SelectItem>
-                      <SelectItem value="6+ HOUR">More than six</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    onChange={(e) => setPrepHours(e.target.value)}
+                    min="0"
+                    max="24"
+                    className="w-[180px] shadow-md"
+                    placeholder="Enter hours"
+                    required
+                  />
+                  <p className="mt-3 text-xs text-stone-500">Max: 24 hours</p>
                 </div>
+
                 <div className="flex flex-col items-center">
                   <p className="py-4 text-stone-500">MIN</p>
-                  <Select
+                  <Input
+                    type="number"
                     value={prepMinutes}
-                    onValueChange={(value) => setPrepMinutes(value)}
-                  >
-                    <SelectTrigger className="w-[180px] shadow-md">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0 MIN">0</SelectItem>
-                      <SelectItem value="5 MIN">5</SelectItem>
-                      <SelectItem value="10 MIN">10</SelectItem>
-                      <SelectItem value="15 MIN">15</SelectItem>
-                      <SelectItem value="20 MIN">20</SelectItem>
-                      <SelectItem value="30 MIN">30</SelectItem>
-                      <SelectItem value="45 MIN">45</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    onChange={(e) => setPrepMinutes(e.target.value)}
+                    min="0"
+                    max="59"
+                    className="w-[180px] shadow-md"
+                    placeholder="Enter minutes"
+                    required
+                  />
+                  <p className="mt-3 text-xs text-stone-500">Max: 59 minutes</p>
                 </div>
               </div>
             </div>
@@ -393,67 +441,47 @@ const AddRecipe = () => {
               <div className="flex gap-10">
                 <div className="flex flex-col items-center">
                   <p className="py-4 text-stone-500">HOUR</p>
-                  <Select
+                  <Input
+                    type="number"
                     value={cookHours}
-                    onValueChange={(value) => setCookHours(value)}
-                  >
-                    <SelectTrigger className="w-[180px] shadow-md">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0 HOUR">0</SelectItem>
-                      <SelectItem value="1 HOUR">1</SelectItem>
-                      <SelectItem value="2 HOUR">2</SelectItem>
-                      <SelectItem value="3 HOUR">3</SelectItem>
-                      <SelectItem value="4 HOUR">4</SelectItem>
-                      <SelectItem value="5 HOUR">5</SelectItem>
-                      <SelectItem value="6 HOUR">6</SelectItem>
-                      <SelectItem value="6+ HOUR">More than six</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    onChange={(e) => setCookHours(e.target.value)}
+                    min="0"
+                    max="24"
+                    className="w-[180px] shadow-md"
+                    placeholder="Enter hours"
+                    required
+                  />
+                  <p className="mt-3 text-xs text-stone-500">Max: 6 hours</p>
                 </div>
+
                 <div className="flex flex-col items-center">
                   <p className="py-4 text-stone-500">MIN</p>
-                  <Select
+                  <Input
+                    type="number"
                     value={cookMinutes}
-                    onValueChange={(value) => setCookMinutes(value)}
-                  >
-                    <SelectTrigger className="w-[180px] shadow-md">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0 MIN">0</SelectItem>
-                      <SelectItem value="5 MIN">5</SelectItem>
-                      <SelectItem value="10 MIN">10</SelectItem>
-                      <SelectItem value="15 MIN">15</SelectItem>
-                      <SelectItem value="20 MIN">20</SelectItem>
-                      <SelectItem value="30 MIN">30</SelectItem>
-                      <SelectItem value="45 MIN">45</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    onChange={(e) => setCookMinutes(e.target.value)}
+                    min="0"
+                    max="59"
+                    className="w-[180px] shadow-md"
+                    placeholder="Enter minutes"
+                    required
+                  />
+                  <p className="mt-3 text-xs text-stone-500">Max: 59 minutes</p>
                 </div>
               </div>
             </div>
           </div>
           <div className="py-3">
             <p className="py-3">Servings</p>
-            <Select
-              required
+            <Input
+              type="number"
+              className="h-12 w-full border px-3"
+              placeholder="Input a number"
               value={servingCount}
-              onValueChange={(value) => setServingCount(value)}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="5">5</SelectItem>
-                <SelectItem value="6">6</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(e) => setServingCount(e.target.value)}
+              min="1"
+              required
+            />
           </div>
           <div className="py-3">
             <p className="py-3">Ingredients</p>
@@ -568,9 +596,14 @@ const AddRecipe = () => {
               <Input
                 className="w-[600px] h-12"
                 value={newIngredient}
-                onChange={(e) => setNewIngredient(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setNewIngredient(value); // Allow input without blocking
+                }}
+                placeholder="Add your additional ingredients"
                 onKeyDown={handleKeyDown}
               />
+
               <Button
                 className="bg-green-700"
                 onClick={(e) => {
