@@ -69,13 +69,13 @@
     transition: background-color 0.3s ease;
 }
 
-.actions .print-button {
+.actions .download-button {
     margin: 10px ;
     background-color: #00868b; /* Dark teal */
     color: white;
 }
 
-.actions .print-button:hover {
+.actions .download-button:hover {
     background-color: #005f5f; /* Slightly darker teal */
 }
 

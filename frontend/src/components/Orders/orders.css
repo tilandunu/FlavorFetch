@@ -1,10 +1,9 @@
-/* Table row styling */
+
 .user-actions {
     display: flex;
     gap: 10px;
 }
 
-/* Update button styling */
 .update-button {
     background-color: #40e0d0; /* Turquoise */
     color: white;
@@ -18,12 +17,13 @@
 }
 
 .update-button:hover {
-    background-color: #2d9a9a; /* Slightly darker turquoise */
+    background-color: #2d9a9a; 
 }
 
-/* Delete button styling */
+
 .delete-button {
-    background-color: #00868b; /* Dark teal */
+    background-color: #bf3434;
+
     color: white;
     padding: 5px 10px;
     border: none;
@@ -31,9 +31,25 @@
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-left: 5px; /* Spacing between buttons */
+    margin-top: 5px; 
 }
 
 .delete-button:hover {
-    background-color: #005f5f; /* Slightly darker teal */
+    background-color: #ab0707; 
+}
+
+.confirm-button{
+    background-color: #6ef57e; /* Dark teal */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 5px; 
+}
+
+.confirm-button:hover {
+    background-color: #2ec941; 
 }

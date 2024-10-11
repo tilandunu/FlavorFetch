@@ -9,7 +9,7 @@ import axios from "axios";
 
 const DriverDashboard: React.FC = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [orderCount, setOrderCount] = useState<number>(0); // State to store order count
+  const [orderCount, setOrderCount] = useState<number>(0); 
 
   const handleMenuToggle = () => {
     setShowMenu(!showMenu);
@@ -20,14 +20,14 @@ const DriverDashboard: React.FC = () => {
     const fetchOrderCount = async () => {
       try {
         const response = await axios.get("http://localhost:3001/api/orders/count");
-        setOrderCount(response.data.count); // Set the fetched order count
+        setOrderCount(response.data.count); 
       } catch (error) {
         console.error("Error fetching order count:", error);
       }
     };
 
-    fetchOrderCount(); // Call the function when the component mounts
-  }, []); // Empty dependency array means this runs once when the component mounts
+    fetchOrderCount(); 
+  }, []); 
 
   return (
     <div className="flex flex-col h-screen">
@@ -42,12 +42,12 @@ const DriverDashboard: React.FC = () => {
           </div>
           <div className="flex flex-wrap justify-between mt-10 mx-4 sm:justify-start">
             
-            {/* Card showing the total number of orders */}
+          
             <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-2 mb-4">
               <Card
-                title={`${orderCount}`} // Dynamically display the order count
+                title={`${orderCount}`} 
                 subtitle={"Total number of orders"}
-                icon={revenue} // You can use a different icon if preferred
+                icon={revenue} 
                 color={"bg-gradient-to-r from-cyan-500 to-blue-500"}
               />
             </div>

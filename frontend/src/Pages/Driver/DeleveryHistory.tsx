@@ -4,6 +4,7 @@ import MenuToggle from "../../components/DriverDash/MenuToggle";
 import Navbar from "../../components/DriverDash/Navbar";
 import OrderList from "../../components/OdList/OrderList";
 
+
 const RoleManagement: React.FC = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
@@ -18,7 +19,7 @@ const RoleManagement: React.FC = () => {
       </div>
       <div className="w-3/4 h-screen">
         <MenuToggle showMenu={showMenu} handleMenuToggle={handleMenuToggle} />
-        <Navbar pagename={"Delivery History"} />
+        <Navbar pagename={"Confirmed Orders"} />
         <div>
           <OrderList />
         </div>
