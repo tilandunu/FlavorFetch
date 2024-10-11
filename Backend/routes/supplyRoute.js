@@ -68,4 +68,20 @@ router.get("/orderData/:orderId", async (req, res) => {
   }
 });
 
+router.get("/getPendingSupplies", async (req, res) => {
+try{
+  let pendingSupplies = await SupplyOrderModel.find({status : "Pending"})
+  if(pendingSupplies){
+    res.status(215).json(pendingSupplies)
+  }else{
+    res.status(315).json("No pending supplies")
+  }
+
+}catch(error){
+  res.status(415).json("connection error")
+  console.log(error)
+}
+
+});
+
 module.exports = router;

@@ -40,6 +40,8 @@ import EditPreferences from "./Pages/EditPreferences.tsx";
 import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
 import Rating from "./Pages/Rating.tsx";
 import ForYou from "./Pages/ForYou.tsx";
+import PendingSuppliesNotification from "./Pages/PendingSuppliesNotification.tsx";
+
 
 function App() {
   return (
@@ -127,6 +129,7 @@ function App() {
                 <Route path="/profileOther" element={<ProfileOther />} />
                 <Route path="/addSupplies" element={<AddSupplies />} />
                 <Route path="/manageSupplies" element={<ManageSupplies />} />
+                <Route path="/pendingSuppliesNotification" element={<PendingSuppliesNotification/>} />
                 <Route
                   path="/editSupplies/:orderId"
                   element={<EditSupplies />}
