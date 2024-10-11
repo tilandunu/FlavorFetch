@@ -9,7 +9,7 @@ import axios from "axios";
 
 const DriverDashboard: React.FC = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [orderCount, setOrderCount] = useState<number>(0); 
+  const [orderCount, setOrderCount] = useState<number>(0);
 
   const handleMenuToggle = () => {
     setShowMenu(!showMenu);
@@ -19,20 +19,26 @@ const DriverDashboard: React.FC = () => {
     // Fetch the total order count from the backend
     const fetchOrderCount = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/orders/count");
-        setOrderCount(response.data.count); 
+        const response = await axios.get(
+          "http://localhost:3001/api/orders/count"
+        );
+        setOrderCount(response.data.count);
       } catch (error) {
         console.error("Error fetching order count:", error);
       }
     };
 
-    fetchOrderCount(); 
-  }, []); 
+    fetchOrderCount();
+  }, []);
 
   return (
     <div className="flex flex-col h-screen">
       <div className="flex flex-grow">
-        <div className={`w-1/4 h-full bg-gray-200 ${showMenu ? "" : "hidden"} lg:block`}>
+        <div
+          className={`w-1/4 h-full bg-gray-200 ${
+            showMenu ? "" : "hidden"
+          } lg:block`}
+        >
           <Menubar />
         </div>
         <div className="flex-1 sm:relative">
@@ -41,17 +47,15 @@ const DriverDashboard: React.FC = () => {
             <Navbar pagename={"Dashboard"} />
           </div>
           <div className="flex flex-wrap justify-between mt-10 mx-4 sm:justify-start">
-            
-          
             <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-2 mb-4">
               <Card
-                title={`${orderCount}`} 
+                title={`${orderCount}`}
                 subtitle={"Total number of orders"}
-                icon={revenue} 
+                icon={revenue}
                 color={"bg-gradient-to-r from-cyan-500 to-blue-500"}
               />
             </div>
-           
+
             {/* Other Cards */}
             <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4 px-2 mb-4">
               <Card

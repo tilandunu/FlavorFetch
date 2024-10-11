@@ -23,6 +23,10 @@ import { EditSupportTicket } from "./Pages/EditSupportTicket";
 import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
 import { ResponseDashboard } from "./Pages/ResponseDashboard";
 
+import DriverDashboard from "./Pages/Driver/Dashboard";
+import Role from "./Pages/Driver/DeleveryHistory.tsx";
+import UserManagement from "./Pages/Driver/UserManagement";
+
 import Ingredients from "./Pages/Ingredients";
 import CreateIngredient from "./Pages/CreateIngredient";
 import UpdateIngredient from "./Pages/UpdateIngredient";
@@ -154,6 +158,10 @@ function App() {
                 />
                 <Route path="/payment/:orderID" element={<Payment />} />
                 <Route path="/success" element={<Success />} />
+
+                <Route path="/driverdashboard" element={<DriverDashboard />} />
+                <Route path="/role-management" element={<Role />} />
+                <Route path="/user-management" element={<UserManagement />} />
               </Routes>
 
               <ToastContainer />

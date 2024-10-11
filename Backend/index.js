@@ -7,13 +7,15 @@ const userRouter = require("./routes/users");
 const ticketRouter = require("./routes/ticket");
 const feedbackRouter = require("./routes/feedback");
 const recipeRouter = require("./routes/recipes");
-const orderRouter = require("./routes/orders");
+const order = require("./routes/orders");
+const orderRoute = require("./routes/orderRoutes");
 const driverRouters = require("./routes/driverRoutes");
 const supplyOrderRouters = require("./routes/supplyRoute");
 const preferenceRouters = require("./routes/preferenceRoute");
 const favoriteRouters = require("./routes/favoriteRecipes");
 const ingredientRouters = require("./routes/ingredients");
 const ratingRoutes = require("./routes/ratingRoute");
+const deliveryOrderRoutes = require("./routes/deliveryOrderRoutes");
 
 const app = express();
 app.use(express.json());
@@ -39,7 +41,8 @@ app.use("/api/users", userRouter);
 app.use("/api/tickets", ticketRouter);
 app.use("/api/feedback", feedbackRouter);
 app.use("/api/recipes", recipeRouter);
-app.use("/api/order", orderRouter);
+app.use("/api/order", order);
+app.use("/api/orders", orderRoute);
 app.use("/api/drivers", driverRouters);
 app.use("/api/supplyOrder", supplyOrderRouters);
 app.use("/api/preference", preferenceRouters);
@@ -47,6 +50,7 @@ app.use("/api/favorites", favoriteRouters);
 app.use("/api/ingredients", ingredientRouters);
 app.use("/api/ratings", ratingRoutes);
 app.use("/api/admin/tickets", ticketRouter);
+app.use("/api/deliveryOrders", deliveryOrderRoutes);
 
 app.listen(3001, () => {
   console.log("Server is running");
