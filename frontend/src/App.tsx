@@ -23,6 +23,7 @@ import { EditSupportTicket } from "./Pages/EditSupportTicket";
 import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
 import { ResponseDashboard } from "./Pages/ResponseDashboard";
 
+
 import Ingredients from "./Pages/Ingredients";
 import CreateIngredient from "./Pages/CreateIngredient";
 import UpdateIngredient from "./Pages/UpdateIngredient";
@@ -40,6 +41,7 @@ import Preference from "./Pages/Preference.tsx";
 import EditPreferences from "./Pages/EditPreferences.tsx";
 import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
 import Rating from "./Pages/Rating.tsx";
+import RatingReport from "./Pages/RatingReport.tsx";
 import ForYou from "./Pages/ForYou.tsx";
 
 function App() {
@@ -88,6 +90,7 @@ function App() {
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
                 <Route path="/recipePage/:recipeId" element={<RecipePage />} />
+                <Route path="/rating_report" element={<RatingReport />} />
                 <Route
                   path="/EditSupportTicket"
                   element={

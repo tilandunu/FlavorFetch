@@ -123,4 +123,22 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
+// GET route to get all ratings
+router.get("/get/all", async (req, res) => {
+  try {
+      const ratings = await RatingModel.find()
+      .populate({
+          path: 'customer',
+          strictPopulate: false
+        })
+      .populate({
+          path: 'recipe',
+          strictPopulate: false
+        });
+      res.json(ratings);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
