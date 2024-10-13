@@ -10,23 +10,29 @@ interface OrderSumProps {
     paymentMethod: string;
     status: string;
     deliveryAddress: string;
-    customerUID: string; 
+    customerUID: string;
   };
 }
 
 const OrderSum: React.FC<OrderSumProps> = (props) => {
-  const { _id, totalAmount, paymentMethod, status, deliveryAddress, customerUID } = props.order;
+  const {
+    _id,
+    totalAmount,
+    paymentMethod,
+    status,
+    deliveryAddress,
+    customerUID,
+  } = props.order;
 
   const confirmOrder = async () => {
     try {
-     
-      const response = await axios.get(`http://localhost:3001/api/deliveryOrders/${_id}`);
-      
+      const response = await axios.get(
+        `http://localhost:3001/api/deliveryOrders/${_id}`
+      );
+
       if (response.data) {
-        
         alert("Order is already confirmed for delivery.");
       } else {
-       
         await axios.post("http://localhost:3001/api/deliveryOrders", {
           orderId: _id,
           customerId: customerUID,
@@ -35,10 +41,8 @@ const OrderSum: React.FC<OrderSumProps> = (props) => {
         alert("Order confirmed for delivery.");
       }
     } catch (error: unknown) {
-    
       if (axios.isAxiosError(error)) {
         if (error.response && error.response.status === 404) {
-         
           try {
             await axios.post("http://localhost:3001/api/deliveryOrders", {
               orderId: _id,
@@ -71,8 +75,9 @@ const OrderSum: React.FC<OrderSumProps> = (props) => {
       <td className="order-actions">
         <Link to={`/orderdetails/${_id}`} className="update-button">
           Update
-        </Link></td>
-        <td>
+        </Link>
+      </td>
+      <td>
         <button onClick={confirmOrder} className="confirm-button">
           Confirm
         </button>

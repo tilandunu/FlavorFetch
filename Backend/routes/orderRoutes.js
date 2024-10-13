@@ -5,7 +5,7 @@ const OrderModel = require("../models/Order");
 // Get all orders
 router.get("/", async (req, res) => {
   try {
-    const orders = await OrderModel.find();
+    const orders = await OrderModel.find({ status: "To-Be-Delivered" });
     res.json({ orders });
   } catch (error) {
     res.status(500).json({ message: error.message });

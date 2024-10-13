@@ -13,7 +13,7 @@ const Menubar: React.FC = () => {
   const menuItems: MenuItem[] = [
     { name: "Orders", icon: dashboard, link: "/driverdashboard" },
     { name: "Confirmed Orders", icon: role, link: "/role-management" },
-    { name: "My Profile", icon: user, link: "" },   //my profile 
+    { name: "My Profile", icon: user, link: "/profileOther" }, //my profile
   ];
 
   const handleItemClick = (item: MenuItem) => {
@@ -23,7 +23,9 @@ const Menubar: React.FC = () => {
   return (
     <div className="flex flex-col h-full w-full">
       <div className="flex items-center justify-center h-20">
-        <span className="px-5 py-2 text-black font-bold text-4xl">FlavorFetch</span>
+        <span className="px-5 py-2 text-black font-bold text-4xl">
+          FlavorFetch
+        </span>
       </div>
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex flex-col items-start pt-20">
@@ -48,7 +50,9 @@ const Menubar: React.FC = () => {
           }}
         >
           <img src={logout} alt="Logout" className="h-6 w-6 mr-2" />
-          <span className="hidden sm:inline-block text-red-500 text-1xl">Logout</span>
+          <span className="hidden sm:inline-block text-red-500 text-1xl">
+            Logout
+          </span>
         </div>
       </div>
     </div>
