@@ -21,6 +21,7 @@ interface Ingredient {
 function Ingredients() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showLowStock, setShowLowStock] = useState(false); // State to track the low-stock filter
 
   useEffect(() => {
     axios
@@ -35,10 +36,7 @@ function Ingredients() {
     );
     if (confirmDelete) {
       axios
-        .delete(
-          "http://localhost:3001/api/ingredients/ingredientsdeleteIngredient/" +
-            id
-        )
+        .delete(`http://localhost:3001/api/ingredients/ingredientsdeleteIngredient/${id}`)
         .then((res) => {
           console.log(res);
           window.location.reload();
@@ -47,26 +45,18 @@ function Ingredients() {
     }
   };
 
-  const filteredIngredients = ingredients.filter((ingredient) =>
-    ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredIngredients = ingredients.filter((ingredient) => {
+    const matchesSearch = ingredient.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesLowStock = showLowStock ? ingredient.lowStock : true;
+    return matchesSearch && matchesLowStock;
+  });
 
   const downloadReport = () => {
     const doc = new jsPDF();
-
     doc.text("Ingredient Report", 20, 10);
-
     doc.autoTable({
       head: [
-        [
-          "Name",
-          "Category",
-          "Stock Quantity",
-          "Minimum Quantity",
-          "Unit Price",
-          "Stock Status",
-          "Created Date",
-        ],
+        ["Name", "Category", "Stock Quantity", "Minimum Quantity", "Unit Price", "Stock Status", "Created Date"],
       ],
       body: filteredIngredients.map((ingredient) => [
         ingredient.name,
@@ -78,7 +68,6 @@ function Ingredients() {
         ingredient.date,
       ]),
     });
-
     doc.save("ingredient_report.pdf");
   };
 
@@ -94,18 +83,14 @@ function Ingredients() {
   };
 
   return (
-    <div className="d-flix vh-100 bg-stone-100 justify-content-center align-items-center  font-poppins cursor-default">
+    <div className="d-flix vh-100 bg-stone-100 justify-content-center align-items-center font-poppins cursor-default">
       <div>
-        {" "}
         <div className="mx-32 pt-20 pb-14 flex justify-between items-center">
           <h1 className="px-4 text-3xl">STOCK MANAGEMENT</h1>
           <div className="flex items-center gap-10">
-            <span
-              className="material-symbols-outlined cursor-pointer"
-              onClick={goBack}
-            >
+            <span className="material-symbols-outlined cursor-pointer" onClick={goBack}>
               arrow_back
-            </span>{" "}
+            </span>
             <Button className="bg-red-600" onClick={handleLogout}>
               LOGOUT
             </Button>
@@ -113,22 +98,15 @@ function Ingredients() {
         </div>
         <div className="flex items-center justify-between mx-32 bg-white px-10 py-10 rounded-xl shadow-lg">
           <div className="flex items-center gap-1">
-            <Link
-              to="/create"
-              className="bg-stone-700 mx-2 px-6 py-2 text-white rounded-lg hover:bg-black hover:text-white duration-500 text-sm"
-            >
+            <Link to="/create" className="bg-stone-700 mx-2 px-6 py-2 text-white rounded-lg hover:bg-black hover:text-white duration-500 text-sm">
               ADD +
             </Link>
-            <Link
-              to="/pendingSuppliesNotification"
-              className="bg-stone-700 mx-2 px-6 py-2 text-white rounded-lg hover:bg-black hover:text-white duration-500 text-sm"
-            >
+            <Link to="/pendingSuppliesNotification" className="bg-stone-700 mx-2 px-6 py-2 text-white rounded-lg hover:bg-black hover:text-white duration-500 text-sm">
               PENDING ORDERS
             </Link>
           </div>
 
-          <div className="flex gap-7">
-            {" "}
+          <div className="flex gap-7 items-center">
             <input
               type="text"
               placeholder="Search by name..."
@@ -136,6 +114,14 @@ function Ingredients() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={showLowStock}
+                onChange={(e) => setShowLowStock(e.target.checked)}
+              />
+              Show Low Stock items
+            </label>
             <button
               className="btn btn-primary my-3 border-b-2 hover:border-black duration-500 text-sm"
               onClick={downloadReport}
@@ -163,35 +149,20 @@ function Ingredients() {
           <tbody>
             {filteredIngredients.length > 0 ? (
               filteredIngredients.map((ingredient) => (
-                <tr
-                  key={ingredient._id}
-                  className="text-left text-black text-sm bg-white"
-                >
+                <tr key={ingredient._id} className="text-left text-black text-sm bg-white">
                   <td className="px-5 py-4 border-2">{ingredient.name}</td>
                   <td className="px-5 py-4 border-2">{ingredient.category}</td>
                   <td className="px-5 py-4 border-2">{ingredient.quantity}</td>
-                  <td className="px-5 py-4 border-2">
-                    {ingredient.minQuantity}
-                  </td>
-                  <td className="px-5 py-4 border-2">
-                    {ingredient.pricePerUnit}
-                  </td>
-                  <td className="px-5 py-4 border-2">
-                    {ingredient.lowStock ? "low stock" : "available"}
-                  </td>
+                  <td className="px-5 py-4 border-2">{ingredient.minQuantity}</td>
+                  <td className="px-5 py-4 border-2">{ingredient.pricePerUnit}</td>
+                  <td className="px-5 py-4 border-2">{ingredient.lowStock ? "low stock" : "available"}</td>
                   <td className="px-5 py-4 border-2">{ingredient.date}</td>
                   <td className="px-5 py-4 border-2">
                     <div className="flex gap-5 cursor-pointer">
-                      <Link
-                        to={`/update/${ingredient._id}`}
-                        className="btn btn-success"
-                      >
-                        <span class="material-symbols-outlined">edit</span>
+                      <Link to={`/update/${ingredient._id}`} className="btn btn-success">
+                        <span className="material-symbols-outlined">edit</span>
                       </Link>
-                      <span
-                        class="material-symbols-outlined text-red-600"
-                        onClick={() => handleDelete(ingredient._id)}
-                      >
+                      <span className="material-symbols-outlined text-red-600" onClick={() => handleDelete(ingredient._id)}>
                         delete
                       </span>
                     </div>
