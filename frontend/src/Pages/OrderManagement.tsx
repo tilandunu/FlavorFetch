@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { Input } from "@/components/ui/input";
+import jsPDF from "jspdf"; // Import jsPDF
 
 const OrderManagement = () => {
   const navigate = useNavigate();
@@ -11,6 +13,7 @@ const OrderManagement = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
   // Fetching orders specific to the logged-in customer
   useEffect(() => {
@@ -49,6 +52,43 @@ const OrderManagement = () => {
   };
 
   const closeModal = () => setIsModalOpen(false);
+
+  // Filtering orders based on the search term
+  const filteredOrders = orders.filter((order) =>
+    order._id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // PDF generation function
+  const generatePDF = () => {
+    const doc = new jsPDF();
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text("Order Invoice", 20, 20);
+
+    // Add order details
+    doc.setFontSize(12);
+    doc.text(`Order ID: ${selectedOrder._id}`, 20, 30);
+    doc.text(`Status: ${selectedOrder.status}`, 20, 40);
+    doc.text(
+      `Total Amount: Rs.${selectedOrder.totalAmount.toFixed(2)}`,
+      20,
+      50
+    );
+
+    // Add ingredients
+    doc.text("Ingredients:", 20, 60);
+    selectedOrder.ingredients.forEach((item, index) => {
+      doc.text(
+        `${index + 1}. ${item.ingredientName}: ${item.quantity}`,
+        20,
+        70 + index * 10
+      );
+    });
+
+    // Save the PDF
+    doc.save(`Order_${selectedOrder._id}_Invoice.pdf`);
+  };
 
   // Loading and error states
   if (isLoading)
@@ -93,7 +133,15 @@ const OrderManagement = () => {
           <div className="flex flex-col">
             <div className="flex justify-between items-center my-20">
               <p className="text-2xl">ORDER DASHBOARD</p>
-              <div className="flex gap-7">
+              <div className="flex items-center gap-7">
+                {/* Search input */}
+                <Input
+                  type="text"
+                  className="rounded-full border border-black"
+                  placeholder="Search by Order ID"
+                  value={searchTerm} // Bind input value to state
+                  onChange={(e) => setSearchTerm(e.target.value)} // Update state on change
+                />
                 <span
                   className="material-symbols-outlined hover:cursor-pointer"
                   onClick={navigateHome}
@@ -104,7 +152,7 @@ const OrderManagement = () => {
             </div>
 
             {/* Displaying customer-specific completed orders */}
-            {orders.map((order) => (
+            {filteredOrders.map((order) => (
               <section
                 key={order._id}
                 className="flex flex-col w-full my-5"
@@ -116,6 +164,13 @@ const OrderManagement = () => {
                 </div>
               </section>
             ))}
+
+            {/* If no orders match the search term */}
+            {filteredOrders.length === 0 && (
+              <div className="text-center mt-8 text-gray-500">
+                No orders found for "{searchTerm}".
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -123,7 +178,7 @@ const OrderManagement = () => {
       {/* Modal for viewing order details */}
       {isModalOpen && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center font-poppins">
-          <div className="bg-white p-8 rounded-lg w-[400px]">
+          <div className="bg-white p-8 rounded-lg w-[600px]">
             <h2 className="text-xl font-semibold mb-4">Order Details</h2>
             <p>Order ID: {selectedOrder._id}</p>
             <p>Status: {selectedOrder.status}</p>
@@ -136,12 +191,20 @@ const OrderManagement = () => {
                 </li>
               ))}
             </ul>
-            <button
-              className="mt-6 bg-slate-800 text-white py-2 px-4 rounded"
-              onClick={closeModal}
-            >
-              Close
-            </button>
+            <div className="flex flex-row gap-10">
+              <button
+                className="mt-6 bg-slate-800 text-white py-2 px-4 rounded"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+              <button
+                className="mt-6 bg-slate-800 text-white py-2 px-4 rounded"
+                onClick={generatePDF} // Link the PDF generation function
+              >
+                Download Report
+              </button>
+            </div>
           </div>
         </div>
       )}
