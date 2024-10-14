@@ -178,33 +178,62 @@ const OrderManagement = () => {
       {/* Modal for viewing order details */}
       {isModalOpen && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center font-poppins">
-          <div className="bg-white p-8 rounded-lg w-[600px]">
-            <h2 className="text-xl font-semibold mb-4">Order Details</h2>
-            <p>Order ID: {selectedOrder._id}</p>
-            <p>Status: {selectedOrder.status}</p>
-            <p>Total Amount: Rs.{selectedOrder.totalAmount.toFixed(2)}</p>
-            <h3 className="font-semibold mt-4">Ingredients:</h3>
-            <ul>
-              {selectedOrder.ingredients.map((item, index) => (
-                <li key={index}>
-                  {item.ingredientName}: {item.quantity}
-                </li>
-              ))}
-            </ul>
-            <div className="flex flex-row gap-10">
+          <div className="bg-white p-8 rounded-lg w-[70%] py-12">
+            <div className="flex items-center justify-between mb-8 px-2">
+              <h2 className="text-xl font-semibold">
+                Order #{selectedOrder._id}
+              </h2>
               <button
-                className="mt-6 bg-slate-800 text-white py-2 px-4 rounded"
+                className=" bg-slate-800 text-white w-11 h-10 rounded"
                 onClick={closeModal}
               >
-                Close
-              </button>
-              <button
-                className="mt-6 bg-slate-800 text-white py-2 px-4 rounded"
-                onClick={generatePDF} // Link the PDF generation function
-              >
-                Download Report
+                X
               </button>
             </div>
+            <div className="flex flex-row w-full gap-10">
+              <div className="flex flex-col border border-black w-1/2 px-7 py-3">
+                <div className="flex justify-between py-3">
+                  <p>INGREDIENTS</p>
+                  <p>QUANTITY</p>
+                </div>
+                <hr className="pb-3" />
+                <ul>
+                  {selectedOrder.ingredients.map((item, index) => (
+                    <li key={index}>
+                      <div className="flex justify-between py-2">
+                        <p>{item.ingredientName}</p>
+                        <p>{item.quantity}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex flex-col border border-black w-1/2 items-center py-10">
+                <p className="font-semibold py-2">FINAL BILL</p>
+                <div className="flex flex-row gap-7 border border-black p-3 items-center">
+                  <p>AMOUNT</p>
+                  <p>Rs.{selectedOrder.totalAmount.toFixed(2)}/=</p>
+                </div>
+                <Separator className="my-4 w-1/2 bg-black" />
+                <div className="flex flex-col items-center">
+                  <p className="font-semibold">STATUS</p>
+                  <p>{selectedOrder.status}</p>
+                </div>
+                <Separator className="my-4 w-1/2 bg-black" />
+                <div className="flex flex-col items-center">
+                  <p className="font-semibold">PAYMENT METHOD</p>
+                  <p>{selectedOrder.paymentMethod}</p>
+                </div>
+                <button
+                  className="mt-6 bg-slate-800 text-white py-2 px-4 rounded"
+                  onClick={generatePDF} // Link the PDF generation function
+                >
+                  Download Report
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-row gap-10"></div>
           </div>
         </div>
       )}
