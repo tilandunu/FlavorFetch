@@ -23,7 +23,6 @@ import { EditSupportTicket } from "./Pages/EditSupportTicket";
 import { EditSupportFeedback } from "./Pages/EditSupportFeedback";
 import { ResponseDashboard } from "./Pages/ResponseDashboard";
 
-
 import Ingredients from "./Pages/Ingredients";
 import CreateIngredient from "./Pages/CreateIngredient";
 import UpdateIngredient from "./Pages/UpdateIngredient";
@@ -90,7 +89,7 @@ function App() {
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
                 <Route path="/recipePage/:recipeId" element={<RecipePage />} />
-                <Route path="/rating_report" element={<RatingReport />} />
+                <Route path="/ratingReport" element={<RatingReport />} />
                 <Route
                   path="/EditSupportTicket"
                   element={

@@ -42,6 +42,10 @@ const ProfileCustomer = () => {
     navigate("/favRecipes");
   };
 
+  const navigateRatings = () => {
+    navigate("/ratingReport");
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (customerUID) {
@@ -90,6 +94,9 @@ const ProfileCustomer = () => {
             </Button>
             <Button className="bg-stone-600 w-44" onClick={navigateFavorites}>
               YOUR FAVORITES
+            </Button>
+            <Button className="bg-stone-600 w-44" onClick={navigateRatings}>
+              YOUR RATINGS
             </Button>
           </div>
         </div>

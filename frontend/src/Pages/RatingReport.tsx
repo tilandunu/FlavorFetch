@@ -72,8 +72,13 @@ const RatingReport = () => {
 
       <div className="p-9 py-9 w-full bg-white shadow-md rounded-lg">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-semibold text-[#000000]">Your Ratings</h2>
-          <span className="material-symbols-outlined cursor-pointer" onClick={goBack}>
+          <h2 className="text-2xl font-semibold text-[#000000]">
+            Your Ratings
+          </h2>
+          <span
+            className="material-symbols-outlined cursor-pointer"
+            onClick={goBack}
+          >
             arrow_back
           </span>
         </div>
@@ -86,7 +91,10 @@ const RatingReport = () => {
       </div>
 
       <div className="flex justify-center items-center w-full mb-5">
-        <Separator orientation="horizontal" className="bg-stone-300 w-[1200px]" />
+        <Separator
+          orientation="horizontal"
+          className="bg-stone-300 w-[1200px]"
+        />
       </div>
 
       {/* If still loading, show a loader */}
@@ -94,10 +102,13 @@ const RatingReport = () => {
         <div>Loading your ratings...</div>
       ) : userRatings.length > 0 ? (
         <div className="overflow-x-auto w-full">
-          <table id="ratings-table" className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
+          <table
+            id="ratings-table"
+            className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg"
+          >
             <thead>
               <tr className="bg-gray-200">
-                <th className="py-3 px-4 border-b text-left">Recipe Name</th>
+                <th className="py-3 px-4 border-b text-left">Recipe Name </th>
                 <th className="py-3 px-4 border-b text-left">Rating</th>
                 <th className="py-3 px-4 border-b text-left">Comment</th>
                 <th className="py-3 px-4 border-b text-left">Date</th>
@@ -106,15 +117,19 @@ const RatingReport = () => {
             <tbody>
               {userRatings.map((rating) => (
                 <tr key={rating._id}>
-                  <td className="py-2 px-4 border-b text-left">{rating.recipeName || "Recipe"}</td>
+                  <td className="py-2 px-4 border-b text-left">
+                    {rating.recipeTitle || "Recipe"}
+                  </td>
                   <td className="py-2 px-4 border-b text-left">
                     <div className="flex gap-1 text-yellow-400">
-                      {"⭐".repeat(rating.rating)} {/* Adjusted to repeat stars */}
+                      {"⭐".repeat(rating.rating)}
                     </div>
                   </td>
-                  <td className="py-2 px-4 border-b text-left break-words">{rating.comment}</td>
+                  <td className="py-2 px-4 border-b text-left break-words">
+                    {rating.comment}
+                  </td>
                   <td className="py-2 px-4 border-b text-left">
-                    {new Date(rating.createdAt).toLocaleDateString()} {/* Correct date format */}
+                    {new Date(rating.createdAt).toLocaleDateString()}
                   </td>
                 </tr>
               ))}
@@ -122,7 +137,9 @@ const RatingReport = () => {
           </table>
         </div>
       ) : (
-        <div className="text-gray-700">You have not submitted any ratings yet.</div>
+        <div className="text-gray-700">
+          You have not submitted any ratings yet.
+        </div>
       )}
     </div>
   );

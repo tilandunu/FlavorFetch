@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const RatingModel = require("../models/Rating");
 const CustomerModel = require("../models/Customer");
+const RecipeModel = require("../models/Recipe");
 
 // POST route to add a new rating
 router.post("/add", async (req, res) => {
@@ -132,14 +133,29 @@ router.get("/user/:customerUID", async (req, res) => {
     const userRatings = await RatingModel.find({ customerUID });
 
     if (!userRatings || userRatings.length === 0) {
-      return res.status(404).json({ message: "No ratings found for this user." });
+      return res
+        .status(404)
+        .json({ message: "No ratings found for this user." });
     }
 
-    return res.status(200).json(userRatings);
+    // Fetch the recipe names for each rating
+    const ratingsWithRecipeTitles = await Promise.all(
+      userRatings.map(async (rating) => {
+        const recipe = await RecipeModel.findOne(
+          { _id: rating.recipeID },
+          "title" // Fetch the title instead of name
+        );
+        return {
+          ...rating._doc, // Spread the original rating data
+          recipeTitle: recipe ? recipe.title : "Unknown Recipe", // Add the recipe title to the result
+        };
+      })
+    );
+
+    return res.status(200).json(ratingsWithRecipeTitles);
   } catch (error) {
     return res.status(500).json({ error: "Failed to fetch user's ratings." });
   }
 });
-
 
 module.exports = router;
