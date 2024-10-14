@@ -17,7 +17,7 @@ function UpdateIngredient() {
 
   // State variables with appropriate types
   const [name, setName] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<string>("Select"); // Set default value to "Select"
   const [quantity, setQuantity] = useState<number>(0);
   const [minQuantity, setMinQuantity] = useState<number>(0);
   const [lowStock, setLowStock] = useState<boolean>(false); // Use boolean type for lowStock
@@ -30,13 +30,12 @@ function UpdateIngredient() {
       .get(`http://localhost:3001/api/ingredients/getIngredient/${id}`)
       .then((result) => {
         setName(result.data.name);
-        setCategory(result.data.category);
+        setCategory(result.data.category); // Set fetched category value
         setQuantity(result.data.quantity);
         setMinQuantity(result.data.minQuantity);
         setLowStock(result.data.lowStock);
         setPricePerUnit(result.data.pricePerUnit);
         setDate(result.data.date);
-        // Image handling would depend on your backend
       })
       .catch((err) => console.log(err));
   }, [id]);
@@ -118,7 +117,6 @@ function UpdateIngredient() {
       <div className="flex bg-white rounded-lg px-20 pt-16 pb-20 w-full mx-20 shadow-xl">
         <form onSubmit={updateIngredient} className="w-full">
           <div className="flex justify-between items-baseline">
-            {" "}
             <p className="text-4xl uppercase pb-12 font-semibold pt-1">
               Update Ingredient
             </p>
@@ -131,7 +129,6 @@ function UpdateIngredient() {
           </div>
 
           <div className="flex flex-col gap-2">
-            {" "}
             <div className="flex mb-3 justify-between gap-40 items-center">
               <Label htmlFor="name">Name</Label>
               <Input
@@ -142,16 +139,33 @@ function UpdateIngredient() {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+
+            {/* Category Dropdown - Updated section */}
             <div className="flex mb-2 justify-between gap-40 items-center">
               <Label htmlFor="category">Category</Label>
-              <Input
-                type="text"
-                placeholder="Enter Ingredient Category"
-                className="w-1/2"
+              <select
+                className={`w-1/2 p-2 border rounded-md focus:outline-none ${
+                  category === "Select" ? "text-gray-400" : "text-black"
+                }`}
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-              />
+              >
+                <option value="Select" disabled hidden>
+                  Select
+                </option>
+                <option value="Fruits">Fruits</option>
+                <option value="Vegetables">Vegetables</option>
+                <option value="Spices">Spices</option>
+                <option value="Meat">Meat</option>
+                <option value="Grains">Grains</option>
+                <option value="Diary">Diary</option>
+                <option value="Oil">Oil</option>
+                <option value="Other">Other</option>
+                
+              </select>
             </div>
+            {/* End of Category Dropdown */}
+
             <div className="flex mb-2 justify-between gap-40 items-center">
               <Label htmlFor="quantity">Stock Quantity</Label>
               <Input
@@ -195,7 +209,6 @@ function UpdateIngredient() {
           </div>
 
           <div className="flex justify-end">
-            {" "}
             <Button className="my-10 w-40" type="submit">
               Submit
             </Button>

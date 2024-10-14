@@ -1,15 +1,15 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function CreateIngredient() {
   const [name, setName] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<string>("Select"); // Default value set to "Select"
   const [quantity, setQuantity] = useState<number>(0);
   const [minQuantity, setMinQuantity] = useState<number>(0);
   const [pricePerUnit, setPricePerUnit] = useState<number>(0);
@@ -17,15 +17,14 @@ function CreateIngredient() {
 
   const validateForm = () => {
     const nameRegex = /^[a-zA-Z\s]+$/;
-    const categoryRegex = /^[a-zA-Z\s]+$/;
 
     if (!nameRegex.test(name)) {
       toast.error("Name cannot contain special characters or numbers!");
       return false;
     }
 
-    if (!categoryRegex.test(category)) {
-      toast.error("Category cannot contain special characters or numbers!");
+    if (category === "Select") {
+      toast.error("Please select a valid category!");
       return false;
     }
 
@@ -63,10 +62,7 @@ function CreateIngredient() {
     };
 
     axios
-      .post(
-        "http://localhost:3001/api/ingredients/createIngredient",
-        ingredientData
-      )
+      .post("http://localhost:3001/api/ingredients/createIngredient", ingredientData)
       .then((result) => {
         console.log(result);
         navigate("/ingredientHome");
@@ -83,9 +79,7 @@ function CreateIngredient() {
       <div className="flex bg-white rounded-lg px-20 pt-16 pb-20 w-full mx-20 shadow-xl">
         <form onSubmit={handleSubmit} className="w-full">
           <div className="flex justify-between items-baseline">
-            <p className="text-4xl uppercase pb-12 font-semibold pt-1">
-              Add Ingredient
-            </p>
+            <p className="text-4xl uppercase pb-12 font-semibold pt-1">Add Ingredient</p>
             <span
               className="material-symbols-outlined hover:text-red-800 cursor-pointer duration-300"
               onClick={goBack}
@@ -95,7 +89,7 @@ function CreateIngredient() {
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex mb-3 justify-between gap-40 items-center">
-              <Label htmlFor="">Name</Label>
+              <Label htmlFor="name">Name</Label>
               <Input
                 type="text"
                 placeholder="Enter Ingredient Name"
@@ -105,14 +99,24 @@ function CreateIngredient() {
               />
             </div>
             <div className="flex mb-2 justify-between gap-40 items-center">
-              <Label htmlFor="">Category</Label>
-              <Input
-                type="text"
-                placeholder="Enter Ingredient Category"
-                className="w-1/2"
+              <Label htmlFor="category">Category</Label>
+              <select
+                className="w-1/2 p-2 border border-gray-300 rounded"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-              />
+              >
+                <option value="Select" disabled hidden>
+                  Select
+                </option>
+                <option value="Fruits" className="text-black">Fruits</option>
+                <option value="Vegetables" className="text-black">Vegetables</option>
+                <option value="Spices" className="text-black">Spices</option>
+                <option value="Meat" className="text-black">Meat</option>
+                <option value="Grains" className="text-black">Grains</option>
+                <option value="Dairy" className="text-black">Dairy</option>
+                <option value="Oil" className="text-black">Oil</option>
+
+              </select>
             </div>
             <div className="flex mb-2 justify-between gap-40 items-center">
               <Label htmlFor="quantity">Stock Quantity</Label>
@@ -125,7 +129,7 @@ function CreateIngredient() {
               />
             </div>
             <div className="flex mb-2 justify-between gap-40 items-center">
-              <Label htmlFor="">Minimum Quantity</Label>
+              <Label htmlFor="minQuantity">Minimum Quantity</Label>
               <Input
                 type="number"
                 placeholder="Enter Minimum Quantity"
@@ -135,7 +139,7 @@ function CreateIngredient() {
               />
             </div>
             <div className="flex mb-2 justify-between gap-40 items-center">
-              <Label htmlFor="">Price Per Unit</Label>
+              <Label htmlFor="pricePerUnit">Price Per Unit</Label>
               <Input
                 type="number"
                 placeholder="Enter Price Per Unit"
@@ -146,10 +150,7 @@ function CreateIngredient() {
             </div>
           </div>
           <div className="flex justify-end">
-            {" "}
-            <Button className="my-10 w-40" type="submit">
-              Add Ingredient
-            </Button>
+            <Button className="my-10 w-40" type="submit">Add Ingredient</Button>
           </div>
         </form>
       </div>
