@@ -44,6 +44,7 @@ import Preference from "./Pages/Preference.tsx";
 import EditPreferences from "./Pages/EditPreferences.tsx";
 import FavoriteRecipes from "./Pages/FavoriteRecipes.tsx";
 import Rating from "./Pages/Rating.tsx";
+import RatingReport from "./Pages/RatingReport.tsx";
 import ForYou from "./Pages/ForYou.tsx";
 import Payment from "./Pages/Payment.tsx";
 import Success from "./Pages/Success.tsx";
@@ -95,6 +96,7 @@ function App() {
                 <Route path="/addRecipe" element={<AddRecipe />} />
                 <Route path="/chefViewRecipe" element={<ChefViewRecipes />} />
                 <Route path="/recipePage/:recipeId" element={<RecipePage />} />
+                <Route path="/ratingReport" element={<RatingReport />} />
                 <Route
                   path="/EditSupportTicket"
                   element={
