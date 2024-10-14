@@ -242,6 +242,13 @@ const Rating = () => {
           <h2 className="text-2xl font-semibold text-[#000000]">
             RECIPE RATINGS
           </h2>
+          <a href="/rating_report">
+          <button
+          className="mt-5 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200"
+        >
+              Go to Your Ratings
+        </button>
+        </a>
           <span
             className="material-symbols-outlined cursor-pointer"
             onClick={goBack}

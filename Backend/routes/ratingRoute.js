@@ -123,22 +123,23 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
-// GET route to get all ratings
-router.get("/get/all", async (req, res) => {
+// GET route to fetch all ratings made by a specific user
+router.get("/user/:customerUID", async (req, res) => {
+  const { customerUID } = req.params;
+
   try {
-      const ratings = await RatingModel.find()
-      .populate({
-          path: 'customer',
-          strictPopulate: false
-        })
-      .populate({
-          path: 'recipe',
-          strictPopulate: false
-        });
-      res.json(ratings);
-  } catch (err) {
-      res.status(500).json({ message: err.message });
+    // Fetch all ratings by the user
+    const userRatings = await RatingModel.find({ customerUID });
+
+    if (!userRatings || userRatings.length === 0) {
+      return res.status(404).json({ message: "No ratings found for this user." });
+    }
+
+    return res.status(200).json(userRatings);
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to fetch user's ratings." });
   }
 });
+
 
 module.exports = router;
