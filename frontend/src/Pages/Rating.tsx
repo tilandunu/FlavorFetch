@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // Modal component for editing the user's rating
 const Modal = ({
@@ -84,6 +85,7 @@ const Rating = () => {
   const [averageRating, setAverageRating] = useState(0); // Store the overall rating
   const customerUID = Cookies.get("userID"); // Get the customer UID from cookies
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Modal state
   const [isEditing, setIsEditing] = useState(false);
@@ -133,6 +135,13 @@ const Rating = () => {
     fetchRatings();
   }, [recipeID, customerUID]);
 
+  const filteredRatings = ratings.filter((rating) => {
+    const customerName = rating.customer
+      ? `${rating.customer.firstName} ${rating.customer.lastName}`
+      : "Anonymous";
+    return customerName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -169,6 +178,10 @@ const Rating = () => {
     setIsEditing(true); // Open the modal
     setEditRating(userRating.rating);
     setEditComment(userRating.comment);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   const handleUpdate = async (e) => {
@@ -242,12 +255,21 @@ const Rating = () => {
           <h2 className="text-2xl font-semibold text-[#000000]">
             RECIPE RATINGS
           </h2>
-          <span
-            className="material-symbols-outlined cursor-pointer"
-            onClick={goBack}
-          >
-            arrow_back
-          </span>
+          <div className="flex gap-4 items-center">
+            <Input
+              className="border border-black"
+              type="text"
+              placeholder="Search by user name..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <span
+              className="material-symbols-outlined cursor-pointer"
+              onClick={goBack}
+            >
+              arrow_back
+            </span>
+          </div>
         </div>
       </div>
 
@@ -365,8 +387,8 @@ const Rating = () => {
         <Separator />
 
         {/* Display other users' ratings */}
-        {ratings.length > 0 ? (
-          ratings.map((rating) => (
+        {filteredRatings.length > 0 ? (
+          filteredRatings.map((rating) => (
             <section
               key={rating._id}
               className="bg-white px-7 py-8 rounded-xl w-full shadow-md"
