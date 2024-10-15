@@ -135,35 +135,57 @@ const Rating = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!rating) {
-      toast.error("Please select a rating.");
+  
+    const specialCharRegex = /^[!@#$%^&*(),.?":{}|<>]*$/;
+    const numberRegex = /^\d+$/;
+  
+    if (!rating || rating < 1 || rating > 5) {
+      toast.error("Please select a valid rating between 1 and 5.");
       return;
     }
+  
+    if (!comment.trim()) {
+      toast.error("Please enter a valid comment.");
+      return;
+    }
+  
+    if (comment.length > 200) {
+      toast.error("Comment should not exceed 200 characters.");
+      return;
+    }
+  
+    if (specialCharRegex.test(comment)) {
+      toast.error("Comment should not contain only special characters.");
+      return;
+    }
+  
+    if (numberRegex.test(comment)) {
+      toast.error("Comment should not contain only numbers.");
+      return;
+    }
+  
     setLoading(true);
-
+  
     try {
-      const response = await axios.post(
-        "http://localhost:3001/api/ratings/add",
-        {
-          recipeID, // Use recipeID from useParams
-          customerUID,
-          rating,
-          comment,
-        }
-      );
+      const response = await axios.post("http://localhost:3001/api/ratings/add", {
+        recipeID,
+        customerUID,
+        rating,
+        comment,
+      });
       if (response.status === 201) {
-        toast.success("Rating added successfully!"); // Show success toast
+        toast.success("Rating added successfully!");
         setRating(0);
         setComment("");
         window.location.reload();
       }
     } catch (err) {
-      toast.error("Failed to add rating. Please try again."); // Show error toast
+      toast.error("Failed to add rating. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false after submission
+      setLoading(false);
     }
   };
+  
 
   const handleEdit = (userRating) => {
     setIsEditing(true); // Open the modal
@@ -173,8 +195,37 @@ const Rating = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
+  
+    const specialCharRegex = /^[!@#$%^&*(),.?":{}|<>]*$/;
+    const numberRegex = /^\d+$/;
+  
+    if (!editRating || editRating < 1 || editRating > 5) {
+      toast.error("Please select a valid rating between 1 and 5.");
+      return;
+    }
+  
+    if (!editComment.trim()) {
+      toast.error("Please enter a valid comment.");
+      return;
+    }
+  
+    if (editComment.length > 200) {
+      toast.error("Comment should not exceed 200 characters.");
+      return;
+    }
+  
+    if (specialCharRegex.test(editComment)) {
+      toast.error("Comment should not contain only special characters.");
+      return;
+    }
+  
+    if (numberRegex.test(editComment)) {
+      toast.error("Comment should not contain only numbers.");
+      return;
+    }
+  
     setLoading(true);
+  
     try {
       const response = await axios.put(
         `http://localhost:3001/api/ratings/update/${userRating._id}`,
@@ -185,8 +236,8 @@ const Rating = () => {
       );
       if (response.status === 200) {
         toast.success("Rating updated successfully!");
-        setIsEditing(false); // Close the modal
-        window.location.reload(); // Reload page to reflect changes
+        setIsEditing(false);
+        window.location.reload();
       }
     } catch (err) {
       toast.error("Failed to update rating.");
