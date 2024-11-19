@@ -359,6 +359,10 @@ const Modal = ({ isOpen, onClose, cartItems, removeFromCart }) => {
   const [quantities, setQuantities] = useState(cartItems.map(() => 1));
   const [exceededStock, setExceededStock] = useState(false);
 
+  useEffect(() => {
+    setQuantities(cartItems.map(() => 1));
+  }, [cartItems]);
+
   if (!isOpen) return null;
 
   const handleQuantityChange = (index, value) => {
